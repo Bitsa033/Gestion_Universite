@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UniversgController!{% endblock %}
+
+{% block body %}
+  <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">CPU Traffic</span>
+                <span class="info-box-number">
+                  10
+                  <small>%</small>
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Likes</span>
+                <span class="info-box-number">41,410</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+
+          <!-- fix for small devices only -->
+          <div class="clearfix hidden-md-up"></div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Sales</span>
+                <span class="info-box-number">760</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">New Members</span>
+                <span class="info-box-number">2,000</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-inline">
+              <div class="card insert-filiere">
+
+                <div class="card-body">
+                  <form action="" method="post">
+                      <input type="text" name="nom_niv" class="form-control" placeholder="Nom du niveau" id="">
+                      <button type="submit" class="btn btn-success">Valider</button>
+                  </form>
+                </div>
+              
+              </div>
+            </div>
+          </div>
+          <!-- /.col niveau -->
+        </div>
+         <!-- /.row -->
+        
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-bordered">
+              <tr>
+                  <th>Niveaux</th>
+                  <th>Infos</th>
+                  <th>Action</th>
+              </tr>
+              {% for niveau in niveaux %}
+              <tr>
+                  <td>{{niveau.nom}}</td>
+                  <td><a class="btn btn-info" href="{{path('find_niveau',{id:niveau.id})}}">Consulter</a></td>
+                  <td><a class="btn btn-danger" href="{{path('find_niveau',{id:niveau.id})}}"><i class="fa fa-times"></i></a></td>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+          
+        </div>
+        <!-- /.col niveaux --> 
+        </div>
+            
+    </section>
+    <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UniversgController!{% endblock %}
+
+{% block body %}
+  <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-cog"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">CPU Traffic</span>
+                <span class="info-box-number">
+                  10
+                  <small>%</small>
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <a href="{{path('create')}}" class="info-box-icon bg-primary elevation-1"><i class="fas fa-plus"></i></a>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Ajouter un </span>
+                <span class="info-box-text">etudiant</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+
+          <!-- fix for small devices only -->
+          <div class="clearfix hidden-md-up"></div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <a href="{{path('inscription')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Inscrire un</span>
+                <span class="info-box-text">etudiant</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-book"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Noter un</span>
+                <span class="info-box-text">etudiant</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-md-12">
+              <table class="table table-bordered">
+              <div class="form-inline">
+                  <p>Trier par :
+                  <form action="{{path('etudiant')}}" method="post">
+                    <select type="text" name="filiere" class="form-control" id="">
+                      <option value="">Filiere</option>
+                      {% for filiere in filieres %}
+                      <option value="{{filiere.id}}">{{filiere.sigle}}</option>
+                      {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-success">Valider</button>
+                  </form>
+                  
+              </div>
+
+              </p>
+                  <tr>
+                      <th>ID</th>
+                      <th>Action</th>
+                      <th>Nom</th>
+                      <th>Prenom</th>
+                      <th>Sexe</th>
+                      <th>Filiere</th>
+                  </tr>
+                  {% for etudiant in etudiants %}
+                  <tr>
+                      <td>{{etudiant.id}}</td>
+                      <td><a href=""  class="btn btn-danger"><i class="fa fa-times"></i></a></td>
+                      <td>{{etudiant.nom}}</td>
+                      <td>{{etudiant.prenom}}</td>
+                      <td>{{etudiant.sexe}}</td>
+                      <td>{{etudiant.filiere.sigle}}</td>
+                  </tr>
+                  {% endfor %}
+              
+              </table>
+          </div>
+          <!-- col -->
+        </div>
+        <!-- row -->
+
+    </section>
+    <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+{% endblock %}

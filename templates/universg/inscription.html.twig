@@ -1,0 +1,149 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UniversgController!{% endblock %}
+
+{% block body %}
+  <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">CPU Traffic</span>
+                <span class="info-box-number">
+                  10
+                  <small>%</small>
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Likes</span>
+                <span class="info-box-number">41,410</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+
+          <!-- fix for small devices only -->
+          <div class="clearfix hidden-md-up"></div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Sales</span>
+                <span class="info-box-number">760</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <a href="{{path('etudiants_niveau')}}" class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></a>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Inscriptions</span>
+                <span class="info-box-number">2,000</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+          <div class="col-md-4 offset-4">
+          <h5>Inscription de l'etudiant</h5>
+          </div>
+        </div>
+        <!-- /row-->
+
+        <div class="row">
+
+        <div class="col-md-5">
+          <table class="table table-bordered">
+
+          </p>
+              <tr>
+                  <th>Nom</th>
+                  <th>Prenom</th>
+                  <th>Filiere</th>
+              </tr>
+              {% for etudiant in etudiants %}
+              <tr>
+                  <td>{{etudiant.id}}</td>
+                  <td>{{etudiant.nom}}</td>
+                  <td>{{etudiant.filiere.sigle}}</td>
+              </tr>
+              {% endfor %}
+          
+          </table>
+        </div>
+        <!-- col -->
+        
+        <div class="col-md-5">
+            <div class="form-inline">
+
+                <div class="card insert-filiere">
+
+                <div class="card-body">
+                <form action="{{path('inscription')}}" method="post">
+                    <br>
+                    <div class="form-group">
+                        <select type="text" name="etudiant" class="form-control" id="">
+                            <option value="">Selectionner l'etudiant</option>
+                            {% for etudiant in etudiants %}
+                            <option value="{{etudiant.id}}">{{etudiant.nom}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <select style="margin-left:1%;" type="text" name="niveau" class="form-control" id="">
+                             <option value="">Selectionner un niveau</option>
+                            {% for niveau in niveaux %}
+                            <option value="{{niveau.id}}">{{niveau.nom}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button type="submit" style="width:190px;" class="btn btn-success">Valider</button>
+                    </div>
+                </form>
+                </div>
+                
+                </div>
+            
+            </div>
+            
+          </div>
+          
+        </div>
+        
+    </section>
+    <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+{% endblock %}
