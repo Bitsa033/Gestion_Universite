@@ -97,14 +97,18 @@
             <table class="table table-bordered">
               <tr>
                   <th>Niveaux</th>
-                  <th>Infos</th>
                   <th>Action</th>
               </tr>
               {% for niveau in niveaux %}
               <tr>
-                  <td>{{niveau.nom}}</td>
-                  <td><a class="btn btn-info" href="{{path('find_niveau',{id:niveau.id})}}">Consulter</a></td>
-                  <td><a class="btn btn-danger" href="{{path('find_niveau',{id:niveau.id})}}"><i class="fa fa-times"></i></a></td>
+                  <td>
+                   Niveau {{niveau.id}} <br>
+                  <i><strong> {{niveau.nom}}</strong></i>
+                  </td>
+                  <td>
+                  <a class="btn btn-info" href="{{path('find_niveau',{id:niveau.id})}}">Consulter <i class="fa fa-eye"></i></a>
+                   <a class="btn btn-warning" href="{{path('delete_niveau',{id:niveau.id})}}">Supprimer <i class="fa fa-times"></i></a>
+                  </td>
               </tr>
               {% endfor %}
             </table>

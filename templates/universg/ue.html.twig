@@ -75,15 +75,22 @@
 
         <div class="row">
           <div class="col-md-12">
-          <h5> <strong> Niveau {{niveau.id}}</strong></h5>
+          <h5>Liste des unites d'enseignement</h5>
               <table class="table table-bordered">
               
                   <tr>
-                      <th>Filieres disponibles</th>
-                      <th>Date d'inscription</th>
-                      <th>Prix d'inscription</th>
-                      <th>Prix de pension</th>
+                      <th>Matiere</th>
+                      <th>Fifliere</th>
+                      <th>Niveau</th>
                   </tr>
+                  {% for inc1 in ues %}
+                  <tr>
+                      <td>{{inc1.matiere.nom}}</td>
+                      <td>{{inc1.filiere.sigle}}</td>
+                      <td>{{inc1.niveau.nom}}</td>
+                  </tr>
+                  {% endfor %}
+
               
               </table>
           </div>

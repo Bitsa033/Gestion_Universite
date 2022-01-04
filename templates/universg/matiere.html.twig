@@ -96,15 +96,17 @@
           <div class="col-md-12">
             <table class="table table-bordered">
               <tr>
-                  <th>Matiere</th>
-                  <th>Filieres</th>
+                  <th>Matieres  <a class="btn btn-info" href="{{path('ue')}}">Unites d'enseignement</a></th>
+                  <th>Actions</th>
               </tr>
               {% for matiere in matieres %}
               <tr>
                   <td>{{matiere.nom}}</td>
                   <td>
                     <a class="btn btn-info" href="{{path('transfert_matiere',{id:matiere.id})}}">Transferer</a>
-                      <a class="btn btn-info" href="{{path('transfert_matiere',{id:matiere.id})}}">Consulter</a>
+                    <a class="btn btn-warning" href="{{path('transfert_matiere',{id:matiere.id})}}">Modifier</a>
+                      
+                    <a class="btn btn-info" href="{{path('delete_matiere',{id:matiere.id})}}">Supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
               {% endfor %}

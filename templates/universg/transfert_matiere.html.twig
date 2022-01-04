@@ -13,7 +13,7 @@
         <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
-              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-cog"></i></span>
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
               <div class="info-box-content">
                 <span class="info-box-text">CPU Traffic</span>
@@ -29,11 +29,11 @@
           <!-- /.col -->
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <a href="{{path('create')}}" class="info-box-icon bg-primary elevation-1"><i class="fas fa-plus"></i></a>
+              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Ajouter un </span>
-                <span class="info-box-text">etudiant</span>
+                <span class="info-box-text">Likes</span>
+                <span class="info-box-number">41,410</span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -46,11 +46,11 @@
 
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <a href="{{path('inscription')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
+              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Inscrire un</span>
-                <span class="info-box-text">etudiant</span>
+                <span class="info-box-text">Sales</span>
+                <span class="info-box-number">760</span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -59,11 +59,11 @@
           <!-- /.col -->
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-book"></i></span>
+              <a href="{{path('etudiants_niveau')}}" class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></a>
 
               <div class="info-box-content">
-                <span class="info-box-text">Noter un</span>
-                <span class="info-box-text">etudiant</span>
+                <span class="info-box-text">Inscriptions</span>
+                <span class="info-box-number">2,000</span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -72,36 +72,84 @@
           <!-- /.col -->
         </div>
         <!-- /.row -->
+        <div class="row">
+          <div class="col-md-4 offset-4">
+          <h5>Unite d'enseignement</h5>
+          </div>
+        </div>
+        <!-- /row-->
 
         <div class="row">
-          <div class="col-md-12">
-          <h5>Liste des Ue</h5>
-              <table class="table table-bordered">
-              
-                  <tr>
-                      <th>Date</th>
-                      <th>Matiere</th>
-                      <th>Filier</th>
-                      <th>Niveau</th>
-                      <th>Code</th>
-                  </tr>
-                  {% for tf1 in tm %}
-                  <tr>
-                      <td>{{tf1.createdAt|date("d/m/Y")}}</td>
-                      <td>{{tf1.matiere.nom}}</td>
-                      <td>{{tf1.filiere.nom}}</td>
-                      <td>{{tf1.niveau.nom}}</td>
-                      <td>Aucun</td>
-                  </tr>
-                  {% endfor %}
 
+          <div class="col-md-5 offset-3">
+            <table class="table table-bordered">
+
+            </p>
+                <tr>
+                <th></th>
+                <th>matiere</th>
+                </tr>
+                
+                <tr>
+                <td>{{matiere.id}}</td>
+                <td>{{matiere.nom}}</td>
+                </tr>
               
-              </table>
-          </div>
-          <!-- col -->
+            </table>
+          </div> 
+          <!-- /col -->
+        
         </div>
-        <!-- row -->
 
+        <!-- /.row -->
+
+        <div class="row" >
+
+          <div class="col-md-5 offset-3">
+            <div class="form-inline">
+
+                <div class="card insert-filiere">
+
+                <div class="card-body">
+      
+                <form action="{{path('transfert_matiere',{id:matiere.id})}}" method="post" >
+
+                    <div class="form-group">
+                      <input type="number" name="credit" id="" class="form-control" placeholder="credit/ coefficient...">
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <select type="text" name="filiere" class="form-control" id="">
+                            <option value="">Selectionner la filiere</option>
+                            {% for filiere in filieres %}
+                            <option value="{{filiere.id}}">{{filiere.sigle}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <select style="margin-left:1%;" type="text" name="niveau" class="form-control" id="">
+                            <option value="">Selectionner le niveau</option>
+                            {% for niveau in niveaux %}
+                            <option value="{{niveau.id}}">{{niveau.nom}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button type="submit" style="width:190px;" class="btn btn-success">Valider</button>
+                    </div>
+                </form>
+                </div>
+                
+                </div>
+            
+            </div>
+            
+          </div>
+        
+        </div>
+        <!-- /.row -->
     </section>
     <!-- /.content -->
     </div>

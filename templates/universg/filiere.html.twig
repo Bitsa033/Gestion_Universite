@@ -96,7 +96,6 @@
             <table class="table table-bordered">
               <tr>
                   <th>filieres</th>
-                  <th>Infos</th>
                   <th>Action</th>
               </tr>
               {% for filiere in filieres %}
@@ -105,11 +104,9 @@
                   <strong>{{filiere.sigle}}</strong><br>
                   <i>{{filiere.nom}}</i>
                   </td>
-                   <td><a class="btn btn-info" href="{{path('filiere',{id:filiere.id})}}">Consulter</a></td>
                   <td>
-                  <a class="btn btn-primary" href="{{path('filiere',{id:filiere.id})}}"><i class="fa fa-edit"></i></a>
-                   <a class="btn btn-danger" href="{{path('filiere',{id:filiere.id})}}"><i class="fa fa-times"></i></a>
-                    <a class="btn btn-warning" href="{{path('filiere',{id:filiere.id})}}"><i class="fa fa-eye"></i></a>
+                    <a class="btn btn-info" href="{{path('filiere',{id:filiere.id})}}">Consulter <i class="fa fa-eye"></i></a>
+                   <a class="btn btn-warning" href="{{path('delete_filiere',{id:filiere.id})}}">Supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
               {% endfor %}

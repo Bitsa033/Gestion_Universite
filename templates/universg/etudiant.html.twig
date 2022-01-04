@@ -102,7 +102,7 @@
                   {% for etudiant in etudiants %}
                   <tr>
                       <td>{{etudiant.id}}</td>
-                      <td><a href=""  class="btn btn-danger"><i class="fa fa-times"></i></a></td>
+                      <td><a href="{{path('delete_etudiant',{id:etudiant.id})}}"  class="btn btn-warning">Supprimer <i class="fa fa-times"></i></a></td>
                       <td>{{etudiant.nom}}</td>
                       <td>{{etudiant.prenom}}</td>
                       <td>{{etudiant.sexe}}</td>
