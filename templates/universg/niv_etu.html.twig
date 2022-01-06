@@ -44,7 +44,7 @@
           <!-- fix for small devices only -->
           <div class="clearfix hidden-md-up"></div>
 
-          <div class="col-12 col-sm-6 col-md-3">
+          {# <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
               <a href="{{path('inscription')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
 
@@ -55,28 +55,35 @@
               <!-- /.info-box-content -->
             </div>
             <!-- /.info-box -->
-          </div>
+          </div> #}
           <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-book"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Noter un</span>
-                <span class="info-box-text">etudiant</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
+          
         </div>
         <!-- /.row -->
 
         <div class="row">
           <div class="col-md-12">
-          <h5>Liste des etudiants</h5>
+          <h5>Liste des inscriptions</h5>
               <table class="table table-bordered">
+                <div class="form-inline">
+                    <p>Trier par :
+                    <form action="{{path('etudiant')}}" method="post">
+                      <select type="text" name="filiere" class="form-control" id="">
+                        <option value="">Filiere</option>
+                        {% for inc1 in inc %}
+                        <option value="{{inc1.etudiant.filiere.sigle}}">{{inc1.etudiant.filiere.sigle}}</option>
+                        {% endfor %}
+                      </select>
+                      <select type="text" name="filiere" class="form-control" id="">
+                        <option value="">niveau</option>
+                        {% for inc1 in inc %}
+                        <option value="{{inc1.niveau.nom}}">{{inc1.niveau.nom}}</option>
+                        {% endfor %}
+                      </select>
+                      <button type="submit" class="btn btn-success">Valider</button>
+                    </form>
+                    
+                  </div>
               
                   <tr>
                       <th>Date</th>

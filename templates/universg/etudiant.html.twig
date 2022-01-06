@@ -13,13 +13,12 @@
         <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
-              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-cog"></i></span>
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">CPU Traffic</span>
+                <span class="info-box-text">Nb etudiants</span>
                 <span class="info-box-number">
-                  10
-                  <small>%</small>
+                  <strong>350</strong>
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -46,30 +45,18 @@
 
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <a href="{{path('inscription')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
+              <a href="{{path('etudiants_niveau')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-table"></i></a>
 
               <div class="info-box-content">
-                <span class="info-box-text">Inscrire un</span>
-                <span class="info-box-text">etudiant</span>
+                <span class="info-box-text">Liste des</span>
+                <span class="info-box-text">inscriptions</span>
               </div>
               <!-- /.info-box-content -->
             </div>
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-book"></i></span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Noter un</span>
-                <span class="info-box-text">etudiant</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
         </div>
         <!-- /.row -->
 
@@ -102,7 +89,10 @@
                   {% for etudiant in etudiants %}
                   <tr>
                       <td>{{etudiant.id}}</td>
-                      <td><a href="{{path('delete_etudiant',{id:etudiant.id})}}"  class="btn btn-warning">Supprimer <i class="fa fa-times"></i></a></td>
+                      <td>
+                      <a href="{{path('delete_etudiant',{id:etudiant.id})}}"  class="btn btn-warning">Supprimer <i class="fa fa-times"></i></a>
+                      <a href="{{path('inscription',{id:etudiant.id})}}"  class="btn btn-info">Inscrire <i class="fa fa-pen"></i></a>
+                      </td>
                       <td>{{etudiant.nom}}</td>
                       <td>{{etudiant.prenom}}</td>
                       <td>{{etudiant.sexe}}</td>

@@ -198,28 +198,25 @@ class UniversgController extends AbstractController
 
     /**
      * Inscription des etudiants
-     * @Route("inscription", name="inscription")
+     * @Route("inscription/{id}", name="inscription")
      */
-    public function inscription(Request $request,ManagerRegistry $end_e)
-        {if (!empty($request->request->get('niveau'))) {
+    public function inscription(Etudiant $in, Request $request,ManagerRegistry $end_e )
+         {
+             if (!empty($request->request->get('niveau'))) {
         
             $repon=$this->getDoctrine()->getRepository(Niveau::class);
             $niveau = $repon->find($request->request->get("niveau"));
 
-            $repoe=$this->getDoctrine()->getRepository(Etudiant::class);
-            $etudiant = $repoe->find($request->request->get("etudiant"));
-            
             $inscription=new Inscription();
-            $inscription->setEtudiant($etudiant);
+            $inscription->setEtudiant($in);
             $inscription->setNiveau($niveau);
             $inscription->setCreatedAt(new \DateTime());
             //$manager=$mg->getManager();
             $manager = $end_e->getManager();
-            
             $manager->persist($inscription);
             $manager->flush();
   
-            return $this->redirectToRoute('inscription');
+            return $this->redirectToRoute('etudiants_niveau');
         }
 
         $reposn=$this->getDoctrine()->getRepository(Niveau::class);
@@ -230,7 +227,8 @@ class UniversgController extends AbstractController
         return $this->render('universg/inscription.html.twig', [
             'controller_name' => 'UniversgController',
             'niveaux'=>$niveaux,
-            'etudiants'=>$etudiant
+            'etudiants'=>$etudiant,
+            'etudiant'=>$in
         ]);
     }
 

@@ -103,10 +103,10 @@
               <tr>
                   <td>{{matiere.nom}}</td>
                   <td>
-                    <a class="btn btn-info" href="{{path('transfert_matiere',{id:matiere.id})}}">Transferer</a>
-                    <a class="btn btn-warning" href="{{path('transfert_matiere',{id:matiere.id})}}">Modifier</a>
-                      
-                    <a class="btn btn-info" href="{{path('delete_matiere',{id:matiere.id})}}">Supprimer <i class="fa fa-times"></i></a>
+                    <a class="btn btn-info" href="{{path('transfert_matiere',{id:matiere.id})}}">transferer</a>
+                    <a class="btn btn-warning" href="{{path('transfert_matiere',{id:matiere.id})}}">modifier</a>
+                    <a class="btn btn-info" href="{{path('delete_matiere',{id:matiere.id})}}">consulter <i class="fa fa-book"></i></a>
+                    <a class="btn btn-warning" href="{{path('delete_matiere',{id:matiere.id})}}">supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
               {% endfor %}
