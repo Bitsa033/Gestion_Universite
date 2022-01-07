@@ -77,6 +77,25 @@
           <div class="col-md-12">
           <h5>Liste des unites d'enseignement</h5>
               <table class="table table-bordered">
+                  <div class="form-inline">
+                    <p>Trier par :
+                    <form action="{{path('ue')}}" method="post">
+                      <select type="text" name="filiere" class="form-control" id="">
+                        <option value="">Filiere</option>
+                        {% for ues1 in filieres %}
+                        <option value="{{ues1.id}}">{{ues1.sigle}}</option>
+                        {% endfor %}
+                      </select>
+                      <select type="text" name="niveau" class="form-control" id="">
+                        <option value="">niveau</option>
+                        {% for ues1 in niveaux %}
+                        <option value="{{ues1.id}}">{{ues1.nom}}</option>
+                        {% endfor %}
+                      </select>
+                      <button type="submit" class="btn btn-success">Valider</button>
+                    </form>
+                    
+                  </div>
               
                   <tr>
                       <th>Matiere</th>

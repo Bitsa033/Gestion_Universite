@@ -298,20 +298,24 @@ class UniversgController extends AbstractController
      */
     public function transfert_matiere (Request $request, ManagerRegistry $end, Matiere $matiere)
     {
-        if (!empty($request->request->get('filiere')) && !empty($request->request->get('niveau'))) {
-            $filiere=$this->getDoctrine()->getRepository(Filiere::class)->find($request->request->get('filiere'));
+        if (!empty($request->request->get('niveau'))) {
+            $filiere=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
             $niveau=$this->getDoctrine()->getRepository(Niveau::class)->find($request->request->get('niveau'));
+
+            foreach ($filiere as $filiere2) {
+                
+                $ue=new Ue();
+                $ue->setFiliere($filiere2);
+                $ue->setNiveau($niveau);
+                $ue->setMatiere($matiere);
+                $ue->setCreatedAt(new \DateTime());
+                $manager = $end->getManager();
+                $manager->persist($ue);
+                $manager->flush();
+            }
             
-            $ue=new Ue();
-            $ue->setFiliere($filiere);
-            $ue->setNiveau($niveau);
-            $ue->setMatiere($matiere);
-            $ue->setCreatedAt(new \DateTime());
-            $manager = $end->getManager();
-            $manager->persist($ue);
-            $manager->flush();
   
-            return $this->redirectToRoute('matiere');
+            return $this->redirectToRoute('ue');
         } 
         $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
         $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
@@ -330,9 +334,13 @@ class UniversgController extends AbstractController
     public function ue ()
     {
         $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
+        $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
+        $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
         return $this->render('universg/ue.html.twig', [
             'controller_name' => 'UniversgController',
-            'ues'=>$repostn
+            'ues'=>$repostn,
+            'filieres'=>$filieres,
+            'niveaux'=>$niveaux
         ]);
     }
 }
