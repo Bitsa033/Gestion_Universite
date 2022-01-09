@@ -167,15 +167,15 @@ class UniversgController extends AbstractController
      */
     public function etudiant (Request $request,ManagerRegistry $end_e)
     {
+        $search=$this->getDoctrine()->getRepository(Etudiant::class)->search($request->request->get('filiere'));
+        $filieres = $this->getDoctrine()->getRepository(Filiere::class)->findAll();
+        //$etudiants = $this->getDoctrine()->getRepository(Etudiant::class)->findAll();
         
-        $reposf=$this->getDoctrine()->getRepository(Filiere::class);
-        $filieres = $reposf->findAll();
-        $repos=$this->getDoctrine()->getRepository(Etudiant::class);
-        $etudiants = $repos->findAll();
         return $this->render('universg/etudiant.html.twig', [
             'controller_name' => 'UniversgController',
             'filieres'=>$filieres,
-            'etudiants'=>$etudiants
+            //'etudiants'=>$etudiants,
+            'recherche'=>$search
         ]);
     }
     
@@ -235,18 +235,17 @@ class UniversgController extends AbstractController
     /**
      * @Route("etudiants_niveau", name="etudiants_niveau")
      */
-    public function etudiants_niveau(): Response
+    public function etudiants_niveau(Request $request)
     {
-        $reposf=$this->getDoctrine()->getRepository(Inscription::class)->findAll();
-    //      $inc= $this->createQueryBuilder('select * from inscription')
-    //    ->andWhere('inscription.niveau_id = :val')
-    //    ->setParameter('val', $id)
-    //    ->getQuery()
-    //    ->getOneOrNullResult();
+        $inscriptions=$this->getDoctrine()->getRepository(Inscription::class)->findAll();
+        $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
+        $search=$this->getDoctrine()->getRepository(Inscription::class)->search($request->request->get('niveau'));
     
         return $this->render('universg/niv_etu.html.twig', [
             'controller_name' => 'UniversgController',
-            'inc'=>$reposf
+            'inc'=>$inscriptions,
+            'niveaux'=>$niveaux,
+            'recherche'=>$search
         ]);
     }
 

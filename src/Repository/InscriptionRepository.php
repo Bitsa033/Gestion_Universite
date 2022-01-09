@@ -19,6 +19,17 @@ class InscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Inscription::class);
     }
 
+    public function search($value)
+    {
+        $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val')
+            ->setParameter('val', $value)
+            ->orderBy('i.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
+    }
+
     // /**
     //  * @return Inscription[] Returns an array of Inscription objects
     //  */

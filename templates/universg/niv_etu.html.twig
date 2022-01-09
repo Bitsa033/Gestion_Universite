@@ -67,17 +67,17 @@
               <table class="table table-bordered">
                 <div class="form-inline">
                     <p>Trier par :
-                    <form action="{{path('etudiant')}}" method="post">
+                    <form action="{{path('etudiants_niveau')}}" method="post">
                       <select type="text" name="filiere" class="form-control" id="">
                         <option value="">Filiere</option>
                         {% for inc1 in inc %}
                         <option value="{{inc1.etudiant.filiere.sigle}}">{{inc1.etudiant.filiere.sigle}}</option>
                         {% endfor %}
                       </select>
-                      <select type="text" name="filiere" class="form-control" id="">
+                      <select type="text" name="niveau" class="form-control" id="">
                         <option value="">niveau</option>
-                        {% for inc1 in inc %}
-                        <option value="{{inc1.niveau.nom}}">{{inc1.niveau.nom}}</option>
+                        {% for niveau in niveaux %}
+                        <option value="{{niveau.id}}">{{niveau.nom}}</option>
                         {% endfor %}
                       </select>
                       <button type="submit" class="btn btn-success">Valider</button>
@@ -92,7 +92,7 @@
                       <th>Niveau</th>
                       <th>Filiere</th>
                   </tr>
-                  {% for inc1 in inc %}
+                  {% for inc1 in recherche %}
                   <tr>
                       <td>{{inc1.createdAt|date("d/m/Y")}}</td>
                       <td>{{inc1.etudiant.nom}}</td>
