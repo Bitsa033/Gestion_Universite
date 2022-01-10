@@ -35,9 +35,9 @@ class Filiere
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Etudiant::class, mappedBy="filiere")
+     * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="filiere")
      */
-    private $etudiants;
+    private $inscriptions;
 
     /**
      * @ORM\OneToMany(targetEntity=Ue::class, mappedBy="filiere")
@@ -46,7 +46,7 @@ class Filiere
 
     public function __construct()
     {
-        $this->etudiants = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
         $this->ues = new ArrayCollection();
     }
 
@@ -92,29 +92,29 @@ class Filiere
     }
 
     /**
-     * @return Collection|Etudiant[]
+     * @return Collection|Inscription[]
      */
-    public function getEtudiants(): Collection
+    public function getInscriptions(): Collection
     {
-        return $this->etudiants;
+        return $this->inscriptions;
     }
 
-    public function addEtudiant(Etudiant $etudiant): self
+    public function addInscription(Inscription $inscription): self
     {
-        if (!$this->etudiants->contains($etudiant)) {
-            $this->etudiants[] = $etudiant;
-            $etudiant->setFiliere($this);
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setFiliere($this);
         }
 
         return $this;
     }
 
-    public function removeEtudiant(Etudiant $etudiant): self
+    public function removeInscription(Inscription $inscription): self
     {
-        if ($this->etudiants->removeElement($etudiant)) {
+        if ($this->inscriptions->removeElement($inscription)) {
             // set the owning side to null (unless already changed)
-            if ($etudiant->getFiliere() === $this) {
-                $etudiant->setFiliere(null);
+            if ($inscription->getFiliere() === $this) {
+                $inscription->setFiliere(null);
             }
         }
 

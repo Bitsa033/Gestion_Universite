@@ -70,8 +70,8 @@
                     <form action="{{path('etudiants_niveau')}}" method="post">
                       <select type="text" name="filiere" class="form-control" id="">
                         <option value="">Filiere</option>
-                        {% for inc1 in inc %}
-                        <option value="{{inc1.etudiant.filiere.sigle}}">{{inc1.etudiant.filiere.sigle}}</option>
+                        {% for inc1 in filieres %}
+                        <option value="{{inc1.id}}">{{inc1.sigle}}</option>
                         {% endfor %}
                       </select>
                       <select type="text" name="niveau" class="form-control" id="">
@@ -98,7 +98,11 @@
                       <td>{{inc1.etudiant.nom}}</td>
                       <td>{{inc1.etudiant.prenom}}</td>
                       <td>{{inc1.niveau.nom}}</td>
-                      <td>{{inc1.etudiant.filiere.sigle}}</td>
+                      <td>{{inc1.filiere.sigle}}</td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="5">Désolé, ce tableau est vide pour le moment !</td>
                   </tr>
                   {% endfor %}
 

@@ -63,7 +63,7 @@
         <div class="row">
           <div class="col-md-12">
               <table class="table table-bordered">
-              <div class="form-inline">
+              {# <div class="form-inline">
                   <p>Trier par :
                   <form action="{{path('etudiant')}}" method="post">
                     <select type="text" name="filiere" class="form-control" id="">
@@ -75,7 +75,7 @@
                     <button type="submit" class="btn btn-success">Valider</button>
                   </form>
                   
-              </div>
+              </div> #}
 
               </p>
                   <tr>
@@ -84,9 +84,8 @@
                       <th>Nom</th>
                       <th>Prenom</th>
                       <th>Sexe</th>
-                      <th>Filiere</th>
                   </tr>
-                  {% for etudiant in recherche %}
+                  {% for etudiant in etudiants %}
                   <tr>
                       <td>{{etudiant.id}}</td>
                       <td>
@@ -96,7 +95,10 @@
                       <td>{{etudiant.nom}}</td>
                       <td>{{etudiant.prenom}}</td>
                       <td>{{etudiant.sexe}}</td>
-                      <td>{{etudiant.filiere.sigle}}</td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="5">Désolé, ce tableau est vide pour le moment !</td>
                   </tr>
                   {% endfor %}
               

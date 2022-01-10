@@ -23,6 +23,11 @@ class Inscription
     private $etudiant;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Filiere::class, inversedBy="inscriptions")
+     */
+    private $filiere;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Niveau::class, inversedBy="inscriptions")
      */
     private $niveau;
@@ -45,6 +50,18 @@ class Inscription
     public function setEtudiant(?Etudiant $etudiant): self
     {
         $this->etudiant = $etudiant;
+
+        return $this;
+    }
+
+    public function getFiliere(): ?Filiere
+    {
+        return $this->filiere;
+    }
+
+    public function setFiliere(?Filiere $filiere): self
+    {
+        $this->filiere = $filiere;
 
         return $this;
     }

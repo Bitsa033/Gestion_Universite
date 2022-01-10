@@ -133,49 +133,41 @@ class UniversgController extends AbstractController
     public function creer_etudiant (Request $request,ManagerRegistry $end_e)
     {
          //insertion de l'etudiant si la request n'est pas vide
-       if (!empty($request->request->get('filiere')) && !empty($request->request->get('nom_et'))) {
-          $repof=$this->getDoctrine()->getRepository(Filiere::class);
-          $filiere = $repof->find($request->request->get("filiere"));
-          
+       if (!empty($request->request->get('nom_et')) && 
+       !empty($request->request->get('prenom_et')) &&
+       !empty($request->request->get('sexe_et'))) {
+           //on enregistre l'etudiant
           $etudiant=new Etudiant();
           $etudiant->setNom($request->request->get("nom_et"));
           $etudiant->setprenom($request->request->get("prenom_et"));
           $etudiant->setSexe($request->request->get("sexe_et"));
-          $etudiant->setFiliere($filiere);
           $etudiant->setCreatedAt(new \DateTime());
-          //$manager=$mg->getManager();
           $manager = $end_e->getManager();
-          
           $manager->persist($etudiant);
           $manager->flush();
 
           return $this->redirectToRoute('etudiant');
        }
-       //affichage des filieres pour l'enregistrement
-       $reposf=$this->getDoctrine()->getRepository(Filiere::class);
-       $filieres = $reposf->findAll();
-
         return $this->render('universg/creation.html.twig', [
-            'controller_name' => 'UniversgController',
-            'filieres'=>$filieres
+            'controller_name' => 'UniversgController'
         ]);
     }
 
     /**
-     * Affichage des etudiants et leurs niveaux
+     * Affichage des etudiants enregistrés
      * @Route("etudiant", name="etudiant")
      */
     public function etudiant (Request $request,ManagerRegistry $end_e)
     {
-        $search=$this->getDoctrine()->getRepository(Etudiant::class)->search($request->request->get('filiere'));
+        //$search=$this->getDoctrine()->getRepository(Etudiant::class)->search($request->request->get('filiere'));
         $filieres = $this->getDoctrine()->getRepository(Filiere::class)->findAll();
-        //$etudiants = $this->getDoctrine()->getRepository(Etudiant::class)->findAll();
+        $etudiants = $this->getDoctrine()->getRepository(Etudiant::class)->findAll();
         
         return $this->render('universg/etudiant.html.twig', [
             'controller_name' => 'UniversgController',
             'filieres'=>$filieres,
-            //'etudiants'=>$etudiants,
-            'recherche'=>$search
+            'etudiants'=>$etudiants,
+            //'recherche'=>$search
         ]);
     }
     
@@ -200,35 +192,35 @@ class UniversgController extends AbstractController
      * Inscription des etudiants
      * @Route("inscription/{id}", name="inscription")
      */
-    public function inscription(Etudiant $in, Request $request,ManagerRegistry $end_e )
-         {
-             if (!empty($request->request->get('niveau'))) {
-        
-            $repon=$this->getDoctrine()->getRepository(Niveau::class);
-            $niveau = $repon->find($request->request->get("niveau"));
+    public function inscription(Etudiant $student, Request $request,ManagerRegistry $end_e )
+        {
+        if (!empty($request->request->get('niveau'))) {
+    
+            $niveau = $this->getDoctrine()->getRepository(Niveau::class)->find($request->request->get("niveau"));
+            $filiere = $this->getDoctrine()->getRepository(Filiere::class)->find($request->request->get("filiere"));
 
             $inscription=new Inscription();
-            $inscription->setEtudiant($in);
+            $inscription->setEtudiant($student);
+            $inscription->setFiliere($filiere);
             $inscription->setNiveau($niveau);
             $inscription->setCreatedAt(new \DateTime());
             //$manager=$mg->getManager();
             $manager = $end_e->getManager();
             $manager->persist($inscription);
             $manager->flush();
-  
+
             return $this->redirectToRoute('etudiants_niveau');
         }
 
-        $reposn=$this->getDoctrine()->getRepository(Niveau::class);
-        $niveaux = $reposn->findAll();
-        $reposn=$this->getDoctrine()->getRepository(Etudiant::class);
-        $etudiant = $reposn->findAll();
-
+        $niveaux = $this->getDoctrine()->getRepository(Niveau::class)->findAll();
+        $etudiants = $this->getDoctrine()->getRepository(Etudiant::class)->findAll();
+        $filieres = $this->getDoctrine()->getRepository(Filiere::class)->findAll();
         return $this->render('universg/inscription.html.twig', [
             'controller_name' => 'UniversgController',
             'niveaux'=>$niveaux,
-            'etudiants'=>$etudiant,
-            'etudiant'=>$in
+            'filieres'=>$filieres,
+            'etudiants'=>$etudiants,
+            'etudiant'=>$student
         ]);
     }
 
@@ -237,14 +229,16 @@ class UniversgController extends AbstractController
      */
     public function etudiants_niveau(Request $request)
     {
-        $inscriptions=$this->getDoctrine()->getRepository(Inscription::class)->findAll();
+        //$inscriptions=$this->getDoctrine()->getRepository(Inscription::class)->findAll();
         $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
-        $search=$this->getDoctrine()->getRepository(Inscription::class)->search($request->request->get('niveau'));
+        $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
+        $search=$this->getDoctrine()->getRepository(Inscription::class)->search($request->request->get('niveau'),$request->request->get('filiere'));
     
         return $this->render('universg/niv_etu.html.twig', [
             'controller_name' => 'UniversgController',
-            'inc'=>$inscriptions,
+            //'inc'=>$inscriptions,
             'niveaux'=>$niveaux,
+            'filieres'=>$filieres,
             'recherche'=>$search
         ]);
     }
@@ -330,16 +324,18 @@ class UniversgController extends AbstractController
      * Affichage des unites d'enseignement
      * @Route("ue", name="ue")
      */
-    public function ue ()
+    public function ue (Request $request)
     {
         $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
         $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
         $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
+        $search=$this->getDoctrine()->getRepository(Ue::class)->search($request->request->get('niveau'),$request->request->get('filiere'));
         return $this->render('universg/ue.html.twig', [
             'controller_name' => 'UniversgController',
             'ues'=>$repostn,
             'filieres'=>$filieres,
-            'niveaux'=>$niveaux
+            'niveaux'=>$niveaux,
+            'recherche'=>$search
         ]);
     }
 }

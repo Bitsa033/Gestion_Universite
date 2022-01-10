@@ -98,15 +98,24 @@
                   </div>
               
                   <tr>
-                      <th>Matiere</th>
-                      <th>Fifliere</th>
-                      <th>Niveau</th>
+                    <th>Actions</th>
+                    <th>Matiere</th>
+                    <th>Fifliere</th>
+                    <th>Niveau</th>
                   </tr>
-                  {% for inc1 in ues %}
+                  {% for inc1 in recherche %}
                   <tr>
+                    <td>
+                      <a class="btn btn-info" href="{{path('transfert_matiere',{id:inc1.id})}}">modifier <i class="fa fa-edit"></i></a>
+                      <a class="btn btn-warning" href="{{path('delete_matiere',{id:inc1.id})}}">supprimer <i class="fa fa-times"></i></a>
+                    </td>
                       <td>{{inc1.matiere.nom}}</td>
                       <td>{{inc1.filiere.sigle}}</td>
                       <td>{{inc1.niveau.nom}}</td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="4">Désolé, ce tableau est vide pour le moment !</td>
                   </tr>
                   {% endfor %}
 

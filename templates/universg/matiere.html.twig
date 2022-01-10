@@ -109,6 +109,10 @@
                     <a class="btn btn-warning" href="{{path('delete_matiere',{id:matiere.id})}}">supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
+              {% else %}
+                  <tr>
+                    <td colspan="5">Désolé, ce tableau est vide pour le moment !</td>
+                  </tr>
               {% endfor %}
             </table>
           </div>

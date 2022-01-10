@@ -19,6 +19,17 @@ class UeRepository extends ServiceEntityRepository
         parent::__construct($registry, Ue::class);
     }
 
+    public function search($niveau,$filiere)
+    {
+        $a= $this->createQueryBuilder('u') ->andWhere('u.niveau = :val1')->andWhere('u.filiere = :val2')
+            ->setParameter('val1', $niveau)->setParameter('val2', $filiere)
+            ->orderBy('u.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
+    }
+
     // /**
     //  * @return Ue[] Returns an array of Ue objects
     //  */

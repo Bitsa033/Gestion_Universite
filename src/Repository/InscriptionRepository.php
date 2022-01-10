@@ -19,10 +19,10 @@ class InscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Inscription::class);
     }
 
-    public function search($value)
+    public function search($niveau,$filiere)
     {
-        $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val')
-            ->setParameter('val', $value)
+        $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val1')->andWhere('i.filiere = :val2')
+            ->setParameter('val1', $niveau)->setParameter('val2', $filiere)
             ->orderBy('i.id', 'ASC');
         $query=$a->getQuery();
 

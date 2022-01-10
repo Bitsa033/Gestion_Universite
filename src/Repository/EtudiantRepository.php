@@ -19,16 +19,16 @@ class EtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, Etudiant::class);
     }
 
-    public function search($value)
-    {
-        $a= $this->createQueryBuilder('e') ->andWhere('e.filiere = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC');
-        $query=$a->getQuery();
+    // public function search($value)
+    // {
+    //     $a= $this->createQueryBuilder('e') ->andWhere('e.nom = :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('e.id', 'ASC');
+    //     $query=$a->getQuery();
 
-        return $query->execute();
+    //     return $query->execute();
         
-    }
+    // }
 
     // /**
     //  * @return Etudiant[] Returns an array of Etudiant objects

@@ -82,13 +82,11 @@
                     <th>Nom</th>
                     <th>Prenom</th>
                     <th>Sexe</th>
-                    <th>Filiere</th>
                 </tr>
                 <tr>
                     <td>{{etudiant.nom}}</td>
                     <td>{{etudiant.prenom}}</td>
                      <td>{{etudiant.sexe}}</td>
-                    <td>{{etudiant.filiere.sigle}}</td>
                 </tr>
             </table>
           </div>
@@ -104,14 +102,23 @@
                   <div class="card-body">
                   
                     <form action="{{path('inscription',{id:etudiant.id})}}" method="post">
+                      <select style="margin-left:1%;" type="text" name="filiere" class="form-control" id="">
+                        <option value="">Filiere</option>
+                        {% for filiere in filieres %}
+                        <option value="{{filiere.id}}">{{filiere.sigle}}</option>
+                        {% endfor %}
+                      </select>
+                      <br>
+
                       <select style="margin-left:1%;" type="text" name="niveau" class="form-control" id="">
-                        <option value="">Selectionner le niveau</option>
+                        <option value="">Niveau</option>
                         {% for niveau in niveaux %}
                         <option value="{{niveau.id}}">{{niveau.nom}}</option>
                         {% endfor %}
                       </select>
                       <br>
                      <button type="submit" class="btn btn-success form-control">Valider</button>
+                    <form>
                   </div>  
                 
                 </div>

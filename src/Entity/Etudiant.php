@@ -35,11 +35,6 @@ class Etudiant
     private $sexe;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Filiere::class, inversedBy="etudiants")
-     */
-    private $filiere;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -91,18 +86,6 @@ class Etudiant
     public function setSexe(string $sexe): self
     {
         $this->sexe = $sexe;
-
-        return $this;
-    }
-
-    public function getFiliere(): ?Filiere
-    {
-        return $this->filiere;
-    }
-
-    public function setFiliere(?Filiere $filiere): self
-    {
-        $this->filiere = $filiere;
 
         return $this;
     }
