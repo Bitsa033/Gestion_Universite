@@ -51,7 +51,7 @@ class ApiController extends AbstractController
         $etudiant = new Etudiant();
         $etudiant->setNom(strtoupper($donnee->nom));
         $etudiant->setprenom(strtoupper($donnee->prenom));
-        $etudiant->setprenom(strtoupper($donnee->sexe));
+        $etudiant->setSexe(strtoupper($donnee->sexe));
         $etudiant->setCreatedAt(new \DateTime());
         $manager=$managerRegistry->getManager();
         $manager->persist($etudiant);
