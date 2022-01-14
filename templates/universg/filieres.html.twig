@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}UniversgController!{% endblock %}
-
 {% block body %}
   <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -16,7 +14,7 @@
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Nb niveaux</span>
+                <span class="info-box-text">Nb filieres</span>
                 <span class="info-box-number">
                   <strong>3</strong>
                 </span>
@@ -26,21 +24,19 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
           
         </div>
         <!-- /.row -->
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="form-inline">
               <div class="card insert-filiere">
 
                 <div class="card-body">
-                  <form action="" method="post">
-                      <input type="text" name="nom_niv" class="form-control" placeholder="Nom du niveau" id="">
+                  <form action="{{path('filieres')}}" method="post">
+                      <input type="text" name="nom_f" class="form-control" placeholder="Nom de la filiere" id="">
+                      <input type="text" name="abbr_filiere" class="form-control" placeholder="Abbreviation" id="">
                       <button type="submit" class="btn btn-success">Valider</button>
                   </form>
                 </div>
@@ -48,7 +44,7 @@
               </div>
             </div>
           </div>
-          <!-- /.col niveau -->
+          <!-- /.col filiere -->
         </div>
          <!-- /.row -->
         
@@ -56,18 +52,18 @@
           <div class="col-md-12">
             <table class="table table-bordered">
               <tr>
-                  <th>Niveaux</th>
+                  <th>filieres</th>
                   <th>Action</th>
               </tr>
-              {% for niveau in niveaux %}
+              {% for filiere in filieres %}
               <tr>
                   <td>
-                   Niveau {{niveau.id}} <br>
-                  <i><strong> {{niveau.nom}}</strong></i>
+                  <strong>{{filiere.sigle}}</strong><br>
+                  <i>{{filiere.nom}}</i>
                   </td>
                   <td>
-                  <a class="btn btn-info" href="{{path('find_niveau',{id:niveau.id})}}">Consulter <i class="fa fa-eye"></i></a>
-                   <a class="btn btn-warning" href="{{path('delete_niveau',{id:niveau.id})}}">Supprimer <i class="fa fa-times"></i></a>
+                    <a class="btn btn-info" href="{{path('filieres',{id:filiere.id})}}">Consulter <i class="fa fa-eye"></i></a>
+                   <a class="btn btn-warning" href="{{path('suppression_filiere',{id:filiere.id})}}">Supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
               {% else %}
@@ -77,9 +73,7 @@
               {% endfor %}
             </table>
           </div>
-          
-        </div>
-        <!-- /.col niveaux --> 
+          <!-- /.col filieres --> 
         </div>
             
     </section>

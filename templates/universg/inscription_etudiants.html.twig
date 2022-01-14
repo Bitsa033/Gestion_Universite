@@ -32,7 +32,7 @@
 
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <a href="{{path('create')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
+              <a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
 
               <div class="info-box-content">
                 <span class="info-box-text">Ajouter un</span>
@@ -49,7 +49,7 @@
 
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <a href="{{path('etudiants_niveau')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-table"></i></a>
+              <a href="{{path('liste_inscriptions_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-table"></i></a>
 
               <div class="info-box-content">
                 <span class="info-box-text">Liste des</span>
@@ -101,7 +101,7 @@
                 <div class="card insert-filiere">
                   <div class="card-body">
                   
-                    <form action="{{path('inscription',{id:etudiant.id})}}" method="post">
+                    <form action="{{path('inscription_etudiants',{id:etudiant.id})}}" method="post">
                       <select style="margin-left:1%;" type="text" name="filiere" class="form-control" id="">
                         <option value="">Filiere</option>
                         {% for filiere in filieres %}

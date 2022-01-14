@@ -29,7 +29,7 @@
           <!-- /.col -->
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <a href="{{path('create')}}" class="info-box-icon bg-primary elevation-1"><i class="fas fa-plus"></i></a>
+              <a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fas fa-plus"></i></a>
 
               <div class="info-box-content">
                 <span class="info-box-text">Ajouter un </span>
@@ -43,20 +43,7 @@
 
           <!-- fix for small devices only -->
           <div class="clearfix hidden-md-up"></div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('ue')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-book"></i></a>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Inscrire un</span>
-                <span class="info-box-text">etudiant</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
+          
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-book"></i></span>
@@ -107,7 +94,7 @@
                   <tr>
                     <td>
                       <a class="btn btn-info" href="{{path('transfert_matiere',{id:inc1.id})}}">modifier <i class="fa fa-edit"></i></a>
-                      <a class="btn btn-warning" href="{{path('delete_matiere',{id:inc1.id})}}">supprimer <i class="fa fa-times"></i></a>
+                      <a class="btn btn-warning" href="{{path('suppression_matiere',{id:inc1.id})}}">supprimer <i class="fa fa-times"></i></a>
                     </td>
                       <td>{{inc1.matiere.nom}}</td>
                       <td>{{inc1.filiere.sigle}}</td>

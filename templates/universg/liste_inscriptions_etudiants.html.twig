@@ -29,7 +29,7 @@
           <!-- /.col -->
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <a href="{{path('create')}}" class="info-box-icon bg-primary elevation-1"><i class="fas fa-plus"></i></a>
+              <a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fas fa-plus"></i></a>
 
               <div class="info-box-content">
                 <span class="info-box-text">Ajouter un </span>
@@ -65,9 +65,9 @@
           <div class="col-md-12">
           <h5>Liste des inscriptions</h5>
               <table class="table table-bordered">
-                <div class="form-inline">
+                  <div class="form-inline">
                     <p>Trier par :
-                    <form action="{{path('etudiants_niveau')}}" method="post">
+                    <form action="{{path('liste_inscriptions_etudiants')}}" method="post">
                       <select type="text" name="filiere" class="form-control" id="">
                         <option value="">Filiere</option>
                         {% for inc1 in filieres %}
@@ -80,7 +80,38 @@
                         <option value="{{niveau.id}}">{{niveau.nom}}</option>
                         {% endfor %}
                       </select>
+                     
                       <button type="submit" class="btn btn-success">Valider</button>
+                    </form>
+                    
+                  </div>
+
+                  <div class="form-inline">
+                    <form action="{{path('liste_inscriptions_etudiants')}}" method="post">
+                        <div class="row">
+                        <p>Trier par filiere :
+                          {% for filiere in filieres  %}
+                            <div class="col">
+                              <label for="rd">{{filiere.sigle}} <input type="radio" value="{{filiere.id}}" name="rd" id="rd"></label>
+                            </div>
+                          {% endfor %}
+                        </div>
+                     
+                      {# <button type="submit" class="btn btn-success">Valider</button> #}
+                    
+                  </div>
+
+                  <div class="form-inline">
+                    <div class="row">
+                    Trier par niveau:
+                      {% for niveau in niveaux  %}
+                        <div class="col-md-5">
+                          <label for="ru">{{niveau.nom}} <input type="radio" value="{{niveau.id}}" name="ru" id="ru"></label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  
+                    {# <button type="submit" class="btn btn-success">Valider</button> #}
                     </form>
                     
                   </div>
