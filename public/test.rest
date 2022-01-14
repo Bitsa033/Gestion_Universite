@@ -1,0 +1,7 @@
+POST  https://127.0.0.1/api/create 
+
+{
+    "nom": "sample",
+    "prenom": "toto",
+    "sexe": "m"
+}
