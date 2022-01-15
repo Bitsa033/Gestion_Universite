@@ -1,7 +1,7 @@
-POST http://127.0.0.1:8000/api/create
+POST http://127.0.0.1:8000/api_create
 
 {
-    "nom": "sample",
-    "prenom": "toto",
+    "nom": "Britania",
+    "prenom": "jelal",
     "sexe": "m"
 }

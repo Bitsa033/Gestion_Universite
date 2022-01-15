@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Etudiant;
 use App\Repository\EtudiantRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Node\Stmt\Else_;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,9 +44,9 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("api/create", name="create")
+     * @Route("api_create", name="api_create")
      */
-    public function create(Request $request,ManagerRegistry $managerRegistry): Response
+    public function create_student(Request $request, ManagerRegistry $managerRegistry): Response
     {
         $donnee= json_decode($request->getContent());
         $etudiant = new Etudiant();
@@ -57,7 +58,27 @@ class ApiController extends AbstractController
         $manager->persist($etudiant);
         $manager->flush();
         return new Response('données crées',201);
-        //return $this->render('api/creation.html.twig');
+    }
+
+    /**
+     * @method('put)
+     * @Route("api/update/{id}", name="create")
+     */
+    /**
+     * @Route("api_update", name="api_update")
+     */
+    public function update_student(Request $request, ManagerRegistry $managerRegistry): Response
+    {
+        $donnee= json_decode($request->getContent());
+        $etudiant = new Etudiant();
+        $etudiant->setNom(strtoupper($donnee->nom));
+        $etudiant->setprenom(strtoupper($donnee->prenom));
+        $etudiant->setSexe(strtoupper($donnee->sexe));
+        $etudiant->setCreatedAt(new \DateTime());
+        $manager=$managerRegistry->getManager();
+        $manager->persist($etudiant);
+        $manager->flush();
+        return new Response('données crées',201);
     }
 
     
