@@ -61,24 +61,49 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @method('put)
-     * @Route("api/update/{id}", name="create")
+     * @Route("api_update/{id}", name="api_update")
      */
-    /**
-     * @Route("api_update", name="api_update")
-     */
-    public function update_student(Request $request, ManagerRegistry $managerRegistry): Response
+    public function update_student(?Etudiant $etudiant, Request $request, ManagerRegistry $managerRegistry): Response
     {
         $donnee= json_decode($request->getContent());
-        $etudiant = new Etudiant();
+        if (!$etudiant) {
+           
+            $etudiant = new Etudiant();
+            $etudiant->setNom(strtoupper($donnee->nom));
+            $etudiant->setprenom(strtoupper($donnee->prenom));
+            $etudiant->setSexe(strtoupper($donnee->sexe));
+        }
         $etudiant->setNom(strtoupper($donnee->nom));
         $etudiant->setprenom(strtoupper($donnee->prenom));
         $etudiant->setSexe(strtoupper($donnee->sexe));
-        $etudiant->setCreatedAt(new \DateTime());
+        if (!$etudiant->getId()) {
+           
+            $etudiant->setCreatedAt(new \DateTime());
+            $manager=$managerRegistry->getManager();
+            $manager->persist($etudiant);
+            $manager->flush();
+            return new Response('données crées',201);
+        }
         $manager=$managerRegistry->getManager();
         $manager->persist($etudiant);
         $manager->flush();
-        return new Response('données crées',201);
+        return new Response('données modifiées',200);
+    }
+
+    /**
+     * @Route("api_delete/{id}", name="api_delete")
+     */
+    public function delete_student(Etudiant $etudiant, Request $request, ManagerRegistry $managerRegistry): Response
+    {
+        
+        if (!$etudiant->getId()) {
+           
+            return new Response('erreur',500);
+        }
+        $manager=$managerRegistry->getManager();
+        $manager->remove($etudiant);
+        $manager->flush();
+        return new Response('données supprimées',200);
     }
 
     

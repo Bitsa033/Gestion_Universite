@@ -1,7 +1,7 @@
 POST http://127.0.0.1:8000/api_create
 
 {
-    "nom": "Britania",
-    "prenom": "jelal",
+    "nom": "boruto",
+    "prenom": "usumaki",
     "sexe": "m"
 }
