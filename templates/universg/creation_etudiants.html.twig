@@ -47,26 +47,42 @@
         </div>
         <!-- /.row -->
 
+        {# <div class="row">
+          <div class="col-md-4 offset-4">
+            <div class="card insert-filiere">
+            <div class="card-body">
+            <p>Nbre d'etudiants</p>
+            <form class="form-inline" action="{{path('creation_etudiants')}}" method="post">
+                <input style="width:100px;" value="{{nb_row}}" type="number" name="nb_row" class="form-control" min="1" max="5" id="">
+                <button style="width:100px;" type="submit" style="width:190px;" class="btn btn-success">Valider</button>
+            </form>
+            </div>
+            
+            </div>
+            
+          </div>
+          
+        </div> #}
+        <!-- /row-->
+         
         <div class="row">
-        
-        <div class="col-md-5 offset-4">
+          <div class="col-md-5 offset-4">
+           
             <div class="form-inline">
-
-                <div class="card insert-filiere">
-
+              <div class="card insert-filiere">
                 <div class="card-body">
                 <form action="{{path('creation_etudiants')}}" method="post">
-                    <div class="form-inline">
-                        <input type="text" name="nom_et" class="form-control" placeholder="nom" id="">
-                    </div>
-                    <br>
+                     <p>Nom  </p>
                     <div class="form-group">
-                        <input type="text" name="prenom_et" class="form-control" placeholder="prenom" id="">
+                        <input type="text" name="nom_et" class="form-control" id="">
                     </div>
-                    <br>
+                     <p>Prenom</p>
                     <div class="form-group">
-                        <select type="text" name="sexe_et" class="form-control" placeholder="sexe" style="width:205px;">
-                             <option value="">Sexe</option>
+                        <input type="text" name="prenom_et" class="form-control" id="">
+                    </div>
+                     <p>Sexe</p>
+                    <div class="form-group">
+                        <select type="text" name="sexe_et" class="form-control"  style="width:205px;">
                             <option value="M">Masculin</option>
                              <option value="F">Feminin</option>
                         </select>
@@ -78,13 +94,15 @@
                 </form>
                 </div>
                 
-                </div>
+              </div>
             
             </div>
             
           </div>
-          
+         
         </div>
+        <!-- /row-->
+        
         
     </section>
     <!-- /.content -->

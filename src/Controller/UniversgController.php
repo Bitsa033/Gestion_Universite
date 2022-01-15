@@ -39,8 +39,8 @@ class UniversgController extends AbstractController
         //insertion de la filiere si la request n'est pas vide
         if (!empty($request->request->get('nom_f')) && !empty($request->request->get('abbr_filiere'))) {
             $filiere=new Filiere();
-            $filiere->setNom($request->request->get('nom_f'));
-            $filiere->setSigle($request->request->get('abbr_filiere'));
+            $filiere->setNom(ucfirst($request->request->get('nom_f')));
+            $filiere->setSigle(strtoupper($request->request->get('abbr_filiere')));
             $filiere->setCreatedAt(new \datetime);
             $manager = $end->getManager();
             $manager->persist($filiere);
@@ -83,13 +83,13 @@ class UniversgController extends AbstractController
          //insertion du niveau si la request n'est pas vide
         if (!empty($request->request->get('nom_niv'))) {
             $niveau=new Niveau();
-            $niveau->setNom($request->request->get('nom_niv'));
+            $niveau->setNom(strtoupper($request->request->get('nom_niv')));
             $niveau->setCreatedAt(new \DateTime());
             $manager = $end->getManager();
             $manager->persist($niveau);
             $manager->flush();
 
-            return $this->redirectToRoute('niveau');
+            return $this->redirectToRoute('niveaux');
         } 
           //affiche des niveaux
         $repos=$this->getDoctrine()->getRepository(Niveau::class);
@@ -135,15 +135,27 @@ class UniversgController extends AbstractController
      */
     public function creation_etudiants (Request $request,ManagerRegistry $end_e)
     {
-         //insertion de l'etudiant si la request n'est pas vide
+        $nb_row=1;
+        if (!empty($request->request->get('nb_row'))) {
+            $request->query->set('nb_row',$request->request->get('nb_row'));
+           // return new Response($request->query->get('nb_row'));
+            $nb_row = $request->query->get('nb_row');
+        }
+
+        // for ($i=1; $i <$nb_row ; $i++) { 
+          
+        // }
+        // $request->query->set('nb_row',1);
+        // return new Response($request->query->get('nb_row'));
+        //insertion de l'etudiant si la request n'est pas vide
        if (!empty($request->request->get('nom_et')) && 
        !empty($request->request->get('prenom_et')) &&
        !empty($request->request->get('sexe_et'))) {
-           //on enregistre l'etudiant
+            //on enregistre l'etudiant
           $etudiant=new Etudiant();
-          $etudiant->setNom($request->request->get("nom_et"));
-          $etudiant->setprenom($request->request->get("prenom_et"));
-          $etudiant->setSexe($request->request->get("sexe_et"));
+          $etudiant->setNom(strtoupper($request->request->get("nom_et")));
+          $etudiant->setprenom(ucfirst($request->request->get("prenom_et")));
+          $etudiant->setSexe(strtoupper($request->request->get("sexe_et")));
           $etudiant->setCreatedAt(new \DateTime());
           $manager = $end_e->getManager();
           $manager->persist($etudiant);
@@ -152,7 +164,8 @@ class UniversgController extends AbstractController
           return $this->redirectToRoute('etudiants');
        }
         return $this->render('universg/creation_etudiants.html.twig', [
-            'controller_name' => 'UniversgController'
+            'controller_name' => 'UniversgController',
+            'nb_row'=>$nb_row
         ]);
     }
 
@@ -241,11 +254,45 @@ class UniversgController extends AbstractController
     }
 
     /**
+     * Inscription des etudiants
+     * @Route("noter_etudiant/{id}", name="noter_etudiant")
+     */
+    public function noter_etudiants(Inscription $student, Request $request,ManagerRegistry $end_e )
+        {
+        if (!empty($request->request->get('niveau'))) {
+    
+            $niveau = $this->getDoctrine()->getRepository(Niveau::class)->find($request->request->get("niveau"));
+            $filiere = $this->getDoctrine()->getRepository(Filiere::class)->find($request->request->get("filiere"));
+
+            // $inscription=new Inscription();
+            // $inscription->setEtudiant($student);
+            // $inscription->setFiliere($filiere);
+            // $inscription->setNiveau($niveau);
+            // $inscription->setCreatedAt(new \DateTime());
+            //$manager=$mg->getManager();
+            // $manager = $end_e->getManager();
+            // $manager->persist($inscription);
+            // $manager->flush();
+
+            return $this->redirectToRoute('liste_inscriptions_etudiants');
+        }
+
+        $matieres = $this->getDoctrine()->getRepository(Matiere::class)->findAll();
+        $etudiants = $this->getDoctrine()->getRepository(Etudiant::class)->findAll();
+        $filieres = $this->getDoctrine()->getRepository(Filiere::class)->findAll();
+        return $this->render('universg/noter_etudiant.html.twig', [
+            'controller_name' => 'UniversgController',
+            'matieres'=>$matieres,
+            'etudiants'=>$etudiants,
+            'inscription'=>$student
+        ]);
+    }
+
+    /**
      * @Route("matieres", name="matieres")
      */
     public function matieres (Request $request, ManagerRegistry $end)
     {
-        
         if (!empty($request->request->get('nom_mat'))) {
             $matiere=new Matiere();
             $matiere->setNom($request->request->get('nom_mat'));
@@ -258,10 +305,33 @@ class UniversgController extends AbstractController
         } 
 
         $repos=$this->getDoctrine()->getRepository(Matiere::class);
-        $matiere = $repos->findAll();
+        $matieres = $repos->findAll();
         return $this->render('universg/matieres.html.twig', [
             'controller_name' => 'UniversgController',
-            'matieres'=>$matiere
+            'matieres'=>$matieres
+        ]);
+    }
+
+    /**
+     * @Route("matiere_edit/{id}", name="matiere_edit")
+     */
+    public function matiere_edit (Matiere $matiere, Request $request, ManagerRegistry $end)
+    {
+        if (!empty($request->request->get('nom_mat'))) {
+            $matiere->setNom($request->request->get('nom_mat'));
+            $matiere->setCreatedAt(new \DateTime());
+            $manager = $end->getManager();
+            $manager->flush();
+
+            return $this->redirectToRoute('matieres');
+        } 
+
+        $repos=$this->getDoctrine()->getRepository(Matiere::class);
+        $matieres = $repos->findAll();
+        return $this->render('universg/matiere_edit.html.twig', [
+            'controller_name' => 'UniversgController',
+            'matieres'=>$matieres,
+            'matiere'=>$matiere
         ]);
     }
 

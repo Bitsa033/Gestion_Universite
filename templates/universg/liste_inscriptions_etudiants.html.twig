@@ -86,48 +86,19 @@
                     
                   </div>
 
-                  <div class="form-inline">
-                    <form action="{{path('liste_inscriptions_etudiants')}}" method="post">
-                        <div class="row">
-                        <p>Trier par filiere :
-                          {% for filiere in filieres  %}
-                            <div class="col">
-                              <label for="rd">{{filiere.sigle}} <input type="radio" value="{{filiere.id}}" name="rd" id="rd"></label>
-                            </div>
-                          {% endfor %}
-                        </div>
-                     
-                      {# <button type="submit" class="btn btn-success">Valider</button> #}
-                    
-                  </div>
-
-                  <div class="form-inline">
-                    <div class="row">
-                    Trier par niveau:
-                      {% for niveau in niveaux  %}
-                        <div class="col-md-5">
-                          <label for="ru">{{niveau.nom}} <input type="radio" value="{{niveau.id}}" name="ru" id="ru"></label>
-                        </div>
-                      {% endfor %}
-                    </div>
-                  
-                    {# <button type="submit" class="btn btn-success">Valider</button> #}
-                    </form>
-                    
-                  </div>
-              
                   <tr>
-                      <th>Date</th>
+                      <th>Action</th>
                       <th>Nom</th>
-                      <th>Prenom</th>
+                    
                       <th>Niveau</th>
                       <th>Filiere</th>
                   </tr>
                   {% for inc1 in recherche %}
                   <tr>
-                      <td>{{inc1.createdAt|date("d/m/Y")}}</td>
-                      <td>{{inc1.etudiant.nom}}</td>
-                      <td>{{inc1.etudiant.prenom}}</td>
+                      <td>
+                        <a class="btn btn-info" href="{{path('noter_etudiant',{id:inc1.id})}}">Noter</a>
+                      </td>
+                      <td>{{inc1.etudiant.nom}}  {{inc1.etudiant.prenom}}</td>
                       <td>{{inc1.niveau.nom}}</td>
                       <td>{{inc1.filiere.sigle}}</td>
                   </tr>

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/layout.html.twig' %}
 
 {% block title %}UniversgController!{% endblock %}
 
@@ -80,7 +80,7 @@
 
                 <div class="card-body">
                   <form action="" method="post">
-                      <input type="text" name="nom_mat" class="form-control" placeholder="Nom de la matiere" id="">
+                      <input type="text" name="nom_mat" value="{{matiere.nom}}" class="form-control" id="">
                       <button type="submit" class="btn btn-success">Valider</button>
                   </form>
                 </div>
@@ -104,7 +104,7 @@
                   <td>{{matiere.nom}}</td>
                   <td>
                     <a class="btn btn-info" href="{{path('transfert_matiere',{id:matiere.id})}}">transferer</a>
-                    <a class="btn btn-warning" href="{{path('matiere_edit',{id:matiere.id})}}">modifier</a>
+                    <a class="btn btn-warning" href="{{path('transfert_matiere',{id:matiere.id})}}">modifier</a>
                     <a class="btn btn-info" href="{{path('suppression_matiere',{id:matiere.id})}}">consulter <i class="fa fa-book"></i></a>
                     <a class="btn btn-warning" href="{{path('suppression_matiere',{id:matiere.id})}}">supprimer <i class="fa fa-times"></i></a>
                   </td>
