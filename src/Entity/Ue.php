@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,16 @@ class Ue
      * @ORM\ManyToOne(targetEntity=Matiere::class, inversedBy="ues")
      */
     private $matiere;
+
+    /**
+     * @ORM\OneToMany(targetEntity=NotesEtudiant::class, mappedBy="Ue")
+     */
+    private $notesEtudiants;
+
+    public function __construct()
+    {
+        $this->notesEtudiants = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +98,36 @@ class Ue
     public function setMatiere(?Matiere $matiere): self
     {
         $this->matiere = $matiere;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|NotesEtudiant[]
+     */
+    public function getNotesEtudiants(): Collection
+    {
+        return $this->notesEtudiants;
+    }
+
+    public function addNotesEtudiant(NotesEtudiant $notesEtudiant): self
+    {
+        if (!$this->notesEtudiants->contains($notesEtudiant)) {
+            $this->notesEtudiants[] = $notesEtudiant;
+            $notesEtudiant->setUe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotesEtudiant(NotesEtudiant $notesEtudiant): self
+    {
+        if ($this->notesEtudiants->removeElement($notesEtudiant)) {
+            // set the owning side to null (unless already changed)
+            if ($notesEtudiant->getUe() === $this) {
+                $notesEtudiant->setUe(null);
+            }
+        }
 
         return $this;
     }

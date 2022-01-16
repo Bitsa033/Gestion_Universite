@@ -29,6 +29,22 @@ class InscriptionRepository extends ServiceEntityRepository
         return $query->execute();
         
     }
+    
+    /** on affiche tous les etudiants qui font parti de la meme filiere 
+    * et niveau
+    */
+    public function searchStudentsAsFiliereNiveau(Inscription $inscription)
+    {
+        $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val1')->andWhere('i.filiere = :val2')
+            ->andWhere('i.id != :val3')
+            ->setParameter('val1', $inscription->getNiveau())->setParameter('val2', $inscription->getFiliere())
+            ->setParameter('val3', $inscription->getId())
+            ->orderBy('i.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
+    }
 
     // /**
     //  * @return Inscription[] Returns an array of Inscription objects

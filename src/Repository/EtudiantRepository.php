@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Etudiant;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Etudiant|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,6 +18,28 @@ class EtudiantRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Etudiant::class);
     }
+
+    public function searchStudentsNotRegister(Etudiant $etudiant)
+    {
+        $a= $this->createQueryBuilder('e') ->andWhere('e.id != :val1')
+            ->setParameter('val1', $etudiant->getId())
+            ->orderBy('e.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
+    }
+
+    // public function searchAllStudentsNotRegister(InscriptionRepository $inscriptionRepository)
+    // {
+    //     $a= $this->createQueryBuilder('e') ->andWhere('e.id != :val1')
+    //         ->setParameter('val1', $inscriptionRepository->find('id'))
+    //         ->orderBy('e.id', 'ASC');
+    //     $query=$a->getQuery();
+
+    //     return $query->execute();
+        
+    // }
 
     // public function search($value)
     // {

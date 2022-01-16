@@ -13,13 +13,12 @@
         <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">CPU Traffic</span>
+                <span class="info-box-text">Nb inscriptions</span>
                 <span class="info-box-number">
-                  10
-                  <small>%</small>
+                  {{inscriptions|length}}
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -28,12 +27,14 @@
           </div>
           <!-- /.col -->
           <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-book"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Likes</span>
-                <span class="info-box-number">41,410</span>
+                <span class="info-box-text">Nb filieres</span>
+                <span class="info-box-number">
+                  {{filieres|length}}
+                </span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -41,29 +42,31 @@
           </div>
           <!-- /.col -->
 
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
-
           <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-table"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Sales</span>
-                <span class="info-box-number">760</span>
+                <span class="info-box-text">Nb niveaux</span>
+                <span class="info-box-number">
+                  {{niveaux|length}}
+                </span>
               </div>
               <!-- /.info-box-content -->
             </div>
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
+
           <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-pen"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">New Members</span>
-                <span class="info-box-number">2,000</span>
+                <span class="info-box-text">Nb matieres</span>
+                <span class="info-box-number">
+                  {{matieres|length}}
+                </span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -72,6 +75,40 @@
           <!-- /.col -->
         </div>
         <!-- /.row -->
+
+        <div class="row">
+          <div class="col-md-12">
+          <h5>Liste des inscriptions</h5>
+              <table class="table table-bordered">
+
+                  <tr>
+                      <th>Action</th>
+                      <th>Nom</th>
+                    
+                      <th>Niveau</th>
+                      <th>Filiere</th>
+                  </tr>
+                  {% for inc1 in inscriptions %}
+                  <tr>
+                      <td>
+                        <a class="btn btn-info" href="{{path('ajout_notes',{id:inc1.id})}}">Noter</a>
+                      </td>
+                      <td>{{inc1.etudiant.nom}}  {{inc1.etudiant.prenom}}</td>
+                      <td>{{inc1.niveau.nom}}</td>
+                      <td>{{inc1.filiere.sigle}}</td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="5">Désolé, aucun etudiant n'est inscrit !</td>
+                  </tr>
+                  {% endfor %}
+
+              
+              </table>
+          </div>
+          <!-- col -->
+        </div>
+        <!-- row -->
         
 
 

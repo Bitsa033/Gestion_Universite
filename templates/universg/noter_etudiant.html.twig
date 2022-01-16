@@ -63,7 +63,7 @@
         </div>
         <!-- /.row -->
         <div class="row">
-          <div class="col-md-6 offset-2">
+          <div class="col-md-6 offset-4">
           <table class="table">
             <tr>
               <th>Notes</th>
@@ -73,9 +73,31 @@
         </div>
         <!-- /row-->
 
+        <!-- on affiche tous  les etudiants
+        qui font parti de la meme filiere et niveau de cet etudiant -->
+
         <div class="row">
+          <div class="col-md-4">
+            <table class="table table-bordered">
+
+                <tr>
+                    <th>Action</th>
+                    <th>Nom</th>
+                </tr>
+                {% for ss in searchStudent %}
+                  
+                <tr>
+                    <td>
+                     <a class="btn btn-info" href="{{path('ajout_notes',{id:ss.id})}}">Noter</a>
+                    </td>
+                    <td>{{ss.etudiant.nom}} {{ss.etudiant.prenom}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+          </div>
+          <!-- col -->
         
-          <div class="col-md-6 offset-2">
+          <div class="col-md-6">
             <table class="table table-bordered">
 
                 <tr>
@@ -89,28 +111,21 @@
                      <td>{{inscription.niveau.nom}}</td>
                 </tr>
             </table>
-          </div>
-          <!-- col -->
-        
-        </div>
-        <!-- ./row -->
 
-          <div class="row">
-            <div class="col-md-6 offset-2">
-              <div class="form-group">
+            <div class="form-group">
                 <div class="card insert-filiere">
                   <div class="card-body">
                   
-                    <form action="{{path('inscription_etudiants',{id:inscription.id})}}" method="post">
-                      <select style="margin-left:1%;" type="text" name="filiere" class="form-control" id="">
+                    <form action="{{path('ajout_notes',{id:inscription.id})}}" method="post">
+                      <select style="margin-left:1%;" type="text" name="ue" class="form-control" id="">
                         <option value="">Matiere</option>
                         {% for matiere in matieres %}
-                        <option value="{{matiere.id}}">{{matiere.nom}}</option>
+                        <option value="{{matiere.id}}">{{matiere.matiere.nom}}</option>
                         {% endfor %}
                       </select>
                       <br>
 
-                      <input style="margin-left:1%;" type="number" name="note" class="form-control" placeholder="Note sur 20" id="">
+                      <input style="margin-left:1%;" type="number" name="moyenne" class="form-control" placeholder="Note sur 20" id="">
                       <br>
                      <button type="submit" class="btn btn-success form-control">Valider</button>
                     <form>
@@ -118,10 +133,11 @@
                 
                 </div>
               </div>
-              <!--/col--> 
-            </div>
           </div>
-          <!-- /row -->
+          <!-- col -->
+        
+        </div>
+        <!-- ./row -->
         
     </section>
     <!-- /.content -->

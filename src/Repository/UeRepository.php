@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Inscription;
 use App\Entity\Ue;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,6 +25,16 @@ class UeRepository extends ServiceEntityRepository
         $a= $this->createQueryBuilder('u') ->andWhere('u.niveau = :val1')->andWhere('u.filiere = :val2')
             ->setParameter('val1', $niveau)->setParameter('val2', $filiere)
             ->orderBy('u.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
+    }
+
+    public function ueFiliereNiveau(Inscription $inscription)
+    {
+        $a= $this->createQueryBuilder('u') ->andWhere('u.niveau = :val1')->andWhere('u.filiere = :val2')
+            ->setParameter('val1', $inscription->getNiveau())->setParameter('val2', $inscription->getFiliere());
         $query=$a->getQuery();
 
         return $query->execute();

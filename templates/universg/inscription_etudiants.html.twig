@@ -11,26 +11,11 @@
       <div class="container-fluid">
         <!-- Info boxes -->
         <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Nb etudiants</span>
-                <span class="info-box-number">
-                  <strong>30</strong>
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
           
           <!-- fix for small devices only -->
           <div class="clearfix hidden-md-up"></div>
 
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-6 col-md-3 offset-4">
             <div class="info-box mb-3">
               <a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
 
@@ -63,7 +48,7 @@
         </div>
         <!-- /.row -->
         <div class="row">
-          <div class="col-md-6 offset-2">
+          <div class="col-md-6 offset-4">
           <table class="table">
             <tr>
               <th>Inscription</th>
@@ -74,8 +59,33 @@
         <!-- /row-->
 
         <div class="row">
-        
-          <div class="col-md-6 offset-2">
+
+          <!-- on affiche tous les etudiants à inscrire -->
+          <div class="col-md-4">
+            <table class="table table-bordered">
+
+                <tr>
+                  <th>Action</th>
+                  <th>Nom</th>
+                </tr>
+                {% for et in etudiants %}
+                  
+                <tr>
+                  <td>
+                     <a class="btn btn-info" href="{{path('inscription_etudiants',{id:et.id})}}">Inscrire</a>
+                  </td>
+                  <td>{{et.nom}}  {{et.prenom}}</td>
+                </tr>
+                {% else %}
+                  <tr>
+                  <td colspan=2> Aucun recent etudiant enregistré !</td>
+                  </tr>
+                {% endfor %}
+
+            </table>
+          </div>
+          <!-- col -->
+          <div class="col-md-6">
             <table class="table table-bordered">
 
                 <tr>
@@ -89,17 +99,8 @@
                      <td>{{etudiant.sexe}}</td>
                 </tr>
             </table>
-          </div>
-          <!-- col -->
-        
-        </div>
-        <!-- ./row -->
 
-          <div class="row">
-            <div class="col-md-6 offset-2">
-              <div class="form-group">
-                <div class="card insert-filiere">
-                  <div class="card-body">
+            <div class="card-body">
                   
                     <form action="{{path('inscription_etudiants',{id:etudiant.id})}}" method="post">
                       <select style="margin-left:1%;" type="text" name="filiere" class="form-control" id="">
@@ -120,13 +121,11 @@
                      <button type="submit" class="btn btn-success form-control">Valider</button>
                     <form>
                   </div>  
-                
-                </div>
-              </div>
-              <!--/col--> 
-            </div>
           </div>
-          <!-- /row -->
+          <!-- col -->
+        
+        </div>
+        <!-- ./row -->
         
     </section>
     <!-- /.content -->

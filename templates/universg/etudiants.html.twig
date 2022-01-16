@@ -13,12 +13,12 @@
         <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Nb etudiants</span>
                 <span class="info-box-number">
-                  <strong>350</strong>
+                {{etudiants|length}}
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -63,21 +63,9 @@
         <div class="row">
           <div class="col-md-12">
               <table class="table table-bordered">
-              {# <div class="form-inline">
-                  <p>Trier par :
-                  <form action="{{path('etudiant')}}" method="post">
-                    <select type="text" name="filiere" class="form-control" id="">
-                      <option value="">Filiere</option>
-                      {% for filiere in filieres %}
-                      <option value="{{filiere.id}}">{{filiere.sigle}}</option>
-                      {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-success">Valider</button>
-                  </form>
-                  
-              </div> #}
 
-              </p>
+                </p>
+             
                   <tr>
                       <th>ID</th>
                       <th>Action</th>
@@ -99,7 +87,7 @@
                   </tr>
                   {% else %}
                   <tr>
-                    <td colspan="5">Désolé, ce tableau est vide pour le moment !</td>
+                    <td colspan="5">Aucun étudiant récent n' a été enregistré !</td>
                   </tr>
                   {% endfor %}
               
