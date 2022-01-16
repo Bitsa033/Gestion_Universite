@@ -1,0 +1,53 @@
+<title> Register</title>
+
+<link rel="stylesheet" href="template/dist/css/adminlte.min.css">
+
+<style>
+    .card-body{
+        background:gray;
+         position:relative ;
+          top:55px;
+    }
+    .card-header{
+      position: relative;
+      top: 55px;
+    }
+</style>
+
+{% form_theme registrationForm 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+
+    {{ form_start(registrationForm) }}
+        
+        <div class="col-md-5 offset-3">
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class=" mb-3 font-weight-normal">Enregistrez-vous <strong>ou</strong> 
+                    <a href="{{path('app_login')}}">Connectez-vous</a>
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                
+                    {{ form_row(registrationForm.email) }}
+                    
+                    {{ form_row(registrationForm.plainPassword, {
+                        label: 'Password'
+                    }) }}
+                    
+                    {{ form_row(registrationForm.agreeTerms) }}
+                    
+                    <button type="submit" class="btn btn-success">Creer mon compte</button>
+                </div>
+                <!-- /card-body -->
+            
+            </div>
+            <!-- /card -->
+        
+        </div>
+        <!-- /col-->
+        
+    {{ form_end(registrationForm) }}
+{% endblock %}
