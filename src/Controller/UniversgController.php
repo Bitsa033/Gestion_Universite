@@ -40,9 +40,9 @@ class UniversgController extends AbstractController
         return $this->render('universg/index.html.twig', [
             'controller_name' => 'UniversgController',
             'inscriptions'=>$inscriptionRepository->studentsUser($user),
-            'filieres'=>$filiereRepository->findAll(),
-            'niveaux'=>$NiveauRepository->findAll(),
-            'matieres'=>$matiereRepository->findAll()
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'niveaux'=>$NiveauRepository->niveauxUser($user),
+            'matieres'=>$matiereRepository->matieresUser($user)
         ]);
     }
 
@@ -271,7 +271,7 @@ class UniversgController extends AbstractController
      * Inscription des etudiants
      * @Route("etudiants/inscription/{id}", name="inscription_etudiants")
      */
-    public function inscription_etudiants(Etudiant $student, EtudiantRepository $etudiantRepository, Request $request,ManagerRegistry $end_e )
+    public function inscription_etudiants(Etudiant $student, EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,ManagerRegistry $end_e )
         {
 
         //on cherche l'utilisateur connecté
@@ -305,12 +305,11 @@ class UniversgController extends AbstractController
         }
 
         $niveaux = $this->getDoctrine()->getRepository(Niveau::class)->findAll();
-        $filieres = $this->getDoctrine()->getRepository(Filiere::class)->findAll();
         return $this->render('universg/inscription_etudiants.html.twig', [
             'controller_name' => 'UniversgController',
-            'niveaux'=>$niveaux,
-            'filieres'=>$filieres,
-            'etudiants'=>$etudiantRepository->findAll(),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'etudiants'=>$etudiantRepository->etudiantsUserNotInGet($user,$student),
             'etudiant'=>$student
         ]);
     }
@@ -318,7 +317,7 @@ class UniversgController extends AbstractController
     /**
      * @Route("etudiants/inscriptions/liste", name="liste_inscriptions_etudiants")
      */
-    public function liste_inscriptions_etudiants(Request $request, InscriptionRepository $repo)
+    public function liste_inscriptions_etudiants( FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request, InscriptionRepository $repo)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -330,14 +329,12 @@ class UniversgController extends AbstractController
 
         //sinon on consulte les données
         $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
-        $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
-        $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
         $search=$repo->search($request->request->get('niveau'),$request->request->get('filiere'));
         return $this->render('universg/liste_inscriptions_etudiants.html.twig', [
             'controller_name' => 'UniversgController',
             'ues'=>$repostn,
-            'filieres'=>$filieres,
-            'niveaux'=>$niveaux,
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
             'recherche'=>$search
         ]);
     }
@@ -432,7 +429,7 @@ class UniversgController extends AbstractController
      * Affectation des matieres à des filieres et niveaux
      * @Route("matiere/transfert/{id}", name="transfert_matiere")
      */
-    public function transfert_matiere (Request $request, ManagerRegistry $end, Matiere $matiere)
+    public function transfert_matiere (FiliereRepository $filiereRepository, NiveauRepository $niveauRepository ,Request $request, ManagerRegistry $end, Matiere $matiere)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -444,7 +441,7 @@ class UniversgController extends AbstractController
 
         //sinon on insert les données
         if (!empty($request->request->get('niveau'))) {
-            $filiere=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
+            $filiere=$filiereRepository->filieresUser($user);
             $niveau=$this->getDoctrine()->getRepository(Niveau::class)->find($request->request->get('niveau'));
 
             foreach ($filiere as $filiere2) {
@@ -463,13 +460,12 @@ class UniversgController extends AbstractController
   
             return $this->redirectToRoute('ue');
         } 
-        $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
-        $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
+       
         return $this->render('universg/transfert_matiere.html.twig', [
             'controller_name' => 'UniversgController',
-            'filieres'=>$filieres,
+            'filieres'=>$filiereRepository->filieresUser($user),
             'matiere'=>$matiere,
-            'niveaux'=>$niveaux
+            'niveaux'=>$niveauRepository->niveauxUser($user),
         ]);
     }
 
@@ -477,7 +473,7 @@ class UniversgController extends AbstractController
      * Affichage des unites d'enseignement
      * @Route("ue", name="ue")
      */
-    public function ue (Request $request, UeRepository $repo)
+    public function ue (FiliereRepository $filiereRepository,NiveauRepository $niveauRepository ,Request $request, UeRepository $repo)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -489,16 +485,36 @@ class UniversgController extends AbstractController
 
         //sinon on consulte les données
         $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
-        $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
-        $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
         $search=$repo->search($request->request->get('niveau'),$request->request->get('filiere'));
         return $this->render('universg/ue.html.twig', [
             'controller_name' => 'UniversgController',
             'ues'=>$repostn,
-            'filieres'=>$filieres,
-            'niveaux'=>$niveaux,
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
             'recherche'=>$search
         ]);
+    }
+
+
+    /**
+     * @Route("ue/suppression/{id}", name="suppression_ue")
+     */
+    public function suppression_ue(Ue $ue, ManagerRegistry $end)
+    {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+        //sinon on supprime les données
+        $manager = $end->getManager();
+        $manager->remove($ue);
+        $manager->flush();
+
+        return $this->redirectToRoute('ue');
+        
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\Etudiant;
+use App\Repository\InscriptionRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -31,16 +32,16 @@ class EtudiantRepository extends ServiceEntityRepository
         
     }
 
-    // public function searchAllStudentsNotRegister(InscriptionRepository $inscriptionRepository)
-    // {
-    //     $a= $this->createQueryBuilder('e') ->andWhere('e.id != :val1')
-    //         ->setParameter('val1', $inscriptionRepository->find('id'))
-    //         ->orderBy('e.id', 'ASC');
-    //     $query=$a->getQuery();
+    public function etudiantsUserNotInGet(User $user, Etudiant $etudiant)
+    {
+        $a= $this->createQueryBuilder('e') ->andWhere('e.user = :val1') ->andWhere('e.id != :val2')
+        ->setParameter('val1', $user)->setParameter('val2', $etudiant->getId())
+        ->orderBy('e.id', 'ASC');
+        $query=$a->getQuery();
 
-    //     return $query->execute();
+        return $query->execute();
         
-    // }
+    }
 
     // public function search($value)
     // {
