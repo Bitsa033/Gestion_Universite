@@ -28,9 +28,18 @@ class UniversgController extends AbstractController
      */
     public function index(InscriptionRepository $inscriptionRepository, FiliereRepository $filiereRepository, NiveauRepository $NiveauRepository, MatiereRepository $matiereRepository) : Response
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on consulte les données
         return $this->render('universg/index.html.twig', [
             'controller_name' => 'UniversgController',
-            'inscriptions'=>$inscriptionRepository->findAll(),
+            'inscriptions'=>$inscriptionRepository->studentsUser($user),
             'filieres'=>$filiereRepository->findAll(),
             'niveaux'=>$NiveauRepository->findAll(),
             'matieres'=>$matiereRepository->findAll()
@@ -43,9 +52,18 @@ class UniversgController extends AbstractController
      */
     public function filiere(FiliereRepository $filiereRepository,Request $request, ManagerRegistry $end)
     {
-        //insertion de la filiere si la request n'est pas vide
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on insert les données
         if (!empty($request->request->get('nom_f')) && !empty($request->request->get('abbr_filiere'))) {
             $filiere=new Filiere();
+            $filiere->setUser($user);
             $filiere->setNom(ucfirst($request->request->get('nom_f')));
             $filiere->setSigle(strtoupper($request->request->get('abbr_filiere')));
             $filiere->setCreatedAt(new \datetime);
@@ -55,13 +73,11 @@ class UniversgController extends AbstractController
 
             return $this->redirectToRoute('filieres');
         } 
-         //affiche des filieres
-        $repos=$this->getDoctrine()->getRepository(Filiere::class);
-        $filieres = $repos->findAll();
+         
         return $this->render('universg/filieres.html.twig', [
             'controller_name' => 'UniversgController',
-            'filieres'=>$filieres,
-            'filieresNb'=>$filiereRepository->findAll(),
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'filieresNb'=>$filiereRepository->findAll()
         ]);
     }
 
@@ -71,6 +87,15 @@ class UniversgController extends AbstractController
      */
     public function suppression_filiere (Filiere $filiere, ManagerRegistry $end)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on supprime les données
         $manager = $end->getManager();
         $manager->remove($filiere);
         $manager->flush();
@@ -88,9 +113,17 @@ class UniversgController extends AbstractController
      */
     public function niveau (NiveauRepository $niveauRepository,Request $request, ManagerRegistry $end)
     {
-         //insertion du niveau si la request n'est pas vide
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+        //sinon on insert les données
         if (!empty($request->request->get('nom_niv'))) {
             $niveau=new Niveau();
+            $niveau->setUser($user);
             $niveau->setNom(strtoupper($request->request->get('nom_niv')));
             $niveau->setCreatedAt(new \DateTime());
             $manager = $end->getManager();
@@ -99,12 +132,10 @@ class UniversgController extends AbstractController
 
             return $this->redirectToRoute('niveaux');
         } 
-          //affiche des niveaux
-        $repos=$this->getDoctrine()->getRepository(Niveau::class);
-        $niveaux = $repos->findAll();
+        
         return $this->render('universg/niveaux.html.twig', [
             'controller_name' => 'UniversgController',
-            'niveaux'=>$niveaux,
+            'niveaux'=>$niveauRepository->niveauxUser($user),
             'niveauxsNb'=>$niveauRepository->findAll(),
         ]);
     }
@@ -115,6 +146,15 @@ class UniversgController extends AbstractController
      */
     public function suppression_niveau (Niveau $niveau, ManagerRegistry $end)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on supprime les données
         $manager = $end->getManager();
         $manager->remove($niveau);
         $manager->flush();
@@ -131,6 +171,15 @@ class UniversgController extends AbstractController
      */
     public function consultation_niveau(Niveau $niveau)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on consulte les données
         //affichage d'un niveau particulier
         return $this->render('universg/consultation_niveau.html.twig', [
             'controller_name' => 'UniversgController',
@@ -144,37 +193,34 @@ class UniversgController extends AbstractController
      */
     public function creation_etudiants (Request $request,ManagerRegistry $end_e)
     {
-        $nb_row=1;
-        if (!empty($request->request->get('nb_row'))) {
-            $request->query->set('nb_row',$request->request->get('nb_row'));
-           // return new Response($request->query->get('nb_row'));
-            $nb_row = $request->query->get('nb_row');
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
         }
 
-        // for ($i=1; $i <$nb_row ; $i++) { 
-          
-        // }
-        // $request->query->set('nb_row',1);
-        // return new Response($request->query->get('nb_row'));
-        //insertion de l'etudiant si la request n'est pas vide
-       if (!empty($request->request->get('nom_et')) && 
-       !empty($request->request->get('prenom_et')) &&
-       !empty($request->request->get('sexe_et'))) {
-            //on enregistre l'etudiant
-          $etudiant=new Etudiant();
-          $etudiant->setNom(strtoupper($request->request->get("nom_et")));
-          $etudiant->setprenom(ucfirst($request->request->get("prenom_et")));
-          $etudiant->setSexe(strtoupper($request->request->get("sexe_et")));
-          $etudiant->setCreatedAt(new \DateTime());
-          $manager = $end_e->getManager();
-          $manager->persist($etudiant);
-          $manager->flush();
+        //sinon on insert les données
 
-          return $this->redirectToRoute('etudiants');
+       if (!empty($request->request->get('nom_et')) && 
+                !empty($request->request->get('prenom_et')) &&
+                !empty($request->request->get('sexe_et'))) {
+                //on enregistre l'etudiant
+                $etudiant=new Etudiant();
+                $etudiant->setUser($user);
+                $etudiant->setNom(strtoupper($request->request->get("nom_et")));
+                $etudiant->setprenom(ucfirst($request->request->get("prenom_et")));
+                $etudiant->setSexe(strtoupper($request->request->get("sexe_et")));
+                $etudiant->setCreatedAt(new \DateTime());
+                $manager = $end_e->getManager();
+                $manager->persist($etudiant);
+                $manager->flush();
+
+            return $this->redirectToRoute('etudiants');
        }
         return $this->render('universg/creation_etudiants.html.twig', [
-            'controller_name' => 'UniversgController',
-            'nb_row'=>$nb_row
+            'controller_name' => 'UniversgController'
         ]);
     }
 
@@ -184,9 +230,17 @@ class UniversgController extends AbstractController
      */
     public function etudiants (EtudiantRepository $etudiantRepository)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+        //sinon on consulte les données
         return $this->render('universg/etudiants.html.twig', [
             'controller_name' => 'UniversgController',
-            'etudiants'=>$etudiantRepository->findAll()
+            'etudiants'=>$etudiantRepository->etudiantsUser($user)
         ]);
     }
     
@@ -196,15 +250,21 @@ class UniversgController extends AbstractController
      */
     public function suppression_etudiant (Etudiant $etudiant, ManagerRegistry $end)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on supprime les données
         $manager = $end->getManager();
         $manager->remove($etudiant);
         $manager->flush();
 
         return $this->redirectToRoute('etudiants');
         
-        // return $this->render('universg/etudiants.html.twig', [
-        //     'controller_name' => 'UniversgController'
-        // ]);
     }
 
     /**
@@ -213,12 +273,23 @@ class UniversgController extends AbstractController
      */
     public function inscription_etudiants(Etudiant $student, EtudiantRepository $etudiantRepository, Request $request,ManagerRegistry $end_e )
         {
+
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on insert les données
         if (!empty($request->request->get('niveau'))) {
     
             $niveau = $this->getDoctrine()->getRepository(Niveau::class)->find($request->request->get("niveau"));
             $filiere = $this->getDoctrine()->getRepository(Filiere::class)->find($request->request->get("filiere"));
 
             $inscription=new Inscription();
+            $inscription->setUser($user);
             $inscription->setEtudiant($student);
             $inscription->setFiliere($filiere);
             $inscription->setNiveau($niveau);
@@ -239,7 +310,7 @@ class UniversgController extends AbstractController
             'controller_name' => 'UniversgController',
             'niveaux'=>$niveaux,
             'filieres'=>$filieres,
-            'etudiants'=>$etudiantRepository->searchStudentsNotRegister($student),
+            'etudiants'=>$etudiantRepository->findAll(),
             'etudiant'=>$student
         ]);
     }
@@ -249,6 +320,15 @@ class UniversgController extends AbstractController
      */
     public function liste_inscriptions_etudiants(Request $request, InscriptionRepository $repo)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on consulte les données
         $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
         $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
         $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
@@ -265,10 +345,20 @@ class UniversgController extends AbstractController
     /**
      * @Route("matieres", name="matieres")
      */
-    public function matieres (Request $request, ManagerRegistry $end)
+    public function matieres (MatiereRepository $matiereRepository, Request $request, ManagerRegistry $end)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on insert les données
         if (!empty($request->request->get('nom_mat'))) {
             $matiere=new Matiere();
+            $matiere->setUser($user);
             $matiere->setNom($request->request->get('nom_mat'));
             $matiere->setCreatedAt(new \DateTime());
             $manager = $end->getManager();
@@ -278,11 +368,9 @@ class UniversgController extends AbstractController
             return $this->redirectToRoute('matieres');
         } 
 
-        $repos=$this->getDoctrine()->getRepository(Matiere::class);
-        $matieres = $repos->findAll();
         return $this->render('universg/matieres.html.twig', [
             'controller_name' => 'UniversgController',
-            'matieres'=>$matieres
+            'matieres'=>$matiereRepository->matieresUser($user)
         ]);
     }
 
@@ -291,6 +379,15 @@ class UniversgController extends AbstractController
      */
     public function matiere_edit (Matiere $matiere, Request $request, ManagerRegistry $end)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on modifie les données
         if (!empty($request->request->get('nom_mat'))) {
             $matiere->setNom($request->request->get('nom_mat'));
             $matiere->setCreatedAt(new \DateTime());
@@ -315,15 +412,20 @@ class UniversgController extends AbstractController
      */
     public function suppression_matiere (Matiere $matiere, ManagerRegistry $end)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+        //sinon on supprime les données
         $manager = $end->getManager();
         $manager->remove($matiere);
         $manager->flush();
 
         return $this->redirectToRoute('matieres');
         
-        // return $this->render('universg/matieres.html.twig', [
-        //     'controller_name' => 'UniversgController'
-        // ]);
     }
 
     /**
@@ -332,6 +434,15 @@ class UniversgController extends AbstractController
      */
     public function transfert_matiere (Request $request, ManagerRegistry $end, Matiere $matiere)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on insert les données
         if (!empty($request->request->get('niveau'))) {
             $filiere=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
             $niveau=$this->getDoctrine()->getRepository(Niveau::class)->find($request->request->get('niveau'));
@@ -340,6 +451,7 @@ class UniversgController extends AbstractController
                 
                 $ue=new Ue();
                 $ue->setFiliere($filiere2);
+                $ue->setUser($user);
                 $ue->setNiveau($niveau);
                 $ue->setMatiere($matiere);
                 $ue->setCreatedAt(new \DateTime());
@@ -367,6 +479,15 @@ class UniversgController extends AbstractController
      */
     public function ue (Request $request, UeRepository $repo)
     {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on consulte les données
         $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
         $filieres=$this->getDoctrine()->getRepository(Filiere::class)->findAll();
         $niveaux=$this->getDoctrine()->getRepository(Niveau::class)->findAll();
@@ -386,11 +507,21 @@ class UniversgController extends AbstractController
      */
     public function ajout_notes(inscription $inscription,UeRepository $ueRepository, InscriptionRepository $inscriptionRepository ,Request $request,ManagerRegistry $end_e )
         {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        //sinon on insert les données
         if (!empty($request->request->get('moyenne'))) {
     
             $ue = $this->getDoctrine()->getRepository(Ue::class)->find($request->request->get("ue"));
 
             $note=new NotesEtudiant();
+            $note->setUser($user);
             $note->setInscription($inscription);
             $note->setUe($ue);
             $note->setMoyenne($request->request->get('moyenne'));

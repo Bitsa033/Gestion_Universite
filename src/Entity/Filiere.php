@@ -44,6 +44,11 @@ class Filiere
      */
     private $ues;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="filieres")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -147,6 +152,18 @@ class Filiere
                 $ue->setFiliere(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

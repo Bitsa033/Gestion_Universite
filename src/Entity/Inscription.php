@@ -44,6 +44,11 @@ class Inscription
      */
     private $notesEtudiants;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="inscriptions")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->notesEtudiants = new ArrayCollection();
@@ -128,6 +133,18 @@ class Inscription
                 $notesEtudiant->setInscription(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

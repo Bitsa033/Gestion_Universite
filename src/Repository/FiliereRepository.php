@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Filiere;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Filiere|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,17 @@ class FiliereRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Filiere::class);
+    }
+
+    public function filieresUser(User $user)
+    {
+        $a= $this->createQueryBuilder('f') ->andWhere('f.user = :val1')
+            ->setParameter('val1', $user)
+            ->orderBy('f.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
     }
 
     // /**

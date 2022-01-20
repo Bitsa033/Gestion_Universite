@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Niveau;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Niveau|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,17 @@ class NiveauRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Niveau::class);
+    }
+
+    public function niveauxUser(User $user)
+    {
+        $a= $this->createQueryBuilder('n') ->andWhere('n.user = :val1')
+            ->setParameter('val1', $user)
+            ->orderBy('n.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
     }
 
     // /**

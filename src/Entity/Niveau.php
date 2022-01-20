@@ -39,6 +39,11 @@ class Niveau
      */
     private $ues;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="niveaux")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -130,6 +135,18 @@ class Niveau
                 $ue->setNiveau(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Inscription;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Inscription|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,17 @@ class InscriptionRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Inscription::class);
+    }
+
+    public function studentsUser(User $user)
+    {
+        $a= $this->createQueryBuilder('i') ->andWhere('i.user = :val1')
+            ->setParameter('val1', $user)
+            ->orderBy('i.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
     }
 
     public function search($niveau,$filiere)

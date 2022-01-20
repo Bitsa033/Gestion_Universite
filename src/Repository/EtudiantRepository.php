@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Etudiant;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -19,10 +20,10 @@ class EtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, Etudiant::class);
     }
 
-    public function searchStudentsNotRegister(Etudiant $etudiant)
+    public function etudiantsUser(User $user)
     {
-        $a= $this->createQueryBuilder('e') ->andWhere('e.id != :val1')
-            ->setParameter('val1', $etudiant->getId())
+        $a= $this->createQueryBuilder('e') ->andWhere('e.user = :val1')
+            ->setParameter('val1', $user)
             ->orderBy('e.id', 'ASC');
         $query=$a->getQuery();
 

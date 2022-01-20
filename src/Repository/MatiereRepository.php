@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Matiere;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Matiere|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,17 @@ class MatiereRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Matiere::class);
+    }
+
+    public function matieresUser(User $user)
+    {
+        $a= $this->createQueryBuilder('m') ->andWhere('m.user = :val1')
+            ->setParameter('val1', $user)
+            ->orderBy('m.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
     }
 
     // /**
