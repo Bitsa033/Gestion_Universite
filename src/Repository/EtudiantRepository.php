@@ -23,36 +23,42 @@ class EtudiantRepository extends ServiceEntityRepository
 
     public function etudiantsUser(User $user)
     {
-        $a= $this->createQueryBuilder('e') ->andWhere('e.user = :val1')
-            ->setParameter('val1', $user)
-            ->orderBy('e.id', 'ASC');
-        $query=$a->getQuery();
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        SELECT etudiant.id as id , etudiant.nom as nom , 
+        etudiant.prenom as prenom , etudiant.sexe as sexe ,
+        inscription.filiere_id as filiere , inscription.niveau_id
+        as niveau
+        FROM etudiant LEFT JOIN inscription ON 
+        inscription.etudiant_id=etudiant.id where 
+        etudiant.user_id= :user
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'user'=>$user->getId()
+        ]);
 
-        return $query->execute();
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
         
     }
 
-    public function etudiantsUserNotInGet(User $user, Etudiant $etudiant)
+    public function etudiantsUserPasInscris(User $user)
     {
-        $a= $this->createQueryBuilder('e') ->andWhere('e.user = :val1') ->andWhere('e.id != :val2')
-        ->setParameter('val1', $user)->setParameter('val2', $etudiant->getId())
-        ->orderBy('e.id', 'ASC');
-        $query=$a->getQuery();
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        SELECT * FROM etudiant where etudiant.user_id= :user and 
+        etudiant.id not in (SELECT etudiant_id from inscription)
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'user'=>$user->getId()
+        ]);
 
-        return $query->execute();
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
         
     }
-
-    // public function search($value)
-    // {
-    //     $a= $this->createQueryBuilder('e') ->andWhere('e.nom = :val')
-    //         ->setParameter('val', $value)
-    //         ->orderBy('e.id', 'ASC');
-    //     $query=$a->getQuery();
-
-    //     return $query->execute();
-        
-    // }
 
     // /**
     //  * @return Etudiant[] Returns an array of Etudiant objects

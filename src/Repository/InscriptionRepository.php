@@ -20,10 +20,23 @@ class InscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Inscription::class);
     }
 
-    public function studentsUser(User $user)
+    public function inscriptionssUser(User $user)
     {
         $a= $this->createQueryBuilder('i') ->andWhere('i.user = :val1')
             ->setParameter('val1', $user)
+            ->orderBy('i.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
+    }
+
+    public function inscriptionsUserFiliereNiveau(User $user,$filiere,$niveau)
+    {
+        $a= $this->createQueryBuilder('i')->andWhere('i.user = :val1')
+        ->andWhere('i.filiere = :val2')->andWhere('i.niveau = :val3')
+        ->setParameter('val1', $user)->setParameter('val2', $filiere)
+        ->setParameter('val3', $niveau)
             ->orderBy('i.id', 'ASC');
         $query=$a->getQuery();
 

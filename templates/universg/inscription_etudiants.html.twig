@@ -1,134 +1,113 @@
-{% extends 'layout/layout.html.twig' %}
-
-{% block title %}UniversgController!{% endblock %}
+{% extends 'base.html.twig' %}
 
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Info boxes -->
-        <div class="row">
-          
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
+		<!-- Main content -->
+		<section class="content">
+			<div
+				class="container-fluid">
+				<!-- Info boxes -->
+				<div
+					class="row">
 
-          <div class="col-12 col-sm-6 col-md-3 offset-4">
-            <div class="info-box mb-3">
-              <a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
+					<!-- fix for small devices only -->
+					<div class="clearfix hidden-md-up"></div>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Ajouter un</span>
-                <span class="info-box-text">etudiant</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
+					<div class="col-12 col-sm-6 col-md-3 offset-3">
+						<div class="info-box mb-3">
+							<a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1">
+								<i class="fa fa-pen"></i>
+							</a>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('liste_inscriptions_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-table"></i></a>
+							<div class="info-box-content">
+								<span class="info-box-text">Ajouter un</span>
+								<span class="info-box-text">etudiant</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
 
-              <div class="info-box-content">
-                <span class="info-box-text">Liste des</span>
-                <span class="info-box-text">inscriptions</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-md-6 offset-4">
-          <table class="table">
-            <tr>
-              <th>Inscription</th>
-              </tr>
-          </table>
-          </div>
-        </div>
-        <!-- /row-->
+					<!-- fix for small devices only -->
+					<div class="clearfix hidden-md-up"></div>
 
-        <div class="row">
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box mb-3">
+							<a href="{{path('liste_inscriptions_etudiants')}}" class="info-box-icon bg-primary elevation-1">
+								<i class="fa fa-th"></i>
+							</a>
 
-          <!-- on affiche tous les etudiants à inscrire -->
-          <div class="col-md-4">
-            <table class="table table-bordered">
+							<div class="info-box-content">
+								<span class="info-box-text">Liste des</span>
+								<span class="info-box-text">inscriptions</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+				<div class="row">
+					<div class="col-md-6 offset-3">
+						<table class="table">
+							<tr>
+								<th>Inscription</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- /row-->
 
-                <tr>
-                  <th>Action</th>
-                  <th>Nom</th>
-                </tr>
-                {% for et in etudiants %}
-                  
-                <tr>
-                  <td>
-                     <a class="btn btn-info" href="{{path('inscription_etudiants',{id:et.id})}}">Inscrire</a>
-                  </td>
-                  <td>{{et.nom}}  {{et.prenom}}</td>
-                </tr>
-                {% else %}
-                  <tr>
-                  <td colspan=2> Aucun recent etudiant enregistré !</td>
-                  </tr>
-                {% endfor %}
+				<div class="row">
 
-            </table>
-          </div>
-          <!-- col -->
-          <div class="col-md-6">
-            <table class="table table-bordered">
+					<div class="col-md-6 offset-3">
+						<div class="card-body">
 
-                <tr>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Sexe</th>
-                </tr>
-                <tr>
-                    <td>{{etudiant.nom}}</td>
-                    <td>{{etudiant.prenom}}</td>
-                     <td>{{etudiant.sexe}}</td>
-                </tr>
-            </table>
+							<form action="{{path('inscription_etudiants')}}" method="post">
+								<select style="margin-left:1%;" type="text" name="etudiant" class="form-control" id="">
+									<option value="">Etudiant</option>
+									{% for etudiant in etudiants %}
+										<option value="{{etudiant.id}}">{{etudiant.nom}}
+											{{etudiant.prenom}}
+										</option>
+									{% else %}
+										<option value="">
+											Aucune donnée récente !
+										</option>
+									{% endfor %}
+								</select>
+								<br>
+								<select style="margin-left:1%;" type="text" name="filiere" class="form-control" id="">
+									<option value="">Filiere</option>
+									{% for filiere in filieres %}
+										<option value="{{filiere.id}}">{{filiere.sigle}}</option>
 
-            <div class="card-body">
-                  
-                    <form action="{{path('inscription_etudiants',{id:etudiant.id})}}" method="post">
-                      <select style="margin-left:1%;" type="text" name="filiere" class="form-control" id="">
-                        <option value="">Filiere</option>
-                        {% for filiere in filieres %}
-                        <option value="{{filiere.id}}">{{filiere.sigle}}</option>
-                        {% endfor %}
-                      </select>
-                      <br>
+									{% endfor %}
+								</select>
+								<br>
 
-                      <select style="margin-left:1%;" type="text" name="niveau" class="form-control" id="">
-                        <option value="">Niveau</option>
-                        {% for niveau in niveaux %}
-                        <option value="{{niveau.id}}">{{niveau.nom}}</option>
-                        {% endfor %}
-                      </select>
-                      <br>
-                     <button type="submit" class="btn btn-success form-control">Valider</button>
-                    <form>
-                  </div>  
-          </div>
-          <!-- col -->
-        
-        </div>
-        <!-- ./row -->
-        
-    </section>
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-{% endblock %}
+								<select style="margin-left:1%;" type="text" name="niveau" class="form-control" id="">
+									<option value="">Niveau</option>
+									{% for niveau in niveaux %}
+										<option value="{{niveau.id}}">{{niveau.nom}}</option>
+									{% endfor %}
+								</select>
+								<br>
+								<button type="submit" class="btn btn-success form-control">Valider</button>
+								<form></div>
+							</div>
+							<!-- col -->
+
+						</div>
+						<!-- ./row -->
+
+					</section>
+					<!-- /.content -->
+				</div>
+				<!-- /.content-wrapper -->
+			{% endblock %}

@@ -1,122 +1,92 @@
-{% extends 'layout/layout.html.twig' %}
-
-{% block title %}UniversgController!{% endblock %}
+{% extends 'base.html.twig' %}
 
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Info boxes -->
-        <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-cog"></i></span>
+		<!-- Main content -->
+		<section class="content">
+			<div
+				class="container-fluid">
+				<!-- Info boxes -->
+				<div class="row">
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box">
+							<span class="info-box-icon bg-primary elevation-1">
+								<i class="fas fa-cog"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">CPU Traffic</span>
-                <span class="info-box-number">
-                  10
-                  <small>%</small>
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fas fa-plus"></i></a>
+							<div class="info-box-content">
+								<span class="info-box-text">CPU Traffic</span>
+								<span class="info-box-number">
+									10
+									<small>%</small>
+								</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
+					<div class="clearfix hidden-md-up"></div>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Ajouter un </span>
-                <span class="info-box-text">etudiant</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
+				</div>
+				<!-- /.row -->
 
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
+				<div class="row">
+					<div class="col-md-12">
+						<h5>Imprimer des inscriptions</h5>
+						<table class="table table-bordered">
+							<div class="form-inline">
+								<p>Trier par :
+									<form action="{{path('liste_inscriptions_etudiants')}}" method="post">
+										<select type="text" name="filiere" class="form-control" id="">
+											<option value="">Filiere</option>
+											{% for inc1 in filieres %}
+												<option value="{{inc1.id}}">{{inc1.sigle}}</option>
+											{% endfor %}
+										</select>
+										<select type="text" name="niveau" class="form-control" id="">
+											<option value="">niveau</option>
+											{% for niveau in niveaux %}
+												<option value="{{niveau.id}}">{{niveau.nom}}</option>
+											{% endfor %}
+										</select>
 
-          {# <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('inscription')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
+										<button type="submit" class="btn btn-success">Valider</button>
+									</form>
+								</p>
+							</div>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Inscrire un</span>
-                <span class="info-box-text">etudiant</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div> #}
-          <!-- /.col -->
-          
-        </div>
-        <!-- /.row -->
+							<tr>
+								<th>Nom</th>
 
-        <div class="row">
-          <div class="col-md-12">
-          <h5>Liste des inscriptions</h5>
-              <table class="table table-bordered">
-                  <div class="form-inline">
-                    <p>Trier par :
-                    <form action="{{path('liste_inscriptions_etudiants')}}" method="post">
-                      <select type="text" name="filiere" class="form-control" id="">
-                        <option value="">Filiere</option>
-                        {% for inc1 in filieres %}
-                        <option value="{{inc1.id}}">{{inc1.sigle}}</option>
-                        {% endfor %}
-                      </select>
-                      <select type="text" name="niveau" class="form-control" id="">
-                        <option value="">niveau</option>
-                        {% for niveau in niveaux %}
-                        <option value="{{niveau.id}}">{{niveau.nom}}</option>
-                        {% endfor %}
-                      </select>
-                     
-                      <button type="submit" class="btn btn-success">Valider</button>
-                    </form>
-                    
-                  </div>
+								<th>Niveau</th>
+								<th>Filiere</th>
+							</tr>
+							{% for inc1 in recherche %}
+								<tr>
+									<td>{{inc1.etudiant.nom}}
+										{{inc1.etudiant.prenom}}</td>
+									<td>{{inc1.niveau.nom}}</td>
+									<td>{{inc1.filiere.sigle}}</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="5">Désolé, ce tableau est vide pour le moment !</td>
+								</tr>
+							{% endfor %}
 
-                  <tr>
-                      <th>Action</th>
-                      <th>Nom</th>
-                    
-                      <th>Niveau</th>
-                      <th>Filiere</th>
-                  </tr>
-                  {% for inc1 in recherche %}
-                  <tr>
-                      <td>
-                        <a class="btn btn-info" href="{{path('ajout_notes',{id:inc1.id})}}">Noter</a>
-                      </td>
-                      <td>{{inc1.etudiant.nom}}  {{inc1.etudiant.prenom}}</td>
-                      <td>{{inc1.niveau.nom}}</td>
-                      <td>{{inc1.filiere.sigle}}</td>
-                  </tr>
-                  {% else %}
-                  <tr>
-                    <td colspan="5">Désolé, ce tableau est vide pour le moment !</td>
-                  </tr>
-                  {% endfor %}
 
-              
-              </table>
-          </div>
-          <!-- col -->
-        </div>
-        <!-- row -->
+						</table>
+					</div>
+					<!-- col -->
+				</div>
+				<!-- row -->
 
-    </section>
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-{% endblock %}
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+	{% endblock %}

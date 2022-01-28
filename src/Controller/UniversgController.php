@@ -39,7 +39,7 @@ class UniversgController extends AbstractController
         //sinon on consulte les données
         return $this->render('universg/index.html.twig', [
             'controller_name' => 'UniversgController',
-            'inscriptions'=>$inscriptionRepository->studentsUser($user),
+            'inscriptions'=>$inscriptionRepository->inscriptionssUser($user),
             'filieres'=>$filiereRepository->filieresUser($user),
             'niveaux'=>$NiveauRepository->niveauxUser($user),
             'matieres'=>$matiereRepository->matieresUser($user)
@@ -225,7 +225,8 @@ class UniversgController extends AbstractController
     }
 
     /**
-     * Affichage des etudiants enregistrés avec leurs filieres
+     * On affiche les etudiants enregistrés en fonction de
+     * l'utilisateur connecté
      * @Route("etudiants", name="etudiants")
      */
     public function etudiants (EtudiantRepository $etudiantRepository)
@@ -237,15 +238,16 @@ class UniversgController extends AbstractController
         if (!$user) {
           return $this->redirectToRoute('app_login');
         }
-        //sinon on consulte les données
+        
         return $this->render('universg/etudiants.html.twig', [
             'controller_name' => 'UniversgController',
-            'etudiants'=>$etudiantRepository->etudiantsUser($user)
+            'etudiants'=>$etudiantRepository->etudiantsUser($user),
+            'nbEtudiants'=>$etudiantRepository->count([])
         ]);
     }
     
     /**
-     * Suppression des etudiants
+     * On supprime un etudiant par son id
      * @Route("etudiant/suppression/{id}", name="suppression_etudiant")
      */
     public function suppression_etudiant (Etudiant $etudiant, ManagerRegistry $end)
@@ -268,10 +270,10 @@ class UniversgController extends AbstractController
     }
 
     /**
-     * Inscription des etudiants
-     * @Route("etudiants/inscription/{id}", name="inscription_etudiants")
+     * On inscrit l'etudiant
+     * @Route("inscription_etudiants", name="inscription_etudiants")
      */
-    public function inscription_etudiants(Etudiant $student, EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,ManagerRegistry $end_e )
+    public function inscription_etudiants(EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,ManagerRegistry $end_e )
         {
 
         //on cherche l'utilisateur connecté
@@ -283,14 +285,20 @@ class UniversgController extends AbstractController
         }
 
         //sinon on insert les données
-        if (!empty($request->request->get('niveau'))) {
+        
+        if (
+            !empty($request->request->get('niveau')) && 
+            !empty($request->request->get('filiere')) &&
+            !empty($request->request->get('etudiant'))
+        ) {
     
-            $niveau = $this->getDoctrine()->getRepository(Niveau::class)->find($request->request->get("niveau"));
-            $filiere = $this->getDoctrine()->getRepository(Filiere::class)->find($request->request->get("filiere"));
-
+            $niveau = $niveauRepository->find($request->request->get("niveau"));
+            $filiere = $filiereRepository->find($request->request->get("filiere"));
+            $etudiant = $etudiantRepository->find($request->request->get("etudiant"));
+           
             $inscription=new Inscription();
             $inscription->setUser($user);
-            $inscription->setEtudiant($student);
+            $inscription->setEtudiant($etudiant);
             $inscription->setFiliere($filiere);
             $inscription->setNiveau($niveau);
             $inscription->setCreatedAt(new \DateTime());
@@ -299,23 +307,20 @@ class UniversgController extends AbstractController
             $manager->persist($inscription);
             $manager->flush();
 
-            return $this->redirectToRoute('inscription_etudiants',[
-                'id'=>$student->getId()
-            ]);
+            return $this->redirectToRoute('inscription_etudiants');
         }
 
-        $niveaux = $this->getDoctrine()->getRepository(Niveau::class)->findAll();
+
         return $this->render('universg/inscription_etudiants.html.twig', [
             'controller_name' => 'UniversgController',
             'niveaux'=>$niveauRepository->niveauxUser($user),
             'filieres'=>$filiereRepository->filieresUser($user),
-            'etudiants'=>$etudiantRepository->etudiantsUserNotInGet($user,$student),
-            'etudiant'=>$student
+            'etudiants'=>$etudiantRepository->etudiantsUserPasInscris($user)
         ]);
     }
 
     /**
-     * @Route("etudiants/inscriptions/liste", name="liste_inscriptions_etudiants")
+     * @Route("liste_inscriptions_etudiants", name="liste_inscriptions_etudiants")
      */
     public function liste_inscriptions_etudiants( FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request, InscriptionRepository $repo)
     {
@@ -458,7 +463,9 @@ class UniversgController extends AbstractController
             }
             
   
-            return $this->redirectToRoute('ue');
+            return $this->redirectToRoute('transfert_matiere',[
+                'id'=>$matiere->getId()
+            ]);
         } 
        
         return $this->render('universg/transfert_matiere.html.twig', [
@@ -485,13 +492,13 @@ class UniversgController extends AbstractController
 
         //sinon on consulte les données
         $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
-        $search=$repo->search($request->request->get('niveau'),$request->request->get('filiere'));
+        $uesUserFiliereNiveau=$repo->uesFiliereNiveau($request->request->get('filiere'),$request->request->get('niveau'));
         return $this->render('universg/ue.html.twig', [
             'controller_name' => 'UniversgController',
             'ues'=>$repostn,
             'filieres'=>$filiereRepository->filieresUser($user),
             'niveaux'=>$niveauRepository->niveauxUser($user),
-            'recherche'=>$search
+            'recherche'=>$uesUserFiliereNiveau
         ]);
     }
 
@@ -519,9 +526,9 @@ class UniversgController extends AbstractController
 
     /**
      * Creer des notes pour des etudiants
-     * @Route("ajout_notes/{id}", name="ajout_notes")
+     * @Route("ajout_notes", name="ajout_notes")
      */
-    public function ajout_notes(inscription $inscription,UeRepository $ueRepository, InscriptionRepository $inscriptionRepository ,Request $request,ManagerRegistry $end_e )
+    public function ajout_notes( InscriptionRepository $inscriptionRepository, UeRepository $ueRepository,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,ManagerRegistry $end_e )
         {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -534,7 +541,8 @@ class UniversgController extends AbstractController
         //sinon on insert les données
         if (!empty($request->request->get('moyenne'))) {
     
-            $ue = $this->getDoctrine()->getRepository(Ue::class)->find($request->request->get("ue"));
+            $ue = $ueRepository->find($request->request->get("ue"));
+            $inscription = $inscriptionRepository->find($request->request->get("inscription"));
 
             $note=new NotesEtudiant();
             $note->setUser($user);
@@ -547,16 +555,39 @@ class UniversgController extends AbstractController
             $manager->flush();
 
             //dd($request);
-            return $this->redirectToRoute('ajout_notes',[
-                'id'=>$inscription->getId()
-            ]);
+            return $this->redirectToRoute('ajout_notes');
         }
+
+        $matieres=$ueRepository->uesFiliereNiveau($request->request->get('filiere'),$request->request->get('niveau'));
+        $inscriptions=$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$request->request->get('filiere'),$request->request->get('niveau'));
 
         return $this->render('universg/noter_etudiant.html.twig', [
             'controller_name' => 'UniversgController',
-            'inscription'=>$inscription,
-            'matieres'=>$ueRepository->ueFiliereNiveau($inscription),
-            'searchStudent'=>$inscriptionRepository->searchStudentsAsFiliereNiveau($inscription)
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
+            'matieres'=>$matieres,
+            'inscriptions'=>$inscriptions
         ]);
     }
+    /**
+     * @Route("essaie/{id}", name="essaie")
+     */
+    public function essaie(Etudiant $etudiant)
+    {
+        if ($etudiant->inscrit($etudiant)) {
+
+            return $this->json([
+                'inscrit'=>'oui',
+                'message'=>'Etudiant inscrit'
+    
+            ],200);
+          
+        }
+        return $this->json([
+            'inscrit'=>'non',
+            'message'=>'Etudiant pas inscrit'
+
+        ],200);
+    }
 }
+

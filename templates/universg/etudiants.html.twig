@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}UniversgController!{% endblock %}
-
 {% block body %}
   <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -18,7 +16,7 @@
               <div class="info-box-content">
                 <span class="info-box-text">Nb etudiants</span>
                 <span class="info-box-number">
-                {{etudiants|length}}
+               {{nbEtudiants}}
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -26,68 +24,55 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fas fa-plus"></i></a>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Ajouter un </span>
-                <span class="info-box-text">etudiant</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('liste_inscriptions_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-table"></i></a>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Liste des</span>
-                <span class="info-box-text">inscriptions</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-
+         
         </div>
         <!-- /.row -->
 
         <div class="row">
           <div class="col-md-12">
+              <a href="{{path('creation_etudiants')}}"  class="btn btn-primary">Ajouter des etudiants <i class="fa fa-plus"></i></a> 
+              <a href="{{path('inscription_etudiants')}}"  class="btn btn-primary">Inscrire des etudiants <i class="fa fa-pen"></i></a> 
+                <a href="{{path('ajout_notes')}}"  class="btn btn-primary">Noter des etudiants <i class="fa fa-pen"></i></a> 
+              <a href="{{path('liste_inscriptions_etudiants')}}"  class="btn btn-primary">Imprimer des inscriptions <i class="fa fa-users"></i></a> 
               <table class="table table-bordered">
 
                 </p>
              
                   <tr>
                       <th>ID</th>
-                      <th>Action</th>
-                      <th>Nom</th>
-                      <th>Prenom</th>
-                      <th>Sexe</th>
+                      <th style="width:7%;">Action</th>
+                      <th>Etudiants</th>
+                      <th>Filieres</th>
+                      <th>Niveaux d'etude</th>
                   </tr>
                   {% for etudiant in etudiants %}
                   <tr>
-                      <td>{{etudiant.id}}</td>
+                      <td style="width:2%;">{{etudiant.id}}</td>
                       <td>
-                      <a href="{{path('suppression_etudiant',{id:etudiant.id})}}"  class="btn btn-warning">Supprimer <i class="fa fa-times"></i></a>
-                      <a href="{{path('inscription_etudiants',{id:etudiant.id})}}"  class="btn btn-info">Inscrire <i class="fa fa-pen"></i></a>
-                      <a href="{{path('inscription_etudiants',{id:etudiant.id})}}"  class="btn btn-info">Filiere <i class="fa fa-book"></i></a>
+                      <a href="{{path('suppression_etudiant',{id:etudiant.id})}}"  class="btn btn-warning"><i class="fa fa-times"></i></a>
+              
                       </td>
-                      <td>{{etudiant.nom}}</td>
-                      <td>{{etudiant.prenom}}</td>
-                      <td>{{etudiant.sexe}}</td>
+                      <td>{{etudiant.nom}}  {{etudiant.prenom}}
+                      <br>
+                      <small><strong>Sexe :</strong></small> 
+                      {{etudiant.sexe}}
+                      </td>
+                      {% if etudiant.filiere and etudiant.niveau  %}
+                      <td>
+                        {{etudiant.filiere}}
+                      </td>
+                      <td>
+                          {{etudiant.niveau}}
+                      </td>
+                      {% else %}
+                        <td colspan="2">
+                         <span class="btn btn-primary  offset-2"> Pas inscrit</span>
+                        </td>
+                      {% endif %}
                   </tr>
                   {% else %}
                   <tr>
-                    <td colspan="5">Aucun étudiant récent n' a été enregistré !</td>
+                    <td colspan="5">Aucune donnée recente !</td>
                   </tr>
                   {% endfor %}
               
@@ -101,4 +86,11 @@
     <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+
 {% endblock %}
+
+{% block javascripts %}
+  <script src=""></script>
+{% endblock %}
+
+

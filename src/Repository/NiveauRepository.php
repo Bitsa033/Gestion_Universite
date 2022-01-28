@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\Niveau;
+use App\Entity\Etudiant;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -28,6 +29,24 @@ class NiveauRepository extends ServiceEntityRepository
         $query=$a->getQuery();
 
         return $query->execute();
+        
+    }
+
+    public function niveauxUserPourEtudiantsInscris(User $user, Etudiant $etudiant)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        SELECT * FROM niveau,etudiant,inscription where
+        niveau.user_id= :user and inscription.etudiant_id != :etudiant
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'user'=>$user->getId(),
+            'etudiant'=>$etudiant->getId()
+        ]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
         
     }
 

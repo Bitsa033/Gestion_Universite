@@ -2,10 +2,11 @@
 
 namespace App\Repository;
 
-use App\Entity\Inscription;
 use App\Entity\Ue;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\User;
+use App\Entity\Inscription;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Ue|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,10 +21,10 @@ class UeRepository extends ServiceEntityRepository
         parent::__construct($registry, Ue::class);
     }
 
-    public function search($niveau,$filiere)
+    public function uesUser(User $user)
     {
-        $a= $this->createQueryBuilder('u') ->andWhere('u.niveau = :val1')->andWhere('u.filiere = :val2')
-            ->setParameter('val1', $niveau)->setParameter('val2', $filiere)
+        $a= $this->createQueryBuilder('u') ->andWhere('u.user = :val1')
+            ->setParameter('val1', $user)
             ->orderBy('u.id', 'ASC');
         $query=$a->getQuery();
 
@@ -31,10 +32,11 @@ class UeRepository extends ServiceEntityRepository
         
     }
 
-    public function ueFiliereNiveau(Inscription $inscription)
+    public function uesFiliereNiveau($filiere,$niveau)
     {
-        $a= $this->createQueryBuilder('u') ->andWhere('u.niveau = :val1')->andWhere('u.filiere = :val2')
-            ->setParameter('val1', $inscription->getNiveau())->setParameter('val2', $inscription->getFiliere());
+        $a= $this->createQueryBuilder('u') ->andWhere('u.filiere = :val1')->andWhere('u.niveau = :val2')
+            ->setParameter('val1', $filiere)->setParameter('val2', $niveau)
+            ->orderBy('u.id', 'ASC');
         $query=$a->getQuery();
 
         return $query->execute();

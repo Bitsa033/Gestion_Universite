@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\Filiere;
+use App\Entity\Etudiant;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -30,7 +31,7 @@ class FiliereRepository extends ServiceEntityRepository
         return $query->execute();
         
     }
-
+    
     // /**
     //  * @return Filiere[] Returns an array of Filiere objects
     //  */

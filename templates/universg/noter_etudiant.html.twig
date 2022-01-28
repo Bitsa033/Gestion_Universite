@@ -1,145 +1,121 @@
-{% extends 'layout/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}UniversgController!{% endblock %}
+{% block title %}UniversgController!
+{% endblock %}
 
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Info boxes -->
-        <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+		<!-- Main content -->
+		<section class="content">
+			<div
+				class="container-fluid">
+				<!-- Info boxes -->
+				<div class="row">
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box">
+							<span class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-th"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Nb etudiants</span>
-                <span class="info-box-number">
-                  <strong>30</strong>
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
+							<div class="info-box-content">
+								<span class="info-box-text">Nb etudiants</span>
+								<span class="info-box-number">
+									<strong>30</strong>
+								</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-pen"></i></a>
+				</div>
+				<!-- /.row -->
+				<div class="row">
+					<div class="col-md-12">
+						<table class="table">
+							<tr>
+								<th>Notes</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- /row-->
+				<div class="row">
+					<div class="col-md-12">
 
-              <div class="info-box-content">
-                <span class="info-box-text">Etudiants</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
+						<table class="table table-bordered">
+							<div class="form-inline">
+								<p>Trier par :
+									<form action="{{path('ajout_notes')}}" method="post">
+										<select type="text" name="filiere" class="form-control" id="">
+											<option value="">Filiere</option>
+											{% for filiere in filieres %}
+												<option value="{{filiere.id}}">{{filiere.sigle}}</option>
+											{% endfor %}
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('liste_inscriptions_etudiants')}}" class="info-box-icon bg-primary elevation-1"><i class="fa fa-table"></i></a>
+										</select>
+										<select type="text" name="niveau" class="form-control" id="">
+											<option value="">Niveau</option>
+											{% for niveau in niveaux %}
+												<option value="{{niveau.id}}">{{niveau.nom}}</option>
+											{% endfor %}
 
-              <div class="info-box-content">
-                <span class="info-box-text">Liste des</span>
-                <span class="info-box-text">notes</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-md-6 offset-4">
-          <table class="table">
-            <tr>
-              <th>Notes</th>
-              </tr>
-          </table>
-          </div>
-        </div>
-        <!-- /row-->
+										</select>
 
-        <!-- on affiche tous  les etudiants
-        qui font parti de la meme filiere et niveau de cet etudiant -->
+										<button type="submit" class="btn btn-success">Valider</button>
+									</form>
+								</p>
+							</div>
 
-        <div class="row">
-          <div class="col-md-4">
-            <table class="table table-bordered">
+							<tr>
+								<th>Etudiants</th>
+								<th>Matiere</th>
+								<th style="width: 12px;">Moyenne</th>
 
-                <tr>
-                    <th>Action</th>
-                    <th>Nom</th>
-                </tr>
-                {% for ss in searchStudent %}
-                  
-                <tr>
-                    <td>
-                     <a class="btn btn-info" href="{{path('ajout_notes',{id:ss.id})}}">Noter</a>
-                    </td>
-                    <td>{{ss.etudiant.nom}} {{ss.etudiant.prenom}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-          </div>
-          <!-- col -->
-        
-          <div class="col-md-6">
-            <table class="table table-bordered">
+							</tr>
+								<form action="{{path('ajout_notes')}}" method="post">
+									<tr>
+										<td>
+											<select class="form-control" type="checkbox" name="inscription" id="">
+												{% for inscription in inscriptions %}
+												<option  value="{{inscription.id}}">{{inscription.etudiant.nom}}</option>
+												{% else %}
+												<option  value="">Liste vide</option>
+												{% endfor %}
+											</select>
+										</td>
+										<td>
+											<select style="margin-left:1%;" type="text" name="ue" class="form-control" id="">
+												{% for matiere in matieres %}
+													<option value="{{matiere.id}}">{{matiere.matiere.nom}}</option>
+													{% else %}
+													<option value="">Liste vide</option>
+												{% endfor %}
+											</select>
+										</td>
+										<td>
+											<input class="form-control" type="text" vlue="" name="moyenne" id="">
+										</td>
+										<td>
+											<button type="submit" class="btn btn-success form-control">Valider</button>
+										</td>
+									</tr>
+								<form>
 
-                <tr>
-                    <th>Nom</th>
-                    <th>Filiere</th>
-                    <th>Niveau</th>
-                </tr>
-                <tr>
-                    <td>{{inscription.etudiant.nom}} {{inscription.etudiant.prenom}}</td>
-                    <td>{{inscription.filiere.sigle}}</td>
-                     <td>{{inscription.niveau.nom}}</td>
-                </tr>
-            </table>
+						</table>
+					</div>
+					<!-- col -->
+				</div>
+				<!-- row -->
 
-            <div class="form-group">
-                <div class="card insert-filiere">
-                  <div class="card-body">
-                  
-                    <form action="{{path('ajout_notes',{id:inscription.id})}}" method="post">
-                      <select style="margin-left:1%;" type="text" name="ue" class="form-control" id="">
-                        <option value="">Matiere</option>
-                        {% for matiere in matieres %}
-                        <option value="{{matiere.id}}">{{matiere.matiere.nom}}</option>
-                        {% endfor %}
-                      </select>
-                      <br>
+				
 
-                      <input style="margin-left:1%;" type="number" name="moyenne" class="form-control" placeholder="Note sur 20" id="">
-                      <br>
-                     <button type="submit" class="btn btn-success form-control">Valider</button>
-                    <form>
-                  </div>  
-                
-                </div>
-              </div>
-          </div>
-          <!-- col -->
-        
-        </div>
-        <!-- ./row -->
-        
-    </section>
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
+		</section>
+		<!-- /.content -->
+	</div>
+	<!-- /.content-wrapper -->
 {% endblock %}

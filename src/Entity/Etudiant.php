@@ -148,4 +148,15 @@ class Etudiant
 
         return $this;
     }
+
+    public function inscrit(Etudiant $etudiant):bool
+    {
+        foreach ($this->inscriptions as $inscription) {
+           if ($inscription->getEtudiant() === $etudiant) return true;
+        }
+
+        return false;
+
+    }  
+
 }
