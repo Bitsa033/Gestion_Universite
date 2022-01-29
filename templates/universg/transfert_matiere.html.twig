@@ -1,117 +1,153 @@
-{% extends 'layout/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}UniversgController!{% endblock %}
+{% block title %}UniversgController!
+{% endblock %}
 
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Info boxes -->
-        <div class="row">
-          <div class="col-12 col-sm-6 col-md-3 offset-2">
-            <div class="info-box">
-              <a class="info-box-icon bg-info elevation-1"><i class="fas fa-table"></i></a>
+		<!-- Main content -->
+		<section class="content">
+			<div
+				class="container-fluid">
+				<!-- Info boxes -->
+				<div class="row">
+					<div class="col-12 col-sm-6 col-md-3 offset-2">
+						<div class="info-box">
+							<a class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-table"></i>
+							</a>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Nb matieres</span>
-                <span class="info-box-number">
-                  12
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('ue')}}" class="info-box-icon bg-info elevation-1"><i class="fas fa-book"></i></a>
+							<div class="info-box-content">
+								<span class="info-box-text">Nb matieres</span>
+								<span class="info-box-number">
+									12
+								</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box mb-3">
+							<a href="{{path('ue')}}" class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-book"></i>
+							</a>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Unites d'en</span>
-                <span class="info-box-text">seignements</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          
-        </div>
-        <!-- /.row -->
-        
-        <div class="row">
-          <div class="col-md-8 offset-1">
-            <table class="table table-bordered">
+							<div class="info-box-content">
+								<span class="info-box-text">Unites d'en</span>
+								<span class="info-box-text">seignements</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
 
-            </p>
-                <tr>
-                <th></th>
-                <th>Matiere</th>
-                <th>Credit</th>
-                </tr>
-                
-                <tr>
-                <td>{{matiere.id}}</td>
-                <td>{{matiere.nom}}</td>
-                <td>
-                <form method="post" action="{{path('transfert_matiere',{id:matiere.id})}}">
-                  <input type="number" name="credit" id="" class="form-control" placeholder="coefficient de la matiere.."> 
-                </td>
-                </tr>
-              
-            </table>
-          </div> 
-          <!-- /col -->
-        
-        </div>
-        <!-- /.row -->
+				</div>
+				<!-- /.row -->
+				<div class="row">
+					<div class="col-md-8 offset-1">
+						<p>Trier par :
+							<form action="{{path('transfert_matiere')}}" method="post">
+								<table class="table">
+									<tr>
+										<th>Filiere</th>
+										<th>Niveau</th>
+									</tr>
 
-        <div class="row" >
-          
-          <div class="col-md-5 offset-2">
-            
-            <div class="card insert-filiere">
+									<tr>
+										<td>
+											<select type="text" name="filiere" class="form-control" id="filiere">
 
-              <div class="card-body">
-                <div class="form-group">
-                  <select style="margin-left:1%;" type="text" name="niveau" class="form-control" id="">
-                    <option value="">Selectionner le niveau</option>
-                    {% for niveau in niveaux %}
-                    <option value="{{niveau.id}}">{{niveau.nom}}</option>
-                    {% endfor %}
-                  </select>
-                      
-                  </div>
-                  
-              </div>
-              
-            </div>
-            <!--/insert-filiere-->
-            
-          </div>
-          <!--/col-->
-        
-        </div>
-        <!-- /.row -->
+												{% for filiere in filieres %}
+													<option value="{{filiere.id}}">{{filiere.sigle}}</option>
+												{% else %}
+													<option value="">Liste vide !</option>
+												{% endfor %}
+											</select>
+										</td>
 
-        <div class="row">
-          <div class="col offset-4">
-                  <div class="form-group">
-                      <button type="submit" style="width:190px;" class="btn btn-success">Valider</button>
-                  </div>
-                </form>
-          </div>
-          
-        </div>
-        <!--/row-->
+										<td>
+											<select type="text" name="niveau" class="form-control" id="niveau">
+
+												{% for niveau in niveaux %}
+													<option value="{{niveau.id}}">{{niveau.nom}}</option>
+												{% else %}
+													<option value="">Liste vide !</option>
+												{% endfor %}
+											</select>
+										</td>
+
+										<td>
+											<button type="submit" class="btn btn-success">Valider</button>
+										</td>
+									</tr>
+
+								</table>
+
+							</form>
+						</p>
+					</div>
+					<!-- ./col -->
+
+				</div>
+				<!-- ./row -->
+
+				<div class="row">
+					<div class="col-md-8 offset-1">
+						<table class="table table-bordered"></p>
+
+						<tr>
+							<th>Matieres</th>
+
+							<th>Credit</th>
+						</tr>
+
+						<tr>
+							<form method="post" action="{{path('transfert_matiere')}}">
+								<td>
+									<select type="text" name="ue" class="form-control" id="">
+
+										{% for matiere in matieres %}
+											<option value="{{matiere.id}}">{{matiere.nom}}</option>
+										{% else %}
+											<option value="">Liste vide</option>
+										{% endfor %}
+									</select>
+								</td>
+
+								<td>
+
+									<input type="number" name="credit" id="" class="form-control" placeholder="coefficient de la matiere.."></td>
+
+							</td>
+						</tr>
+
+					</table>
+
+				</div>
+				<!-- /col -->
+
+			</div>
+			<!-- /.row -->
+
+			<div class="row">
+				<div class="col offset-3">
+					<div class="form-group">
+						<button type="submit" style="width:190px;" class="btn btn-success">Valider</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+		<!--/row-->
 
 
-    </section>
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-{% endblock %}
+	</section>
+	<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->{% endblock %}

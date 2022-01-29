@@ -432,9 +432,9 @@ class UniversgController extends AbstractController
 
     /**
      * Affectation des matieres à des filieres et niveaux
-     * @Route("matiere/transfert/{id}", name="transfert_matiere")
+     * @Route("transfert_matiere", name="transfert_matiere")
      */
-    public function transfert_matiere (FiliereRepository $filiereRepository, NiveauRepository $niveauRepository ,Request $request, ManagerRegistry $end, Matiere $matiere)
+    public function transfert_matiere (FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,MatiereRepository $matiereRepository ,Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -446,32 +446,27 @@ class UniversgController extends AbstractController
 
         //sinon on insert les données
         if (!empty($request->request->get('niveau'))) {
-            $filiere=$filiereRepository->filieresUser($user);
-            $niveau=$this->getDoctrine()->getRepository(Niveau::class)->find($request->request->get('niveau'));
-
-            foreach ($filiere as $filiere2) {
+            $filiere=$filiereRepository->find($request->request->get("filiere"));
+            $niveau=$niveauRepository->find($request->request->get('niveau'));
+            $matiere=$matiereRepository->find($request->request->get('ue'));
                 
-                $ue=new Ue();
-                $ue->setFiliere($filiere2);
-                $ue->setUser($user);
-                $ue->setNiveau($niveau);
-                $ue->setMatiere($matiere);
-                $ue->setCreatedAt(new \DateTime());
-                $manager = $end->getManager();
-                $manager->persist($ue);
-                $manager->flush();
-            }
+            $ue=new Ue();
+            $ue->setFiliere($filiere);
+            $ue->setUser($user);
+            $ue->setNiveau($niveau);
+            $ue->setMatiere($matiere);
+            $ue->setCreatedAt(new \DateTime());
+            $manager = $end->getManager();
+            $manager->persist($ue);
+            $manager->flush();
             
-  
-            return $this->redirectToRoute('transfert_matiere',[
-                'id'=>$matiere->getId()
-            ]);
+            return $this->redirectToRoute('transfert_matiere');
         } 
        
         return $this->render('universg/transfert_matiere.html.twig', [
             'controller_name' => 'UniversgController',
             'filieres'=>$filiereRepository->filieresUser($user),
-            'matiere'=>$matiere,
+            'matieres'=>$matiereRepository->matieresUser($user),
             'niveaux'=>$niveauRepository->niveauxUser($user),
         ]);
     }
