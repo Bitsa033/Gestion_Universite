@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}UniversgController!
+{% block title %}Choix filiere etudiant
 {% endblock %}
 
 {% block body %}
@@ -49,59 +49,44 @@
 
 				</div>
 				<!-- /.row -->
-					<form action="{{path('transfert_matiere')}}" method="post">
-				
-
 				<div class="row">
 					<div class="col-md-8 offset-1">
-						<table class="table table-bordered"></p>
+						<form action="{{path('notes_etudiant')}}" method="post">
+							<table class="table">
+								<tr>
+									<th>Etudiant</th>
+									<td>
+										<select class="form-control" type="text" name="inscription" id="">
+											{% for inscription in inscriptions %}
+												<option value="{{inscription.id}}">{{inscription.etudiant.nom}}</option>
+											{% else %}
+												<option value="">Liste vide</option>
+											{% endfor %}
+										</select>
+									</td>
+									
+								</tr>
 
-						<tr>
-							<th>Matieres</th>
+							</table>
 
-							<th>Credit</th>
-						</tr>
-
-						<tr>
-							{# <form method="post" action="{{path('transfert_matiere')}}"> #}
-								<td>
-									<select type="text" name="ue" class="form-control" id="">
-
-										{% for matiere in matieres %}
-											<option value="{{matiere.id}}">{{matiere.nom}}</option>
-										{% else %}
-											<option value="">Liste vide</option>
-										{% endfor %}
-									</select>
-								</td>
-
-								<td>
-
-									<input type="number" name="credit" id="" class="form-control" placeholder="coefficient de la matiere.."></td>
-
-							</td>
-						</tr>
-
-					</table>
-
+					</p>
 				</div>
-				<!-- /col -->
+				<!-- ./col -->
 
 			</div>
-			<!-- /.row -->
+			<!-- ./row -->
 
 			<div class="row">
 				<div class="col offset-3">
 					<div class="form-group">
-						<a href="{{path('ue_filiere')}}" class="btn btn-primary">Retour</a>
-						<button type="submit" style="width:190px;" class="btn btn-primary">Enregistrer</button>
+					<a href="{{path('note_filiere')}}" class="btn btn-primary">Retour</a>
+						<button type="submit" style="width:190px;" class="btn btn-primary">Choisir</button>
 					</div>
 				</form>
 			</div>
 
 		</div>
 		<!--/row-->
-
 
 	</section>
 	<!-- /.content -->

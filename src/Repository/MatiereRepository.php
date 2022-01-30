@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\Filiere;
 use App\Entity\Matiere;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -28,6 +29,25 @@ class MatiereRepository extends ServiceEntityRepository
         $query=$a->getQuery();
 
         return $query->execute();
+        
+    }
+
+    public function matiereUserPasEncoreUe(User $user,Filiere $filiere)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        select * from matiere where id not in(
+            SELECT matiere_id from ue where filiere_id= :filiere)
+        AND matiere.user_id= :user
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'user'=>$user->getId(),
+            'filiere'=>$filiere->getId()
+        ]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
         
     }
 

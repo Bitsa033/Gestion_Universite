@@ -80,7 +80,7 @@
               <table class="table table-bordered">
 
                   <tr>
-                      <th>Action</th>
+                     
                       <th>Nom</th>
                     
                       <th>Niveau</th>
@@ -88,9 +88,7 @@
                   </tr>
                   {% for inc1 in inscriptions %}
                   <tr>
-                      <td>
-                        <a class="btn btn-info" href="{{path('ajout_notes',{id:inc1.id})}}">Noter</a>
-                      </td>
+                     
                       <td>{{inc1.etudiant.nom}}  {{inc1.etudiant.prenom}}</td>
                       <td>{{inc1.niveau.nom}}</td>
                       <td>{{inc1.filiere.sigle}}</td>
