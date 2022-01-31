@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Etudiant;
 use App\Entity\Inscription;
+use App\Repository\UeRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\EtudiantRepository;
@@ -48,7 +49,7 @@ class EtudiantsController extends AbstractController
                 //on enregistre l'etudiant
                 $etudiant=new Etudiant();
                 $etudiant->setUser($user);
-                $etudiant->setNom(strtoupper($request->request->get("nom_et")));
+                $etudiant->setNom(ucfirst($request->request->get("nom_et")));
                 $etudiant->setprenom(ucfirst($request->request->get("prenom_et")));
                 $etudiant->setSexe(strtoupper($request->request->get("sexe_et")));
                 $etudiant->setCreatedAt(new \DateTime());
@@ -56,7 +57,7 @@ class EtudiantsController extends AbstractController
                 $manager->persist($etudiant);
                 $manager->flush();
 
-            return $this->redirectToRoute('etudiants');
+            return $this->redirectToRoute('creation_etudiants');
        }
         return $this->render('universg/creation_etudiants.html.twig', [
             'controller_name' => 'EtudiantsController',
@@ -64,8 +65,7 @@ class EtudiantsController extends AbstractController
     }
 
     /**
-     * On affiche les etudiants enregistrés en fonction de
-     * l'utilisateur connecté
+     * On affiche les etudiants inscris ou non en fonction de l'utilisateur
      * @Route("etudiants", name="etudiants")
      */
     public function etudiants (EtudiantRepository $etudiantRepository)
@@ -81,7 +81,9 @@ class EtudiantsController extends AbstractController
         return $this->render('universg/etudiants.html.twig', [
             'controller_name' => 'EtudiantsController',
             'etudiants'=>$etudiantRepository->etudiantsUser($user),
-            'nbEtudiants'=>$etudiantRepository->count([])
+            'nbEtudiants'=>$etudiantRepository->count([
+                'user'=>$user
+            ])
         ]);
     }
 
@@ -159,9 +161,10 @@ class EtudiantsController extends AbstractController
     }
 
     /**
+     * on consulte les donnees des inscriptions
      * @Route("liste_inscriptions_etudiants", name="liste_inscriptions_etudiants")
      */
-    public function liste_inscriptions_etudiants( FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request, InscriptionRepository $repo)
+    public function liste_inscriptions_etudiants( FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,UeRepository $ueRepository, InscriptionRepository $inscriptionRepository)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -172,14 +175,15 @@ class EtudiantsController extends AbstractController
         }
 
         //sinon on consulte les données
-        $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
-        $search=$repo->search($request->request->get('niveau'),$request->request->get('filiere'));
+        $postFiliere=$request->request->get('filiere');
+        $postNiveau=$request->request->get('niveau');
+        $inscriptions=$inscriptionRepository->inscriptionsFiliereNiveau($postFiliere,$postNiveau,$user);
         return $this->render('universg/liste_inscriptions_etudiants.html.twig', [
             'controller_name' => 'EtudiantsController',
-            'ues'=>$repostn,
+            'ues'=>$ueRepository->uesUser($user),
             'filieres'=>$filiereRepository->filieresUser($user),
             'niveaux'=>$niveauRepository->niveauxUser($user),
-            'recherche'=>$search
+            'inscriptions'=>$inscriptions
         ]);
     }
     

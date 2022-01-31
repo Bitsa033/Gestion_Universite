@@ -44,32 +44,67 @@ class InscriptionRepository extends ServiceEntityRepository
         
     }
 
-    public function search($niveau,$filiere)
+    public function inscriptionsFiliereNiveau($filiere,$niveau)
     {
-        $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val1')->andWhere('i.filiere = :val2')
-            ->setParameter('val1', $niveau)->setParameter('val2', $filiere)
+        if ( empty($niveau)) {
+
+            $a= $this->createQueryBuilder('i') 
+            ->andWhere('i.filiere = :val1')
+            ->setParameter('val1', $filiere)
             ->orderBy('i.id', 'ASC');
+            $query=$a->getQuery();
+            
+            return $query->execute();
+            
+        }
+
+        elseif (empty($fililere)) {
+
+            $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val1')
+            ->setParameter('val1', $niveau)
+            ->orderBy('i.id', 'ASC');
+            $query=$a->getQuery();
+
+            return $query->execute();
+            
+        }
+    
+        $a= $this->createQueryBuilder('i') ->andWhere('i.filiere = :val1')
+        ->andWhere('i.niveau = :val2')
+        ->setParameter('val1', $filiere)->setParameter('val2', $niveau)
+        ->orderBy('i.id', 'ASC');
         $query=$a->getQuery();
 
         return $query->execute();
         
     }
+
+    // public function search($niveau,$filiere)
+    // {
+    //     $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val1')->andWhere('i.filiere = :val2')
+    //         ->setParameter('val1', $niveau)->setParameter('val2', $filiere)
+    //         ->orderBy('i.id', 'ASC');
+    //     $query=$a->getQuery();
+
+    //     return $query->execute();
+        
+    // }
     
     /** on affiche tous les etudiants qui font parti de la meme filiere 
     * et niveau
     */
-    public function searchStudentsAsFiliereNiveau(Inscription $inscription)
-    {
-        $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val1')->andWhere('i.filiere = :val2')
-            ->andWhere('i.id != :val3')
-            ->setParameter('val1', $inscription->getNiveau())->setParameter('val2', $inscription->getFiliere())
-            ->setParameter('val3', $inscription->getId())
-            ->orderBy('i.id', 'ASC');
-        $query=$a->getQuery();
+    // public function searchStudentsAsFiliereNiveau(Inscription $inscription)
+    // {
+    //     $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val1')->andWhere('i.filiere = :val2')
+    //         ->andWhere('i.id != :val3')
+    //         ->setParameter('val1', $inscription->getNiveau())->setParameter('val2', $inscription->getFiliere())
+    //         ->setParameter('val3', $inscription->getId())
+    //         ->orderBy('i.id', 'ASC');
+    //     $query=$a->getQuery();
 
-        return $query->execute();
+    //     return $query->execute();
         
-    }
+    // }
 
     // /**
     //  * @return Inscription[] Returns an array of Inscription objects

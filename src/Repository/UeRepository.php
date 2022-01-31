@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Ue;
 use App\Entity\User;
+use App\Entity\Niveau;
+use App\Entity\Filiere;
 use App\Entity\Inscription;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -40,6 +42,31 @@ class UeRepository extends ServiceEntityRepository
         $query=$a->getQuery();
 
         return $query->execute();
+        
+    }
+
+    public function uePasEncoreNoterPourInscription(User $user,Filiere $filiere, Niveau $niveau, Inscription $inscription)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        select distinct matiere.nom, ue.id as id from matiere inner join ue on ue.matiere_id =
+        matiere.id  where matiere.id in( 
+        SELECT matiere_id from ue where filiere_id= :filiere 
+        AND niveau_id= :niveau AND ue.id not in ( SELECT notes_etudiant.ue_id
+        FROM notes_etudiant WHERE notes_etudiant.inscription_id = (
+        SELECT inscription.id FROM inscription WHERE inscription.id= :inscription
+        ) ) ) AND matiere.user_id= :user
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'user'=>$user->getId(),
+            'filiere'=>$filiere->getId(),
+            'niveau'=>$niveau->getId(),
+            'inscription'=>$inscription->getId()
+        ]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
         
     }
 

@@ -54,8 +54,8 @@
 						<form action="{{path('notes_etudiant')}}" method="post">
 							<table class="table">
 								<tr>
-									<th>Etudiant</th>
-									<td>
+									<th style="width:12%;">Etudiant</th>
+									<th>
 										<select class="form-control" type="text" name="inscription" id="">
 											{% for inscription in inscriptions %}
 												<option value="{{inscription.id}}">{{inscription.etudiant.nom}}</option>
@@ -63,7 +63,7 @@
 												<option value="">Liste vide</option>
 											{% endfor %}
 										</select>
-									</td>
+									</th>
 									
 								</tr>
 
@@ -79,7 +79,7 @@
 			<div class="row">
 				<div class="col offset-3">
 					<div class="form-group">
-					<a href="{{path('note_filiere')}}" class="btn btn-primary">Retour</a>
+					<a href="{{path('filiere_niveau_etudiant')}}" class="btn btn-primary">Retour</a>
 						<button type="submit" style="width:190px;" class="btn btn-primary">Choisir</button>
 					</div>
 				</form>

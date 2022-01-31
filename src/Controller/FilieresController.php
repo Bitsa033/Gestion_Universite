@@ -53,7 +53,9 @@ class FilieresController extends AbstractController
         return $this->render('universg/filieres.html.twig', [
             'controller_name' => 'FilieresController',
             'filieres'=>$filiereRepository->filieresUser($user),
-            'filieresNb'=>$filiereRepository->findAll()
+            'filieresNb'=>$filiereRepository->count([
+                'user'=>$user
+            ]),
         ]);
     }
 

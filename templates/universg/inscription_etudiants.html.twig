@@ -70,7 +70,6 @@
 
 							<form action="{{path('inscription_etudiants')}}" method="post">
 								<select style="margin-left:1%;" type="text" name="etudiant" class="form-control" id="">
-									<option value="">Etudiant</option>
 									{% for etudiant in etudiants %}
 										<option value="{{etudiant.id}}">{{etudiant.nom}}
 											{{etudiant.prenom}}
@@ -85,7 +84,7 @@
 								<select style="margin-left:1%;" type="text" name="filiere" class="form-control" id="">
 									<option value="">Filiere</option>
 									{% for filiere in filieres %}
-										<option value="{{filiere.id}}">{{filiere.sigle}}</option>
+										<option value="{{filiere.id}}">{{filiere.nom}}</option>
 
 									{% endfor %}
 								</select>

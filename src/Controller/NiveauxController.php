@@ -51,7 +51,9 @@ class NiveauxController extends AbstractController
         return $this->render('universg/niveaux.html.twig', [
             'controller_name' => 'NiveauxController',
             'niveaux'=>$niveauRepository->niveauxUser($user),
-            'niveauxsNb'=>$niveauRepository->findAll(),
+            'niveauxNb'=>$niveauRepository->count([
+                'user'=>$user
+            ]),
         ]);
     }
 

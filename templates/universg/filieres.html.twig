@@ -16,7 +16,7 @@
               <div class="info-box-content">
                 <span class="info-box-text">Nb filieres</span>
                 <span class="info-box-number">
-                 {{filieresNb|length}}
+                 {{filieresNb}}
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -62,13 +62,13 @@
                   <i>{{filiere.nom}}</i>
                   </td>
                   <td>
-                    <a class="btn btn-info" href="{{path('filieres',{id:filiere.id})}}">Consulter <i class="fa fa-eye"></i></a>
+                    <a class="btn btn-info" href="{{path('filieres',{id:filiere.id})}}">Infos <i class="fa fa-eye"></i></a>
                    <a class="btn btn-warning" href="{{path('suppression_filiere',{id:filiere.id})}}">Supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
               {% else %}
                   <tr>
-                    <td colspan="2">Désolé, ce tableau est vide pour le moment !</td>
+                    <td colspan="2">Liste vide !</td>
                   </tr>
               {% endfor %}
             </table>

@@ -16,7 +16,7 @@
               <div class="info-box-content">
                 <span class="info-box-text">Nb niveaux</span>
                 <span class="info-box-number">
-                {{niveauxsNb|length}}
+                {{niveauxNb}}
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -51,11 +51,11 @@
          <!-- /.row -->
         
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-10">
             <table class="table table-bordered">
               <tr>
                   <th>Niveaux</th>
-                  <th>Action</th>
+                  <th >Action</th>
               </tr>
               {% for niveau in niveaux %}
               <tr>
@@ -64,13 +64,13 @@
                   <i><strong> {{niveau.nom}}</strong></i>
                   </td>
                   <td>
-                  <a class="btn btn-info" href="{{path('consultation_niveau',{id:niveau.id})}}">Consulter <i class="fa fa-eye"></i></a>
+                  <a class="btn btn-info" href="{{path('consultation_niveau',{id:niveau.id})}}">Infos <i class="fa fa-eye"></i></a>
                    <a class="btn btn-warning" href="{{path('suppression_niveau',{id:niveau.id})}}">Supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
               {% else %}
                   <tr>
-                    <td colspan="2">Désolé, ce tableau est vide pour le moment !</td>
+                    <td colspan="2">Liste vide !</td>
                   </tr>
               {% endfor %}
             </table>

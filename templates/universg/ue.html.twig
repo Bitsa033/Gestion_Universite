@@ -42,7 +42,7 @@
                       <select type="text" name="filiere" class="form-control" id="">
                         <option value="">Filiere</option>
                         {% for ues1 in filieres %}
-                        <option value="{{ues1.id}}">{{ues1.sigle}}</option>
+                        <option value="{{ues1.id}}">{{ues1.nom}}</option>
                         {% endfor %}
                       </select>
                       <select type="text" name="niveau" class="form-control" id="">
@@ -74,7 +74,7 @@
                   </tr>
                   {% else %}
                   <tr>
-                    <td colspan="4">Désolé, ce tableau est vide pour le moment !</td>
+                    <td colspan="4">Liste vide !</td>
                   </tr>
                   {% endfor %}
 

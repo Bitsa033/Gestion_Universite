@@ -36,19 +36,19 @@
 
 				<div class="row">
 					<div class="col-md-12">
-						<h5>Imprimer des inscriptions</h5>
+						<h5>Trier des inscriptions par filiere et par niveau</h5>
 						<table class="table table-bordered">
 							<div class="form-inline">
-								<p>Trier par :
+								<p>
 									<form action="{{path('liste_inscriptions_etudiants')}}" method="post">
-										<select type="text" name="filiere" class="form-control" id="">
-											<option value="">Filiere</option>
+										Filiere : <select type="text" name="filiere" class="form-control" id="">
+											<option value="">Toutes</option>
 											{% for inc1 in filieres %}
-												<option value="{{inc1.id}}">{{inc1.sigle}}</option>
+												<option value="{{inc1.id}}">{{inc1.nom}}</option>
 											{% endfor %}
 										</select>
-										<select type="text" name="niveau" class="form-control" id="">
-											<option value="">niveau</option>
+										Niveau : <select type="text" name="niveau" class="form-control" id="">
+											<option value="">Tous</option>
 											{% for niveau in niveaux %}
 												<option value="{{niveau.id}}">{{niveau.nom}}</option>
 											{% endfor %}
@@ -65,16 +65,16 @@
 								<th>Niveau</th>
 								<th>Filiere</th>
 							</tr>
-							{% for inc1 in recherche %}
+							{% for inscription in inscriptions %}
 								<tr>
-									<td>{{inc1.etudiant.nom}}
-										{{inc1.etudiant.prenom}}</td>
-									<td>{{inc1.niveau.nom}}</td>
-									<td>{{inc1.filiere.sigle}}</td>
+									<td>{{inscription.etudiant.nom}}
+										{{inscription.etudiant.prenom}}</td>
+									<td>{{inscription.niveau.nom}}</td>
+									<td>{{inscription.filiere.sigle}}</td>
 								</tr>
 							{% else %}
 								<tr>
-									<td colspan="5">Désolé, ce tableau est vide pour le moment !</td>
+									<td colspan="5">Liste vide !</td>
 								</tr>
 							{% endfor %}
 

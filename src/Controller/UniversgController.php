@@ -27,7 +27,7 @@ class UniversgController extends AbstractController
     /**
      * @Route("/universg", name="universg")
      */
-    public function index(InscriptionRepository $inscriptionRepository, FiliereRepository $filiereRepository, NiveauRepository $NiveauRepository, MatiereRepository $matiereRepository) : Response
+    public function index(InscriptionRepository $inscriptionRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, MatiereRepository $matiereRepository) : Response
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -41,16 +41,29 @@ class UniversgController extends AbstractController
         return $this->render('universg/index.html.twig', [
             'controller_name' => 'UniversgController',
             'inscriptions'=>$inscriptionRepository->inscriptionssUser($user),
+            'inscriptionsNb'=>$inscriptionRepository->count([
+                'user'=>$user
+            ]),
             'filieres'=>$filiereRepository->filieresUser($user),
-            'niveaux'=>$NiveauRepository->niveauxUser($user),
-            'matieres'=>$matiereRepository->matieresUser($user)
+            'filieresNb'=>$filiereRepository->count([
+                'user'=>$user
+            ]),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
+            'niveauxNb'=>$niveauRepository->count([
+                'user'=>$user
+            ]),
+            'matieres'=>$matiereRepository->matieresUser($user),
+            'matieresNb'=>$matiereRepository->count([
+                'user'=>$user
+            ]),
         ]);
     }
 
     /**
-     * @Route("note_filiere", name="note_filiere")
+     * on choisi la filiere et le niveau afin d'afficher ses etudiants
+     * @Route("filiere_niveau_etudiant", name="filiere_niveau_etudiant")
      */
-     function note_filiere(SessionInterface $session, Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+     function filiere_niveau_etudiant(SessionInterface $session, Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
          //on cherche l'utilisateur connecté
          $user= $this->getUser();
          //si l'utilisateur est n'est pas connecté,
@@ -73,7 +86,7 @@ class UniversgController extends AbstractController
             
             return $this->redirectToRoute('notes_etudiant');
         }
-         return $this->render('universg/note_filiere.html.twig',[
+         return $this->render('universg/filiere_niveau_etudiant.html.twig',[
              'filieres'=>$filiereRepository->filieresUser($user),
              'niveaux'=>$niveauRepository->niveauxUser($user),
          ]);
@@ -82,7 +95,7 @@ class UniversgController extends AbstractController
      /**
      * @Route("notes_etudiant", name="notes_etudiant")
      */
-    function note_etudiant(SessionInterface $session, Request $request, InscriptionRepository $inscriptionRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+    function notes_etudiant(SessionInterface $session, Request $request, InscriptionRepository $inscriptionRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         //si l'utilisateur est n'est pas connecté,
@@ -108,7 +121,7 @@ class UniversgController extends AbstractController
 
         $filiere=$filiereRepository->find($sessionF);
         $niveau=$niveauRepository->find($sessionN);
-        return $this->render('universg/note_etudiant.html.twig',[
+        return $this->render('universg/notes_etudiant.html.twig',[
             'inscriptions'=>$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$filiere,$niveau),
         ]);
     }
@@ -151,7 +164,8 @@ class UniversgController extends AbstractController
         $sessionF=$session->get('filiereNote',[]);
         $sessionN=$session->get('niveauNote',[]);
 
-        $matieres=$ueRepository->uesFiliereNiveau($sessionF,$sessionN);
+        //$matieres=$ueRepository->uesFiliereNiveau($sessionF,$sessionN);
+        $matieres=$ueRepository->uePasEncoreNoterPourInscription($user,$sessionF,$sessionN,$sessionI);
         $inscriptions=$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$request->request->get('filiere'),$request->request->get('niveau'));
 
         return $this->render('universg/noter_etudiant.html.twig', [

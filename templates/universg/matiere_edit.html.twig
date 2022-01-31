@@ -1,128 +1,112 @@
 {% extends 'layout/layout.html.twig' %}
 
-{% block title %}UniversgController!{% endblock %}
+{% block title %}UniversgController!
+{% endblock %}
 
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Info boxes -->
-        <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+		<!-- Main content -->
+		<section class="content">
+			<div
+				class="container-fluid">
+				<!-- Info boxes -->
+				<div class="row">
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box">
+							<span class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-cog"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">CPU Traffic</span>
-                <span class="info-box-number">
-                  10
-                  <small>%</small>
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+							<div class="info-box-content">
+								<span class="info-box-text">CPU Traffic</span>
+								<span class="info-box-number">
+									10
+									<small>%</small>
+								</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box mb-3">
+							<span class="info-box-icon bg-danger elevation-1">
+								<i class="fas fa-thumbs-up"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Likes</span>
-                <span class="info-box-number">41,410</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
+							<div class="info-box-content">
+								<span class="info-box-text">Likes</span>
+								<span class="info-box-number">41,410</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
 
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
+					<!-- fix for small devices only -->
+					<div class="clearfix hidden-md-up"></div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <a href="{{path('ue')}}" class="info-box-icon bg-info elevation-1"><i class="fas fa-shopping-cart"></i></a>
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box mb-3">
+							<a href="{{path('ue')}}" class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-shopping-cart"></i>
+							</a>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Matieres des</span>
-                <span class="info-box-text">Filieres</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+							<div class="info-box-content">
+								<span class="info-box-text">Matieres des</span>
+								<span class="info-box-text">Filieres</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box mb-3">
+							<span class="info-box-icon bg-warning elevation-1">
+								<i class="fas fa-users"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">New Members</span>
-                <span class="info-box-number">2,000</span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
+							<div class="info-box-content">
+								<span class="info-box-text">New Members</span>
+								<span class="info-box-number">2,000</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
 
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-inline">
-              <div class="card insert-filiere">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-inline">
+							<div class="card insert-filiere">
 
-                <div class="card-body">
-                  <form action="" method="post">
-                      <input type="text" name="nom_mat" value="{{matiere.nom}}" class="form-control" id="">
-                      <button type="submit" class="btn btn-success">Valider</button>
-                  </form>
-                </div>
-              
-              </div>
-            </div>
-          </div>
-          <!-- /.col niveau -->
-        </div>
-         <!-- /.row -->
-        
-        <div class="row">
-          <div class="col-md-12">
-            <table class="table table-bordered">
-              <tr>
-                  <th>Matieres  <a class="btn btn-info" href="{{path('ue')}}">Unites d'enseignement</a></th>
-                  <th>Actions</th>
-              </tr>
-              {% for matiere in matieres %}
-              <tr>
-                  <td>{{matiere.nom}}</td>
-                  <td>
-                    <a class="btn btn-info" href="{{path('transfert_matiere',{id:matiere.id})}}">transferer</a>
-                    <a class="btn btn-warning" href="{{path('matiere_edit',{id:matiere.id})}}">modifier</a>
-                    <a class="btn btn-info" href="{{path('suppression_matiere',{id:matiere.id})}}">consulter <i class="fa fa-book"></i></a>
-                    <a class="btn btn-warning" href="{{path('suppression_matiere',{id:matiere.id})}}">supprimer <i class="fa fa-times"></i></a>
-                  </td>
-              </tr>
-              {% else %}
-                  <tr>
-                    <td colspan="5">Désolé, ce tableau est vide pour le moment !</td>
-                  </tr>
-              {% endfor %}
-            </table>
-          </div>
-          <!-- /.col --> 
-        </div>
-        <!-- /.row --> 
-        </div>
-            
-    </section>
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
+								<div class="card-body">
+									<form action="" method="post">
+										<input type="text" name="nom_mat" value="{{matiere.nom}}" class="form-control" id="">
+										<button type="submit" class="btn btn-success">Valider</button>
+									</form>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<!-- /.col niveau -->
+				</div>
+				<!-- /.row -->
+
+			</div>
+
+		</section>
+		<!-- /.content -->
+	</div>
+	<!-- /.content-wrapper -->
 {% endblock %}
