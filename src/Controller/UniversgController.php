@@ -164,8 +164,8 @@ class UniversgController extends AbstractController
         $sessionF=$session->get('filiereNote',[]);
         $sessionN=$session->get('niveauNote',[]);
 
-        //$matieres=$ueRepository->uesFiliereNiveau($sessionF,$sessionN);
-        $matieres=$ueRepository->uePasEncoreNoterPourInscription($user,$sessionF,$sessionN,$sessionI);
+        $matieres=$ueRepository->uesFiliereNiveau($sessionF,$sessionN);
+        //$matieres=$ueRepository->uePasEncoreNoterPourInscription($user,$sessionF,$sessionN,$sessionI);
         $inscriptions=$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$request->request->get('filiere'),$request->request->get('niveau'));
 
         return $this->render('universg/noter_etudiant.html.twig', [

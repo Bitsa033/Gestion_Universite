@@ -49,13 +49,11 @@ class UeRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-        select distinct matiere.nom, ue.id as id from matiere inner join ue on ue.matiere_id =
-        matiere.id  where matiere.id in( 
-        SELECT matiere_id from ue where filiere_id= :filiere 
-        AND niveau_id= :niveau AND ue.id not in ( SELECT notes_etudiant.ue_id
-        FROM notes_etudiant WHERE notes_etudiant.inscription_id = (
-        SELECT inscription.id FROM inscription WHERE inscription.id= :inscription
-        ) ) ) AND matiere.user_id= :user
+        SELECT ue.id, matiere.nom from ue inner join matiere on matiere.id = ue.matiere_id,
+        inscription where ue.filiere_id= :filiere AND ue.niveau_id= :niveau AND ue.id 
+        not in ( SELECT notes_etudiant.ue_id FROM notes_etudiant) AND 
+        ue.user_id= :user and inscription.id= :inscription
+
             ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([
