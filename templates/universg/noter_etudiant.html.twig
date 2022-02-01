@@ -60,7 +60,7 @@
 									<select type="text" name="ue" class="form-control" id="">
 
 										{% for ue in matieres %}
-											<option value="{{ue.id}}">{{ue.matiere.nom}}</option>
+											<option value="{{ue.id}}">{{ue.nom}}</option>
 										{% else %}
 											<option value="">Liste vide</option>
 										{% endfor %}

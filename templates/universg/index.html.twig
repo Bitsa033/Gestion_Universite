@@ -1,116 +1,125 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Info boxes -->
-        <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
+		<!-- Main content -->
+		<section class="content">
+			<div
+				class="container-fluid">
+				<!-- Info boxes -->
+				<div class="row">
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box">
+							<span class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-users"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Nb inscriptions</span>
-                <span class="info-box-number">
-                  {{inscriptionsNb}}
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-book"></i></span>
+							<div class="info-box-content">
+								<span class="info-box-text">Nb inscriptions</span>
+								<span class="info-box-number">
+									{{inscriptionsNb}}
+								</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box">
+							<span class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-th"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Nb filieres</span>
-                <span class="info-box-number">
-                  {{filieresNb}}
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
+							<div class="info-box-content">
+								<span class="info-box-text">Nb filieres</span>
+								<span class="info-box-number">
+									{{filieresNb}}
+								</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-table"></i></span>
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box">
+							<span class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-th"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Nb niveaux</span>
-                <span class="info-box-number">
-                  {{niveauxNb}}
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
+							<div class="info-box-content">
+								<span class="info-box-text">Nb niveaux</span>
+								<span class="info-box-number">
+									{{niveauxNb}}
+								</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-pen"></i></span>
+					<div class="col-12 col-sm-6 col-md-3">
+						<div class="info-box">
+							<span class="info-box-icon bg-info elevation-1">
+								<i class="fas fa-th"></i>
+							</span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Nb matieres</span>
-                <span class="info-box-number">
-                  {{matieresNb}}
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
+							<div class="info-box-content">
+								<span class="info-box-text">Nb matieres</span>
+								<span class="info-box-number">
+									{{matieresNb}}
+								</span>
+							</div>
+							<!-- /.info-box-content -->
+						</div>
+						<!-- /.info-box -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
 
-        <div class="row">
-          <div class="col-md-12">
-          <h5>Liste des Etudiants inscris</h5>
-              <table class="table table-bordered">
+				<div class="row">
+					<div class="col-md-12">
+						<h5 class='h5'>Liste des Etudiants inscris  <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a> </h5>
+						<table class="table table-bordered">
 
-                  <tr>
-                     
-                      <th>Nom</th>
-                    
-                      <th>Niveau</th>
-                      <th>Filiere</th>
-                  </tr>
-                  {% for inc1 in inscriptions %}
-                  <tr>
-                     
-                      <td>{{inc1.etudiant.nom}}  {{inc1.etudiant.prenom}}</td>
-                      <td>{{inc1.niveau.nom}}</td>
-                      <td>{{inc1.filiere.sigle}}</td>
-                  </tr>
-                  {% else %}
-                  <tr>
-                    <td colspan="5">Liste vide !</td>
-                  </tr>
-                  {% endfor %}
+							<tr>
+              <th>ID</th>
+								<th>Nom</th>
+								<th>Niveau</th>
+								<th>Filiere</th>
+							</tr>
+							{% for inscription in inscriptions %}
+								<tr>
 
-              
-              </table>
-          </div>
-          <!-- col -->
-        </div>
-        <!-- row -->
-        
+									<td>{{inscription.id}}</td>
+									<td>{{inscription.etudiant.nom}}
+										{{inscription.etudiant.prenom}}</td>
+									<td>{{inscription.niveau.nom}}</td>
+									<td>{{inscription.filiere.sigle}}</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="5">Liste vide !</td>
+								</tr>
+							{% endfor %}
 
 
-            
-    </section>
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-{% endblock %}
+						</table>
+					</div>
+					<!-- col -->
+				</div>
+				<!-- row -->
+
+
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+	{% endblock %}

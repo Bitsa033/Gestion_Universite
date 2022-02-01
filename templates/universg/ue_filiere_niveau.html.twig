@@ -1,8 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}UniversgController!
-{% endblock %}
-
 {% block body %}
 	<!-- Content Wrapper. Contains page content -->
 	<div
@@ -13,45 +10,10 @@
 			<div
 				class="container-fluid">
 				<!-- Info boxes -->
+				
 				<div class="row">
-					<div class="col-12 col-sm-6 col-md-3 offset-2">
-						<div class="info-box">
-							<a class="info-box-icon bg-info elevation-1">
-								<i class="fas fa-th"></i>
-							</a>
-
-							<div class="info-box-content">
-								<span class="info-box-text">Nb matieres</span>
-								<span class="info-box-number">
-									12
-								</span>
-							</div>
-							<!-- /.info-box-content -->
-						</div>
-						<!-- /.info-box -->
-					</div>
-					<!-- /.col -->
-					<div class="col-12 col-sm-6 col-md-3">
-						<div class="info-box mb-3">
-							<a href="{{path('ue')}}" class="info-box-icon bg-info elevation-1">
-								<i class="fas fa-th"></i>
-							</a>
-
-							<div class="info-box-content">
-								<span class="info-box-text">Unites d'en</span>
-								<span class="info-box-text">seignements</span>
-							</div>
-							<!-- /.info-box-content -->
-						</div>
-						<!-- /.info-box -->
-					</div>
-					<!-- /.col -->
-
-				</div>
-				<!-- /.row -->
-				<div class="row">
-					<div class="col-md-8 offset-1">
-						<p>Trier par :
+					<div class="col-md-8 offset-1 position">
+						<p class='h5'>Veuillez choisir la filiere et le niveau pour les Ues à creer :
 							<form action="{{path('ue_filiere_niveau')}}" method="post">
 								<table class="table">
 									<tr>
@@ -83,8 +45,8 @@
 										</td>
 
 										{# <td>
-																					<button type="submit" class="btn btn-success">Choisir</button>
-																				</td> #}
+																															<button type="submit" class="btn btn-success">Choisir</button>
+																														</td> #}
 									</tr>
 
 								</table>
@@ -99,7 +61,7 @@
 				<!-- ./row -->
 
 				<div class="row">
-					<div class="col offset-3">
+					<div class="col offset-3 position">
 						<div class="form-group">
 							<button type="submit" style="width:190px;" class="btn btn-success">Choisir</button>
 						</div>

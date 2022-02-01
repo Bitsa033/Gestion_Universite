@@ -12,32 +12,10 @@
 		<section class="content">
 			<div
 				class="container-fluid">
-				<!-- Info boxes -->
+				
 				<div class="row">
-					<div class="col-12 col-sm-6 col-md-3 offset-2">
-						<div class="info-box">
-							<a class="info-box-icon bg-info elevation-1">
-								<i class="fas fa-th"></i>
-							</a>
-
-							<div class="info-box-content">
-								<a href="{{path('etudiants')}}" class="info-box-text">Retour</a>
-								<span class="info-box-number">
-									<i class="fa fa-back"></i>
-								</span>
-							</div>
-							<!-- /.info-box-content -->
-						</div>
-						<!-- /.info-box -->
-					</div>
-					<!-- /.col -->
-					
-
-				</div>
-				<!-- /.row -->
-				<div class="row">
-					<div class="col-md-8 offset-1">
-						<p>Trier par :
+					<div class="col-md-8 offset-1 position">
+						<p class='h5'>Veuillez choisir la filiere et le niveau de l'etudiant à noter :
 							<form action="{{path('filiere_niveau_etudiant')}}" method="post">
 								<table class="table">
 									<tr>
@@ -85,7 +63,7 @@
 				<!-- ./row -->
 
 				<div class="row">
-					<div class="col offset-3">
+					<div class="col offset-3 position">
 						<div class="form-group">
 							<button type="submit" style="width:190px;" class="btn btn-success">Choisir</button>
 						</div>
