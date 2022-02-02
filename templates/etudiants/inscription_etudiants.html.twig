@@ -18,7 +18,7 @@
 
 					<div class="col-12 col-sm-6 col-md-3 offset-3">
 						<div class="info-box mb-3">
-							<a href="{{path('creation_etudiants')}}" class="info-box-icon bg-primary elevation-1">
+							<a href="{{path('etudiants_ajout')}}" class="info-box-icon bg-primary elevation-1">
 								<i class="fa fa-pen"></i>
 							</a>
 
@@ -37,7 +37,7 @@
 
 					<div class="col-12 col-sm-6 col-md-3">
 						<div class="info-box mb-3">
-							<a href="{{path('liste_inscriptions_etudiants')}}" class="info-box-icon bg-primary elevation-1">
+							<a href="{{path('etudiants_liste_Inscriptions')}}" class="info-box-icon bg-primary elevation-1">
 								<i class="fa fa-th"></i>
 							</a>
 
@@ -68,7 +68,7 @@
 					<div class="col-md-6 offset-3">
 						<div class="card-body">
 
-							<form action="{{path('inscription_etudiants')}}" method="post">
+							<form action="" method="post">
 								<select style="margin-left:1%;" type="text" name="etudiant" class="form-control" id="">
 									{% for etudiant in etudiants %}
 										<option value="{{etudiant.id}}">{{etudiant.nom}}

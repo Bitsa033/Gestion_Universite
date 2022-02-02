@@ -15,22 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @Route("matieres_",name="matieres_")
+ */
 class MatieresController extends AbstractController
 {
-    /**
-     * @Route("/matieres", name="matieres")
-     */
-    public function index(): Response
-    {
-        return $this->render('matieres/index.html.twig', [
-            'controller_name' => 'MatieresController',
-        ]);
-    }
 
      /**
-     * @Route("matieres", name="matieres")
+     * @Route("ajoutEt_liste", name="ajoutEt_liste")
      */
-    public function matieres (MatiereRepository $matiereRepository, Request $request, ManagerRegistry $end)
+    public function ajoutEt_liste (MatiereRepository $matiereRepository, Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -50,10 +44,10 @@ class MatieresController extends AbstractController
             $manager->persist($matiere);
             $manager->flush();
 
-            return $this->redirectToRoute('matieres');
+            return $this->redirectToRoute('matieres_ajoutEt_liste');
         } 
 
-        return $this->render('universg/matieres.html.twig', [
+        return $this->render('matieres/matieres.html.twig', [
             'controller_name' => 'UniversgController',
             'matieres'=>$matiereRepository->matieresUser($user),
             'matieresNb'=>$matiereRepository->count([
@@ -63,9 +57,9 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * @Route("matiere_edit/{id}", name="matiere_edit")
+     * @Route("miseAjour/{id}", name="miseAjour")
      */
-    public function matiere_edit (Matiere $matiere, Request $request, ManagerRegistry $end)
+    public function miseAjour (Matiere $matiere, Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -82,12 +76,12 @@ class MatieresController extends AbstractController
             $manager = $end->getManager();
             $manager->flush();
 
-            return $this->redirectToRoute('matieres');
+            return $this->redirectToRoute('matieres_ajoutEt_liste');
         } 
 
         $repos=$this->getDoctrine()->getRepository(Matiere::class);
         $matieres = $repos->findAll();
-        return $this->render('universg/matiere_edit.html.twig', [
+        return $this->render('matieres/matiere_miseAjour.html.twig', [
             'controller_name' => 'UniversgController',
             'matieres'=>$matieres,
             'matiere'=>$matiere
@@ -96,9 +90,9 @@ class MatieresController extends AbstractController
 
     /**
      * Suppression des matieres
-     * @Route("matiere_suppression/{id}", name="suppression_matiere")
+     * @Route("suppression/{id}", name="suppression")
      */
-    public function suppression_matiere (Matiere $matiere, ManagerRegistry $end)
+    public function suppression (Matiere $matiere, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -112,15 +106,15 @@ class MatieresController extends AbstractController
         $manager->remove($matiere);
         $manager->flush();
 
-        return $this->redirectToRoute('matieres');
+        return $this->redirectToRoute('matieres_ajoutEt_liste');
         
     }
 
     /**
-     * on choisi la filiere et le niveau  pour la creation de leur ues
-     * @Route("ue_filiere_niveau", name="ue_filiere_niveau")
+     * on choisi la filiere et le niveau  pour la creation des ues
+     * @Route("choix_filiereEtNiveau_Ue", name="choix_filiereEtNiveau_Ue")
      */
-    function ue_filiere_niveau(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+    function choix_filiereEtNiveau_Ue(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         //si l'utilisateur est n'est pas connecté,
@@ -140,9 +134,9 @@ class MatieresController extends AbstractController
             //dd($session);
             $session->set('filiere',$filiere);
             $session->set('niveau',$niveau);
-            return $this->redirectToRoute('transfert_matiere');
+            return $this->redirectToRoute('matieres_transfert');
         }
-        return $this->render('universg/ue_filiere_niveau.html.twig',[
+        return $this->render('matieres/filiereNiveau_Ue.html.twig',[
             'filieres'=>$filiereRepository->filieresUser($user),
             'niveaux'=>$niveauRepository->niveauxUser($user),
         ]);
@@ -150,9 +144,9 @@ class MatieresController extends AbstractController
 
     /**
      * on cree des ues pour les filieres et niveaux
-     * @Route("transfert_matiere", name="transfert_matiere")
+     * @Route("transfert", name="transfert")
      */
-    public function transfert_matiere (SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,MatiereRepository $matiereRepository ,Request $request, ManagerRegistry $end)
+    public function transfert(SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,MatiereRepository $matiereRepository ,Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -178,12 +172,12 @@ class MatieresController extends AbstractController
             $manager->persist($ue);
             $manager->flush();
             
-            return $this->redirectToRoute('transfert_matiere');
+            return $this->redirectToRoute('matieres_transfert');
         }
         $filieresPasEncoreUe=$filiereRepository->find($sessionF);
         $niveauxPasEncoreUe=$niveauRepository->find($sessionN);
        
-        return $this->render('universg/transfert_matiere.html.twig', [
+        return $this->render('matieres/transfert_matiere.html.twig', [
             'controller_name' => 'MatieresController',
             'filieres'=>$filiereRepository->filieresUser($user),
             'matieres'=>$matiereRepository->matiereUserPasEncoreUe($user,$filieresPasEncoreUe,$niveauxPasEncoreUe),
@@ -192,10 +186,42 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * on consulte les donnees des ues
-     * @Route("ue", name="ue")
+     * on choisi la filiere et le niveau  pour consulter des ues
+     * @Route("choix_filiereEtNiveauUes_liste", name="choix_filiereEtNiveauUes_liste")
      */
-    public function ue (FiliereRepository $filiereRepository,NiveauRepository $niveauRepository ,Request $request, UeRepository $repo)
+    function choix_filiereEtNiveauUes_liste(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        if (!empty($request->request->all())) {
+            $filiere=$filiereRepository->find($request->request->get("filiere"));
+            $niveau=$niveauRepository->find($request->request->get('niveau'));
+            $get_filiere=$session->get('filiere',[]);
+            if (!empty($get_filiere)) {
+              $session->set('filiere',$filiere);
+              $session->set('niveau',$niveau);
+            }
+            //dd($session);
+            $session->set('filiere',$filiere);
+            $session->set('niveau',$niveau);
+            return $this->redirectToRoute('matieres_liste_Ues');
+        }
+        return $this->render('matieres/filiereNiveauUes_liste.html.twig',[
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
+        ]);
+    }
+
+    /**
+     * on consulte les donnees des ues
+     * @Route("liste_Ues", name="liste_Ues")
+     */
+    public function liste_Ues (SessionInterface $session,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository,UeRepository $ueRepository,Request $request)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -206,21 +232,21 @@ class MatieresController extends AbstractController
         }
 
         //sinon on consulte les données
-        $repostn=$this->getDoctrine()->getRepository(Ue::class)->findAll();
-        $uesUserFiliereNiveau=$repo->uesFiliereNiveau($request->request->get('filiere'),$request->request->get('niveau'));
-        return $this->render('universg/ue.html.twig', [
+        $sessionF=$session->get('filiere',[]);
+        $sessionN=$session->get('niveau',[]);
+        $uesUserFiliereNiveau=$ueRepository->uesFiliereNiveau($sessionF,$sessionN);
+        return $this->render('matieres/liste_Ues.html.twig', [
             'controller_name' => 'MatieresController',
-            'ues'=>$repostn,
             'filieres'=>$filiereRepository->filieresUser($user),
             'niveaux'=>$niveauRepository->niveauxUser($user),
-            'recherche'=>$uesUserFiliereNiveau
+            'uesUserFiliereNiveau'=>$uesUserFiliereNiveau
         ]);
     }
 
 
     /**
      * on supprime les ues
-     * @Route("ue_suppression/{id}", name="suppression_ue")
+     * @Route("ue_suppression/{id}", name="ue_suppression")
      */
     public function suppression_ue(Ue $ue, ManagerRegistry $end)
     {
@@ -236,7 +262,7 @@ class MatieresController extends AbstractController
         $manager->remove($ue);
         $manager->flush();
 
-        return $this->redirectToRoute('ue');
+        return $this->redirectToRoute('matieres_liste_Ues');
         
     }
     

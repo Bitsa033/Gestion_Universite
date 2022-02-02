@@ -10,21 +10,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @Route("filieres_", name="filieres_")
+ */
 class FilieresController extends AbstractController
 {
-    /**
-     * @Route("/filieres", name="filieres")
-     */
-    public function index(): Response
-    {
-        return $this->render('filieres/index.html.twig', [
-            'controller_name' => 'FilieresController',
-        ]);
-    }
 
     /**
      * Insertion et affichage des filieres
-     * @Route("filieres", name="filieres")
+     * @Route("ajoutEt_liste", name="ajoutEt_liste")
      */
     public function filiere(FiliereRepository $filiereRepository,Request $request, ManagerRegistry $end)
     {
@@ -47,10 +41,10 @@ class FilieresController extends AbstractController
             $manager->persist($filiere);
             $manager->flush();
 
-            return $this->redirectToRoute('filieres');
+            return $this->redirectToRoute('filieres_ajoutEt_liste');
         } 
          
-        return $this->render('universg/filieres.html.twig', [
+        return $this->render('filieres/filieres.html.twig', [
             'controller_name' => 'FilieresController',
             'filieres'=>$filiereRepository->filieresUser($user),
             'filieresNb'=>$filiereRepository->count([
@@ -61,7 +55,7 @@ class FilieresController extends AbstractController
 
     /**
      * Suppression des filieres
-     * @Route("filiere/suppression/{id}", name="suppression_filiere")
+     * @Route("suppression/{id}", name="suppression")
      */
     public function suppression_filiere (Filiere $filiere, ManagerRegistry $end)
     {
@@ -78,11 +72,8 @@ class FilieresController extends AbstractController
         $manager->remove($filiere);
         $manager->flush();
 
-        return $this->redirectToRoute('filieres');
+        return $this->redirectToRoute('filieres_ajoutEt_liste');
         
-        return $this->render('universg/filieres.html.twig', [
-            'controller_name' => 'FilieresController',
-        ]);
     }
 
 }

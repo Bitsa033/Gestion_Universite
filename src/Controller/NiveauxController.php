@@ -10,23 +10,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @Route("niveaux_", name="niveaux_")
+ */
 class NiveauxController extends AbstractController
 {
-    /**
-     * @Route("/niveaux", name="niveaux")
-     */
-    public function index(): Response
-    {
-        return $this->render('niveaux/index.html.twig', [
-            'controller_name' => 'NiveauxController',
-        ]);
-    }
-
+   
     /**
      * Insertion et affichage des niveaux
-     * @Route("niveaux", name="niveaux")
+     * @Route("ajoutEt_liste", name="ajoutEt_liste")
      */
-    public function niveau (NiveauRepository $niveauRepository,Request $request, ManagerRegistry $end)
+    public function ajoutEt_liste (NiveauRepository $niveauRepository,Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -45,10 +39,10 @@ class NiveauxController extends AbstractController
             $manager->persist($niveau);
             $manager->flush();
 
-            return $this->redirectToRoute('niveaux');
+            return $this->redirectToRoute('niveaux_ajoutEt_liste');
         } 
         
-        return $this->render('universg/niveaux.html.twig', [
+        return $this->render('niveaux/niveaux.html.twig', [
             'controller_name' => 'NiveauxController',
             'niveaux'=>$niveauRepository->niveauxUser($user),
             'niveauxNb'=>$niveauRepository->count([
@@ -59,9 +53,9 @@ class NiveauxController extends AbstractController
 
     /**
      * Suppression des niveaux
-     * @Route("niveau/suppression/{id}", name="suppression_niveau")
+     * @Route("suppression/{id}", name="suppression")
      */
-    public function suppression_niveau (Niveau $niveau, ManagerRegistry $end)
+    public function suppression (Niveau $niveau, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -76,17 +70,17 @@ class NiveauxController extends AbstractController
         $manager->remove($niveau);
         $manager->flush();
 
-        return $this->redirectToRoute('niveau');
+        return $this->redirectToRoute('niveaux_ajoutEt_liste');
         
-        return $this->render('universg/niveaux.html.twig', [
+        return $this->render('niveaux/niveaux.html.twig', [
             'controller_name' => 'NiveauxController',
         ]);
     }
 
     /**
-     * @Route("consultation/niveau/{id}", name="consultation_niveau")
+     * @Route("infos/{id}", name="infos")
      */
-    public function consultation_niveau(Niveau $niveau)
+    public function infos(Niveau $niveau)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -98,7 +92,7 @@ class NiveauxController extends AbstractController
 
         //sinon on consulte les données
         //affichage d'un niveau particulier
-        return $this->render('universg/consultation_niveau.html.twig', [
+        return $this->render('niveaux/consultation_niveau.html.twig', [
             'controller_name' => 'UniversgController',
             'niveau'=>$niveau
         ]);

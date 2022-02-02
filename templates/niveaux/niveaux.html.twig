@@ -14,10 +14,9 @@
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Nb matieres</span>
+                <span class="info-box-text">Nb niveaux</span>
                 <span class="info-box-number">
-                  {{matieresNb}}
-                 
+                {{niveauxNb}}
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -25,6 +24,9 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
+
+          <!-- fix for small devices only -->
+          <div class="clearfix hidden-md-up"></div>
           
         </div>
         <!-- /.row -->
@@ -35,8 +37,8 @@
               <div class="card insert-filiere">
 
                 <div class="card-body">
-                  <form action="" method="post">
-                      <input type="text" name="nom_mat" class="form-control" placeholder="Nom de la matiere" id="">
+                  <form action="{{path('niveaux_ajoutEt_liste')}}" method="post">
+                      <input type="text" name="nom_niv" class="form-control" placeholder="Nom du niveau" id="">
                       <button type="submit" class="btn btn-success">Valider</button>
                   </form>
                 </div>
@@ -49,30 +51,27 @@
          <!-- /.row -->
         
         <div class="row">
-          <div class="col-md-8">
-            <h5 class="h5">Liste des matieres</h5>
-            <h5 class='h5'> 
-             <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a>
-              <a href="{{path('ue_filiere_niveau')}}"  class="btn btn-primary">Ajouter des Ues <i class="fa fa-plus"></i></a>
-              <a href="{{path('ue')}}"  class="btn btn-primary">Consulter des Ues <i class="fa fa-th"></i></a>
-            </h5>
+          <div class="col-md-10">
+            <h5 class='h5'> Liste des niveaux d'études <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a> </h5>
             <table class="table table-bordered">
-            
               <tr>
-                  <th>Matieres</th>
-                  <th style="width:40%;">Actions</th>
+                  <th  style="width:3%;">ID</th>
+                  <th>Niveaux</th>
+                  <th  style="width:33%;">Action</th>
               </tr>
-              {% for matiere in matieres %}
+              {% for niveau in niveaux %}
               <tr>
-                  <td>{{matiere.nom}}</td>
+                <td>{{niveau.id}}</td>
+                  <td> {{niveau.nom}}
+                  </td>
                   <td>
-                    <a class="btn btn-warning" href="{{path('matiere_edit',{id:matiere.id})}}">modifier</a>
-                    <a class="btn btn-warning" href="{{path('suppression_matiere',{id:matiere.id})}}">supprimer <i class="fa fa-times"></i></a>
+                  <a class="btn btn-info" href="{{path('niveaux_infos',{id:niveau.id})}}">Infos <i class="fa fa-eye"></i></a>
+                   <a class="btn btn-warning" href="{{path('niveaux_suppression',{id:niveau.id})}}">Supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
               {% else %}
                   <tr>
-                    <td colspan="5">Liste vide !</td>
+                    <td colspan="2">Liste vide !</td>
                   </tr>
               {% endfor %}
             </table>

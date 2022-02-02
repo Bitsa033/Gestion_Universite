@@ -14,9 +14,10 @@
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Nb filieres</span>
+                <span class="info-box-text">Nb matieres</span>
                 <span class="info-box-number">
-                 {{filieresNb}}
+                  {{matieresNb}}
+                 
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -29,14 +30,13 @@
         <!-- /.row -->
 
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-inline">
               <div class="card insert-filiere">
 
                 <div class="card-body">
-                  <form action="{{path('filieres')}}" method="post">
-                      <input type="text" name="nom_f" class="form-control" placeholder="Nom de la filiere" id="">
-                      <input type="text" name="abbr_filiere" class="form-control" placeholder="Abbreviation" id="">
+                  <form action="{{path('matieres_ajoutEt_liste')}}" method="post">
+                      <input type="text" name="nom_mat" class="form-control" placeholder="Nom de la matiere" id="">
                       <button type="submit" class="btn btn-success">Valider</button>
                   </form>
                 </div>
@@ -44,39 +44,42 @@
               </div>
             </div>
           </div>
-          <!-- /.col filiere -->
+          <!-- /.col niveau -->
         </div>
          <!-- /.row -->
         
         <div class="row">
-          <div class="col-md-10">
-            <h5 class='h5'>Liste des filieres <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a> </h5>
+          <div class="col-md-8">
+            <h5 class="h5">Liste des matieres</h5>
+            <h5 class='h5'> 
+             <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a>
+              <a href="{{path('matieres_choix_filiereEtNiveau_Ue')}}"  class="btn btn-primary">Ajouter des Ues <i class="fa fa-plus"></i></a>
+              <a href="{{path('matieres_choix_filiereEtNiveauUes_liste')}}"  class="btn btn-primary">Consulter des Ues <i class="fa fa-th"></i></a>
+            </h5>
             <table class="table table-bordered">
+            
               <tr>
-                <th  style="width:3%;">ID</th>
-                  <th>filieres</th>
-                  <th style="width:32%;">Action</th>
+                  <th>Matieres</th>
+                  <th style="width:48%;">Actions</th>
               </tr>
-              {% for filiere in filieres %}
+              {% for matiere in matieres %}
               <tr>
-              <td> {{filiere.id}}</td>
+                  <td>{{matiere.nom}}</td>
                   <td>
-                  <strong>{{filiere.sigle}}</strong><br>
-                  <i>{{filiere.nom}}</i>
-                  </td>
-                  <td>
-                    <a class="btn btn-info" href="{{path('filieres',{id:filiere.id})}}">Infos <i class="fa fa-eye"></i></a>
-                   <a class="btn btn-warning" href="{{path('suppression_filiere',{id:filiere.id})}}">Supprimer <i class="fa fa-times"></i></a>
+                    <a class="btn btn-warning" href="{{path('matieres_miseAjour',{id:matiere.id})}}">Mettre à jour</a>
+                    <a class="btn btn-warning" href="{{path('matieres_suppression',{id:matiere.id})}}">Supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>
               {% else %}
                   <tr>
-                    <td colspan="2">Liste vide !</td>
+                    <td colspan="5">Liste vide !</td>
                   </tr>
               {% endfor %}
             </table>
           </div>
-          <!-- /.col filieres --> 
+          
+        </div>
+        <!-- /.col niveaux --> 
         </div>
             
     </section>

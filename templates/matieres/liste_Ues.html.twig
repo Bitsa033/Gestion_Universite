@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UniversgController!
+{% endblock %}
+
+{% block body %}
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
+
+		<!-- Main content -->
+		<section class="content">
+			<div
+				class="container-fluid">
+				<!-- Info boxes -->
+				<div class="row">
+
+					<div class="col-12 ">
+						<br>
+						<h5 class="h5">
+							<a class="btn btn-primary" href="">
+								Generer un fichier pdf
+								<i class="fa fa-file"></i>
+							</a>
+							<a href="{{path('matieres_choix_filiereEtNiveau_Ue')}}" class="btn btn-primary">
+								Ajouter des Ues
+								<i class="fa fa-plus"></i>
+							</a>
+
+						</h5>
+					</div>
+					<!-- /.col -->
+
+				</div>
+				<!-- /.row -->
+
+				<div class="row">
+					<div class="col-md-12">
+						<h5>Liste des unites d'enseignement</h5>
+						<table class="table table-bordered">
+
+							<tr>
+								<th>Actions</th>
+								<th>Matiere</th>
+								<th>Fifliere</th>
+								<th>Niveau</th>
+							</tr>
+							{% for matiere in uesUserFiliereNiveau %}
+								<tr>
+									<td>
+										<a class="btn btn-info" href="{{path('matieres_transfert',{id:matiere.id})}}">modifier
+											<i class="fa fa-edit"></i>
+										</a>
+										<a class="btn btn-warning" href="{{path('matieres_ue_suppression',{id:matiere.id})}}">supprimer
+											<i class="fa fa-times"></i>
+										</a>
+									</td>
+									<td>{{matiere.matiere.nom}}</td>
+									<td>{{matiere.filiere.sigle}}</td>
+									<td>{{matiere.niveau.nom}}</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="4">Liste vide !</td>
+								</tr>
+							{% endfor %}
+
+
+						</table>
+					</div>
+					<!-- col -->
+				</div>
+				<!-- row -->
+
+            <div class="row">
+					<div class="col offset-3">
+						<div class="form-group">
+							<a href="{{path('matieres_choix_filiereEtNiveauUes_liste')}}" style="width:190px;" class="btn btn-success">Retour</a>
+						</div>
+					</div>
+				</div>
+            <!-- row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+	{% endblock %}

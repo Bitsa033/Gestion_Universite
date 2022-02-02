@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Etudiant;
 use App\Entity\Inscription;
+use App\Entity\NotesEtudiant;
 use App\Repository\UeRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
@@ -13,25 +14,20 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @Route("etudiants_", name="etudiants_")
+ */
 class EtudiantsController extends AbstractController
 {
-    /**
-     * @Route("/etudiants", name="etudiants")
-     */
-    public function index(): Response
-    {
-        return $this->render('etudiants/index.html.twig', [
-            'controller_name' => 'EtudiantsController',
-        ]);
-    }
 
     /**
      * Creation des etudiants
-     * @Route("create", name="creation_etudiants")
+     * @Route("ajout", name="ajout")
      */
-    public function creation_etudiants (Request $request,ManagerRegistry $end_e)
+    public function ajout (Request $request,ManagerRegistry $end_e)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -57,18 +53,18 @@ class EtudiantsController extends AbstractController
                 $manager->persist($etudiant);
                 $manager->flush();
 
-            return $this->redirectToRoute('creation_etudiants');
+            return $this->redirectToRoute('etudiants_ajout');
        }
-        return $this->render('universg/creation_etudiants.html.twig', [
+        return $this->render('etudiants/ajout_etudiants.html.twig', [
             'controller_name' => 'EtudiantsController',
         ]);
     }
 
     /**
      * On affiche les etudiants inscris ou non en fonction de l'utilisateur
-     * @Route("etudiants", name="etudiants")
+     * @Route("liste", name="liste")
      */
-    public function etudiants (EtudiantRepository $etudiantRepository)
+    public function liste (EtudiantRepository $etudiantRepository)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -78,7 +74,7 @@ class EtudiantsController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
         
-        return $this->render('universg/etudiants.html.twig', [
+        return $this->render('etudiants/etudiants.html.twig', [
             'controller_name' => 'EtudiantsController',
             'etudiants'=>$etudiantRepository->etudiantsUser($user),
             'nbEtudiants'=>$etudiantRepository->count([
@@ -89,9 +85,9 @@ class EtudiantsController extends AbstractController
 
     /**
      * On supprime un etudiant par son id
-     * @Route("etudiant/suppression/{id}", name="suppression_etudiant")
+     * @Route("suppression/{id}", name="suppression")
      */
-    public function suppression_etudiant (Etudiant $etudiant, ManagerRegistry $end)
+    public function suppression (Etudiant $etudiant, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -106,15 +102,15 @@ class EtudiantsController extends AbstractController
         $manager->remove($etudiant);
         $manager->flush();
 
-        return $this->redirectToRoute('etudiants');
+        return $this->redirectToRoute('etudiants_liste');
         
     }
 
     /**
      * On inscrit l'etudiant
-     * @Route("inscription_etudiants", name="inscription_etudiants")
+     * @Route("inscription", name="inscription")
      */
-    public function inscription_etudiants(EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,ManagerRegistry $end_e )
+    public function inscription(EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,ManagerRegistry $end_e )
         {
 
         //on cherche l'utilisateur connecté
@@ -148,11 +144,11 @@ class EtudiantsController extends AbstractController
             $manager->persist($inscription);
             $manager->flush();
 
-            return $this->redirectToRoute('inscription_etudiants');
+            return $this->redirectToRoute('etudiants_inscription');
         }
 
 
-        return $this->render('universg/inscription_etudiants.html.twig', [
+        return $this->render('etudiants/inscription_etudiants.html.twig', [
             'controller_name' => 'EtudiantsController',
             'niveaux'=>$niveauRepository->niveauxUser($user),
             'filieres'=>$filiereRepository->filieresUser($user),
@@ -162,9 +158,9 @@ class EtudiantsController extends AbstractController
 
     /**
      * on consulte les donnees des inscriptions
-     * @Route("liste_inscriptions_etudiants", name="liste_inscriptions_etudiants")
+     * @Route("liste_Inscriptions", name="liste_Inscriptions")
      */
-    public function liste_inscriptions_etudiants( FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,UeRepository $ueRepository, InscriptionRepository $inscriptionRepository)
+    public function liste_Inscriptions( FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,UeRepository $ueRepository, InscriptionRepository $inscriptionRepository)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -178,7 +174,7 @@ class EtudiantsController extends AbstractController
         $postFiliere=$request->request->get('filiere');
         $postNiveau=$request->request->get('niveau');
         $inscriptions=$inscriptionRepository->inscriptionsFiliereNiveau($postFiliere,$postNiveau,$user);
-        return $this->render('universg/liste_inscriptions_etudiants.html.twig', [
+        return $this->render('etudiants/liste_inscriptions_etudiants.html.twig', [
             'controller_name' => 'EtudiantsController',
             'ues'=>$ueRepository->uesUser($user),
             'filieres'=>$filiereRepository->filieresUser($user),
