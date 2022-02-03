@@ -31,9 +31,9 @@ class NotesEtudiantsController extends AbstractController
 
     /**
      * on choisi la filiere et le niveau de l'etudiant a noter
-     * @Route("filiereEtNiveauu_etudiant", name="filiereEtNiveauu_etudiant")
+     * @Route("filiereEtNiveau_etudiant", name="filiereEtNiveau_etudiant")
      */
-    function filiere_niveau_etudiant(SessionInterface $session, Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+    function filiere_niveau_etudiant(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         //si l'utilisateur est n'est pas connecté,
@@ -42,20 +42,19 @@ class NotesEtudiantsController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
 
-       if (!empty($request->request->all())) {
-           $filiere=$filiereRepository->find($request->request->get("filiereNote"));
-           $niveau=$niveauRepository->find($request->request->get('niveauNote'));
-           $get_filiere=$session->get('filiereNote',[]);
-           if (!empty($get_filiere)) {
-               $session->set('filiereNote',$filiere);
-               $session->set('niveauNote',$niveau);
-           }
-           //dd($session);
-           $session->set('filiereNote',$filiere);
-           $session->set('niveauNote',$niveau);
-           
-           return $this->redirectToRoute('notes_etudiants_choixEtudiant_notes');
-       }
+        if (!empty($request->request->all())) {
+            $filiere=$filiereRepository->find($request->request->get("filiere"));
+            $niveau=$niveauRepository->find($request->request->get('niveau'));
+            $get_filiere=$session->get('filiere',[]);
+            if (!empty($get_filiere)) {
+              $session->set('filiere',$filiere);
+              $session->set('niveau',$niveau);
+            }
+            //dd($session);
+            $session->set('filiere',$filiere);
+            $session->set('niveau',$niveau);
+            return $this->redirectToRoute('notes_etudiants_choixEtudiant_notes');
+        }
         return $this->render('notes_etudiants/filiereEtNiveau_etudiant.html.twig',[
             'filieres'=>$filiereRepository->filieresUser($user),
             'niveaux'=>$niveauRepository->niveauxUser($user),
@@ -66,34 +65,30 @@ class NotesEtudiantsController extends AbstractController
      * on choisi l'etudiant a noter
      * @Route("choixEtudiant_notes", name="choixEtudiant_notes")
      */
-    function choixEtudiant_notes(SessionInterface $session, Request $request, InscriptionRepository $inscriptionRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
-        //on cherche l'utilisateur connecté
-        $user= $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
-        if (!$user) {
-          return $this->redirectToRoute('app_login');
-        }
+    function choixEtudiant_notes(SessionInterface $session,Request $request,InscriptionRepository $inscriptionRepository,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+       //on cherche l'utilisateur connecté
+       $user= $this->getUser();
+       //si l'utilisateur est n'est pas connecté,
+       // on le redirige vers la page de connexion
+       if (!$user) {
+         return $this->redirectToRoute('app_login');
+       }
 
-        if (!empty($request->request->all())) {
-            $inscription= $inscriptionRepository->find($request->request->get("inscription"));
-            $get_inscription=$session->get('inscriptionNote',[]);
-            if (!empty($get_inscription)) {
-                $session->set('inscriptionNote',$inscription);
-            }
-            //dd($session);
-            $session->set('inscriptionNote',$inscription);
-            
-            return $this->redirectToRoute('notes_etudiants_ajout_notes');
-        }
-
-        $sessionF=$session->get('filiereNote',[]);
-        $sessionN=$session->get('niveauNote',[]);
-
-        $filiere=$filiereRepository->find($sessionF);
-        $niveau=$niveauRepository->find($sessionN);
+       if (!empty($request->request->all())) {
+           $inscription=$inscriptionRepository->find($request->request->get("inscription"));
+           $get_inscription=$session->get('inscription',[]);
+           if (!empty($get_filiere)) {
+             $session->set('inscription',$inscription);
+           }
+           //dd($session);
+           $session->set('inscription',$inscription);
+           return $this->redirectToRoute('notes_etudiants_ajout_notes');
+       }
+       $sessionF=$session->get('filiere',[]);
+        $sessionN=$session->get('niveau',[]);
+        $inscriptions=$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$sessionF,$sessionN);
         return $this->render('notes_etudiants/choixEtudiant_notes.html.twig',[
-            'inscriptions'=>$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$filiere,$niveau),
+            'inscriptions'=>$inscriptions
         ]);
     }
 
@@ -112,7 +107,7 @@ class NotesEtudiantsController extends AbstractController
         }
 
         //sinon on insert les données
-        $sessionI=$session->get('inscriptionNote',[]);
+        $sessionI=$session->get('inscription',[]);
         if ( !empty($sessionI) && !empty($request->request->get('moyenne'))) {
            
             $ue = $ueRepository->find($request->request->get("ue"));
@@ -129,11 +124,11 @@ class NotesEtudiantsController extends AbstractController
             $manager->flush();
 
             //dd($request);
-            return $this->redirectToRoute('etudiants_ajout_notes');
+            return $this->redirectToRoute('notes_etudiants_ajout_notes');
         }
 
-        $sessionF=$session->get('filiereNote',[]);
-        $sessionN=$session->get('niveauNote',[]);
+        $sessionF=$session->get('filiere',[]);
+        $sessionN=$session->get('niveau',[]);
 
         //$matieres=$ueRepository->uesFiliereNiveau($sessionF,$sessionN);
         $matieres=$ueRepository->uePasEncoreNoterPourInscription($user,$sessionF,$sessionN,$sessionI);
