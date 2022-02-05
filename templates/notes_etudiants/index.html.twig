@@ -1,20 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello NotesEtudiantsController!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+		<!-- Main content -->
+		<section class="content">
+			<div class="container-fluid">
+				<br>
+				<a href="{{path('notes_etudiants_filiereEtNiveau_etudiant')}}" class="btn btn-primary">Noter des etudiants
+					<i class="fa fa-pen"></i>
+				</a>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/pascalbitsa/Desktop/Symfony4/exampleT/src/Controller/NotesEtudiantsController.php'|file_link(0) }}">src/Controller/NotesEtudiantsController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/pascalbitsa/Desktop/Symfony4/exampleT/templates/notes_etudiants/index.html.twig'|file_link(0) }}">templates/notes_etudiants/index.html.twig</a></code></li>
-    </ul>
-</div>
+				<div class="row">
+					<div class="col-md-10">
+						<br>
+						<h5 class='h5'>
+							Liste des notes
+							<a class="btn btn-primary" href="">
+								Generer un fichier pdf
+								<i class="fa fa-file"></i>
+							</a>
+						</h5>
+						<table class="table table-bordered">
+							<tr>
+								<th style="width:3%;">ID</th>
+								<th>Etudiant</th>
+								<th>Matiere</th>
+								<th>Note</th>
+								<th style="width:35%;">Action</th>
+							</tr>
+							{% for note in notes %}
+
+								<tr>
+									<td>{{note.id}}</td>
+									<td>{{note.inscription.etudiant.nom}}</td>
+									<td>{{note.ue.matiere.nom}}</td>
+									<td>{{note.moyenne}} / 20</td>
+									<td>
+										<a class="btn btn-info" href="{{path('notes_etudiants_liste')}}">Modifier
+											<i class="fa fa-eye"></i>
+										</a>
+										<a class="btn btn-warning" href="{{path('notes_etudiants_liste')}}">Supprimer
+											<i class="fa fa-times"></i>
+										</a>
+									</td>
+								</tr>
+								{% else %}
+                                <tr>
+                                    <td  colspan="5"><p class="h6 offset-4">Liste vide ! </p></td>
+                                </tr>
+							{% endfor %}
+
+						</table>
+					</div>
+
+				</div>
+				<!-- /.col niveaux -->
+			</div>
+
+		</section>
+		<!-- /.content -->
+	</div>
+	<!-- /.content-wrapper -->
 {% endblock %}

@@ -8,6 +8,7 @@ use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\InscriptionRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\NotesEtudiantRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,12 +21,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class NotesEtudiantsController extends AbstractController
 {
     /**
-     * @Route("choix_filiereEtNiveauNotes_liste", name="choix_filiereEtNiveauNotes_liste")
+     * @Route("liste", name="liste")
      */
-    public function index(): Response
+    public function index( NotesEtudiantRepository $notesEtudiantRepository): Response
     {
         return $this->render('notes_etudiants/index.html.twig', [
             'controller_name' => 'NotesEtudiantsController',
+            'notes'=>$notesEtudiantRepository->findAll()
         ]);
     }
 
