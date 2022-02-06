@@ -2,9 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
+use App\Entity\Niveau;
+use App\Entity\Filiere;
+use App\Entity\Inscription;
 use App\Entity\NotesEtudiant;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method NotesEtudiant|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +21,33 @@ class NotesEtudiantRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, NotesEtudiant::class);
+    }
+
+    public function notesEtudiantUser(User $user,Filiere $filiere, Niveau $niveau)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        
+        select notes_etudiant.id, etudiant.nom as nomE, matiere.nom as nomM, 
+        moyenne from notes_etudiant inner join inscription on
+        inscription.id = notes_etudiant.inscription_id inner join etudiant 
+        on etudiant.id= inscription.etudiant_id inner join 
+        ue on ue.id= notes_etudiant.ue_id  inner join matiere on matiere.id
+        = ue.matiere_id
+        WHERE inscription.filiere_id = :filiere AND 
+        inscription.niveau_id = :niveau AND notes_etudiant.user_id = :user 
+
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'user'=>$user->getId(),
+            'filiere'=>$filiere->getId(),
+            'niveau'=>$niveau->getId()
+        ]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
+        
     }
 
     // /**

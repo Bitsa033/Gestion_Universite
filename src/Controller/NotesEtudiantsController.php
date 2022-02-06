@@ -20,14 +20,53 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class NotesEtudiantsController extends AbstractController
 {
+
+    /**
+     * on choisi la filiere et le niveau de l'etudiant a noter
+     * @Route("choixFiliereEtNiveau_listeNotes", name="choixFiliereEtNiveau_listeNotes")
+     */
+    function choixFiliereEtNiveau_listeNotes(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        if (!empty($request->request->all())) {
+            $filiere=$filiereRepository->find($request->request->get("filiere"));
+            $niveau=$niveauRepository->find($request->request->get('niveau'));
+            $get_filiere=$session->get('filiere',[]);
+            if (!empty($get_filiere)) {
+              $session->set('filiere',$filiere);
+              $session->set('niveau',$niveau);
+            }
+            //dd($session);
+            $session->set('filiere',$filiere);
+            $session->set('niveau',$niveau);
+            return $this->redirectToRoute('notes_etudiants_liste');
+        }
+        return $this->render('notes_etudiants/choixFiliereEtNiveau_listeNotes.html.twig',[
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
+        ]);
+    }
+
     /**
      * @Route("liste", name="liste")
      */
-    public function index( NotesEtudiantRepository $notesEtudiantRepository): Response
+    public function index(SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, NotesEtudiantRepository $notesEtudiantRepository): Response
     {
+        $user=$this->getUser();
+        $filiere=$filiereRepository->find($session->get('filiere',[]));
+        $niveau=$niveauRepository->find($session->get('niveau',[]));
+
         return $this->render('notes_etudiants/index.html.twig', [
             'controller_name' => 'NotesEtudiantsController',
-            'notes'=>$notesEtudiantRepository->findAll()
+            'notes'=>$notesEtudiantRepository->notesEtudiantUser($user,$filiere,$niveau),
+            'filiere'=>$filiere,
+            'niveau'=>$niveau
         ]);
     }
 

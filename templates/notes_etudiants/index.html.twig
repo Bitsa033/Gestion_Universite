@@ -8,11 +8,7 @@
 		<!-- Main content -->
 		<section class="content">
 			<div class="container-fluid">
-				<br>
-				<a href="{{path('notes_etudiants_filiereEtNiveau_etudiant')}}" class="btn btn-primary">Noter des etudiants
-					<i class="fa fa-pen"></i>
-				</a>
-
+				
 				<div class="row">
 					<div class="col-md-10">
 						<br>
@@ -22,8 +18,17 @@
 								Generer un fichier pdf
 								<i class="fa fa-file"></i>
 							</a>
+							<a href="{{path('notes_etudiants_filiereEtNiveau_etudiant')}}" class="btn btn-primary">Noter des etudiants
+								<i class="fa fa-pen"></i>
+							</a>
 						</h5>
+						<br>
+						<p class="h5 btn btn-danger">
+						Filiere : {{filiere.nom}} <br>
+						Niveau: {{niveau.nom}}
+						</p>
 						<table class="table table-bordered">
+							
 							<tr>
 								<th style="width:3%;">ID</th>
 								<th>Etudiant</th>
@@ -35,8 +40,8 @@
 
 								<tr>
 									<td>{{note.id}}</td>
-									<td>{{note.inscription.etudiant.nom}}</td>
-									<td>{{note.ue.matiere.nom}}</td>
+									<td>{{note.nomE}}</td>
+									<td>{{note.nomM}}</td>
 									<td>{{note.moyenne}} / 20</td>
 									<td>
 										<a class="btn btn-info" href="{{path('notes_etudiants_liste')}}">Modifier
