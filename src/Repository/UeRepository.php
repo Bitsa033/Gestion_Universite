@@ -68,7 +68,6 @@ class UeRepository extends ServiceEntityRepository
         // returns an array of arrays (i.e. a raw data set)
         return $stmt;
         
-    }
 
     // /**
     //  * @return Ue[] Returns an array of Ue objects
@@ -98,4 +97,5 @@ class UeRepository extends ServiceEntityRepository
         ;
     }
     */
+}
 }

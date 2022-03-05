@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Inscription;
 use App\Entity\NotesEtudiant;
 use App\Repository\UeRepository;
 use App\Repository\NiveauRepository;
@@ -170,7 +171,8 @@ class NotesEtudiantsController extends AbstractController
 
         $sessionF=$session->get('filiere',[]);
         $sessionN=$session->get('niveau',[]);
-
+        $sessionI=$session->get('inscription',[]);
+        $iu=$inscriptionRepository->find($sessionI);
         //$matieres=$ueRepository->uesFiliereNiveau($sessionF,$sessionN);
         $matieres=$ueRepository->uePasEncoreNoterPourInscription($user,$sessionF,$sessionN,$sessionI);
         $inscriptions=$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$sessionF,$sessionN);
