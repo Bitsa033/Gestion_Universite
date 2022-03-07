@@ -38,8 +38,9 @@
 
                 <div class="card-body">
                   <form action="{{path('niveaux_ajoutEt_liste')}}" method="post">
-                      <input type="text" name="nom_niv" class="form-control" placeholder="Nom du niveau" id="">
-                      <button type="submit" class="btn btn-success">Valider</button>
+                      <input type="number" class="form-control" placeholder="Ajouter un niveau" style="width:35%;" disabled>
+                      <input type="number" name="niv" class="form-control" value="1" style="width:10%;">
+                      <button type="submit" name="boutton_niv" class="btn btn-success">Valider</button>
                   </form>
                 </div>
               

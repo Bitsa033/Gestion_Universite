@@ -30,17 +30,36 @@ class NiveauxController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
         //sinon on insert les données
-        if (!empty($request->request->get('nom_niv'))) {
-            $niveau=new Niveau();
-            $niveau->setUser($user);
-            $niveau->setNom(strtoupper($request->request->get('nom_niv')));
-            $niveau->setCreatedAt(new \DateTime());
-            $manager = $end->getManager();
-            $manager->persist($niveau);
-            $manager->flush();
+        $nbniveaux=$niveauRepository->count([
+            'user'=>$user]);
+        if (empty($nbniveaux)) {
 
+            for ($i=1; $i <7 ; $i++) { 
+               
+                $niveau=new Niveau();
+                $niveau->setUser($user);
+                $niveau->setNom(strtoupper("Niveau $i"));
+                $niveau->setCreatedAt(new \DateTime());
+                $manager = $end->getManager();
+                $manager->persist($niveau);
+                $manager->flush();
+            }
+            
             return $this->redirectToRoute('niveaux_ajoutEt_liste');
         } 
+
+        if (isset($_POST['boutton_niv'])) {
+            $niv=$request->request->get('niv');
+            $niveau=new Niveau();
+                $niveau->setUser($user);
+                $niveau->setNom(strtoupper("Niveau ".$niv));
+                $niveau->setCreatedAt(new \DateTime());
+                $manager = $end->getManager();
+                $manager->persist($niveau);
+                $manager->flush();
+
+                return $this->redirectToRoute('niveaux_ajoutEt_liste');
+        }
         
         return $this->render('niveaux/niveaux.html.twig', [
             'controller_name' => 'NiveauxController',
@@ -69,12 +88,9 @@ class NiveauxController extends AbstractController
         $manager = $end->getManager();
         $manager->remove($niveau);
         $manager->flush();
-
+        
         return $this->redirectToRoute('niveaux_ajoutEt_liste');
         
-        return $this->render('niveaux/niveaux.html.twig', [
-            'controller_name' => 'NiveauxController',
-        ]);
     }
 
     /**
