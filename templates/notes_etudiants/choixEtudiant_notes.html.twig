@@ -22,7 +22,7 @@
 									<th>
 										<select class="form-control" type="text" name="inscription" id="">
 											{% for inscription in inscriptions %}
-												<option value="{{inscription.id}}">{{inscription.etudiant.nom}}</option>
+												<option value="{{inscription.id}}">{{inscription.etudiant.nom}} {{inscription.etudiant.prenom}}</option>
 											{% else %}
 												<option value="">Liste vide</option>
 											{% endfor %}

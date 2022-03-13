@@ -64,7 +64,7 @@
 							<tr>
 								<th style="width:3%;">ID</th>
 								<th>filieres</th>
-								<th style="width:32%;">Action</th>
+								<th style="width:35%;">Action</th>
 							</tr>
 							{% for filiere in filieres %}
 								<tr>
@@ -75,8 +75,8 @@
 										<i>{{filiere.nom}}</i>
 									</td>
 									<td>
-										<a class="btn btn-info" href="{{path('filieres_ajoutEt_liste',{id:filiere.id})}}">Infos
-											<i class="fa fa-eye"></i>
+										<a class="btn btn-info" href="{{path('filieres_ajoutEt_liste',{id:filiere.id})}}">Mettre à jour
+											<i class="fa fa-edit"></i>
 										</a>
 										<a class="btn btn-warning" href="{{path('filieres_suppression',{id:filiere.id})}}">Supprimer
 											<i class="fa fa-times"></i>

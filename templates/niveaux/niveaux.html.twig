@@ -58,7 +58,7 @@
               <tr>
                   <th  style="width:3%;">ID</th>
                   <th>Niveaux</th>
-                  <th  style="width:33%;">Action</th>
+                  <th  style="width:35%;">Action</th>
               </tr>
               {% for niveau in niveaux %}
               <tr>
@@ -66,7 +66,7 @@
                   <td> {{niveau.nom}}
                   </td>
                   <td>
-                  <a class="btn btn-info" href="{{path('niveaux_infos',{id:niveau.id})}}">Infos <i class="fa fa-eye"></i></a>
+                  <a class="btn btn-info" href="{{path('niveaux_infos',{id:niveau.id})}}">Mettre à jour <i class="fa fa-edit"></i></a>
                    <a class="btn btn-warning" href="{{path('niveaux_suppression',{id:niveau.id})}}">Supprimer <i class="fa fa-times"></i></a>
                   </td>
               </tr>

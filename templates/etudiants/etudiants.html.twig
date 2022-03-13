@@ -33,7 +33,8 @@
               <a href="{{path('etudiants_ajout')}}"  class="btn btn-primary">Ajouter des etudiants <i class="fa fa-plus"></i></a> 
               <a href="{{path('etudiants_inscription')}}"  class="btn btn-primary">Inscrire des etudiants <i class="fa fa-pen"></i></a> 
               <a href="{{path('etudiants_liste_Inscriptions')}}"  class="btn btn-primary">Trier des inscriptions <i class="fa fa-users"></i></a> 
-              <a href="{{path('notes_etudiants_choixFiliereEtNiveau_listeNotes')}}"  class="btn btn-primary">Notes des etudiants <i class="fa fa-th"></i></a> 
+              <a href="{{path('notes_etudiants_choixFiliereEtNiveau_listeNotes')}}"  class="btn btn-primary">Ajouter des Notes <i class="fa fa-pen"></i></a> 
+               <a href="{{path('notes_etudiants_choixFiliereEtNiveau_listeNotes')}}"  class="btn btn-primary">Notes des etudiants <i class="fa fa-th"></i></a> 
               <table class="table table-bordered">
 
                 </p>
@@ -48,9 +49,9 @@
                   {% for etudiant in etudiants %}
                   <tr>
                       <td style="width:2%;">{{etudiant.id}}</td>
-                      <td>
-                      <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-warning"><i class="fa fa-times"></i></a>
-              
+                      <td style="width:28%;">
+                      <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-warning">Supprimer <i class="fa fa-times"></i></a>
+                      <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-info">Mettre à jour <i class="fa fa-edit"></i></a>
                       </td>
                       <td>{{etudiant.nom}}  {{etudiant.prenom}}
                       <br>
