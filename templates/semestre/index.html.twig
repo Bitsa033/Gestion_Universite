@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title  %}
+    Semestre index
+{% endblock %}
+
+{% block body %}
+    <!-- Content Wrapper. Contains page content -->
+    <div
+        class="content-wrapper">
+
+        <!-- Main content -->
+        <section class="content">
+            <div
+                class="container-fluid">
+                <!-- Info boxes -->
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info elevation-1">
+                                <i class="fas fa-th"></i>
+                            </span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Nb semestre</span>
+                                <span class="info-box-number"></span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-inline">
+                            <div class="card insert-filiere">
+
+                                <div class="card-body">
+                                    <form action="{{ path('semestre_index') }}" method="post">
+                                        <input type="number" name="nom_s" class="form-control" placeholder="Numero du semestre" id="">
+
+                                        <button type="submit" class="btn btn-success">Valider</button>
+                                    </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.col filiere -->
+                        </div>
+                        <!-- /.row -->
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class='h5'>Liste des Semestres
+                                    <a class="btn btn-primary" href="">
+                                        Generer un fichier pdf
+                                        <i class="fa fa-file"></i>
+                                    </a>
+
+                                    <a class="btn btn-primary" href="{{path('semestre_new')}}">
+                                        Ajouter un semestre
+                                        <i class="fa fa-pen"></i>
+                                    </a>
+                                </h5>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th style="width:3%;">ID</th>
+                                        <th>semestre</th>
+                                        <th style="width:50%;">Action</th>
+                                    </tr>
+                                    {% for semestre in semestres %}
+                                        <tr>
+                                            <td>{{ semestre.id }}</td>
+                                            <td>Semestre {{ semestre.nom }}</td>
+                                            <td>
+                                                <a class="btn btn-info" href="{{ path('semestre_show', {'id': semestre.id}) }}"> Consulter <i class="fa fa-th"></i></a>
+                                                <a class="btn btn-warning" href="{{ path('semestre_edit', {'id': semestre.id}) }}">Mettre à jour <i class="fa fa-pen"></i></a>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3">no records found</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <!-- /.col filieres -->
+                        </div>
+
+                    </section>
+                    <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+            {% endblock %}

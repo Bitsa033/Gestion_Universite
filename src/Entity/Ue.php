@@ -49,6 +49,11 @@ class Ue
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="ues")
+     */
+    private $semestre;
+
     public function __construct()
     {
         $this->notesEtudiants = new ArrayCollection();
@@ -145,6 +150,18 @@ class Ue
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSemestre(): ?Semestre
+    {
+        return $this->semestre;
+    }
+
+    public function setSemestre(?Semestre $semestre): self
+    {
+        $this->semestre = $semestre;
 
         return $this;
     }

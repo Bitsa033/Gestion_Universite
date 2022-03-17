@@ -18,6 +18,7 @@
 								<table class="table">
 									<tr>
 										<th>Filiere</th>
+										<th> Semestre </th>
 										<th>Niveau</th>
 									</tr>
 
@@ -27,6 +28,17 @@
 
 												{% for filiere in filieres %}
 													<option value="{{filiere.id}}">{{filiere.nom}}</option>
+												{% else %}
+													<option value="">Liste vide !</option>
+												{% endfor %}
+											</select>
+										</td>
+
+										<td>
+											<select type="text" name="semestre" class="form-control" id="filiere">
+
+												{% for semestre in semestres %}
+													<option value="{{semestre.id}}">{{semestre.nom}}</option>
 												{% else %}
 													<option value="">Liste vide !</option>
 												{% endfor %}

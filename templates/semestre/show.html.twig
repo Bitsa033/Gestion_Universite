@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Semestre
+{% endblock %}
+
+{% block body %}
+
+    <!-- Content Wrapper. Contains page content -->
+    <div
+        class="content-wrapper">
+
+        <!-- Main content -->
+        <section class="content">
+            <div
+                class="container-fluid">
+                <!-- Info boxes -->
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info elevation-1">
+                                <i class="fas fa-th"></i>
+                            </span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Nb semestre</span>
+                                <span class="info-box-number"></span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+
+                    <!-- fix for small devices only -->
+                    <div class="clearfix hidden-md-up"></div>
+
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="">
+                            <div class="card insert-filiere">
+
+                                <div class="card-body">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:3%;">Id</th>
+                                                <td>{{ semestre.id }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nom</th>
+                                                <td>{{ semestre.nom }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <a href="{{ path('semestre_index') }}">back to list</a>
+
+                                    <a href="{{ path('semestre_edit', {'id': semestre.id}) }}">edit</a>
+
+                                    {{ include('semestre/_delete_form.html.twig') }}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col niveau -->
+                </div>
+                <!-- /.row -->
+
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+    {% endblock %}

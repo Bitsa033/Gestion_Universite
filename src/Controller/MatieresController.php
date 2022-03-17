@@ -8,6 +8,7 @@ use App\Repository\UeRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\MatiereRepository;
+use App\Repository\SemestreRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -111,10 +112,10 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * on choisi la filiere et le niveau  pour la creation des ues
+     * on choisi la filiere, le semestre et le niveau  pour la creation des ues
      * @Route("choix_filiereEtNiveau_Ue", name="choix_filiereEtNiveau_Ue")
      */
-    function choix_filiereEtNiveau_Ue(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+    function choix_filiereEtNiveau_Ue(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository){
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         //si l'utilisateur est n'est pas connecté,
@@ -125,28 +126,34 @@ class MatieresController extends AbstractController
 
         if (!empty($request->request->all())) {
             $filiere=$filiereRepository->find($request->request->get("filiere"));
+            $semestre=$semestreRepository->find($request->request->get('semestre'));
             $niveau=$niveauRepository->find($request->request->get('niveau'));
             $get_filiere=$session->get('filiere',[]);
-            if (!empty($get_filiere)) {
+            $get_semestre=$session->get('semestre',[]);
+            $get_niveau=$session->get('niveau',[]);
+            if (!empty($get_filiere) && !empty($get_semestre) && !empty($get_niveau)) {
               $session->set('filiere',$filiere);
+              $session->set('semestre',$semestre);
               $session->set('niveau',$niveau);
             }
             //dd($session);
             $session->set('filiere',$filiere);
+            $session->set('semestre',$semestre);
             $session->set('niveau',$niveau);
             return $this->redirectToRoute('matieres_transfert');
         }
         return $this->render('matieres/filiereNiveau_Ue.html.twig',[
             'filieres'=>$filiereRepository->filieresUser($user),
+            'semestres'=>$semestreRepository->findAll(),
             'niveaux'=>$niveauRepository->niveauxUser($user),
         ]);
     }
 
     /**
-     * on cree des ues pour les filieres et niveaux
+     * on cree des ues pour les filieres et niveaux et on precise le semestre
      * @Route("transfert", name="transfert")
      */
-    public function transfert(SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,MatiereRepository $matiereRepository ,Request $request, ManagerRegistry $end)
+    public function transfert(SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,MatiereRepository $matiereRepository , SemestreRepository $semestreRepository ,Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -156,14 +163,17 @@ class MatieresController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
         $sessionF=$session->get('filiere',[]);
+        $sessionSe=$session->get('semestre',[]);
         $sessionN=$session->get('niveau',[]);
-        if (!empty($sessionF) && !empty($sessionN) && $request->request->get('ue')) {
+        if (!empty($sessionF) && !empty($sessionSe) && !empty($sessionN) && $request->request->get('ue')) {
             $matiere=$matiereRepository->find($request->request->get('ue'));    
             //dd($session->get('filiere'),$session->get('niveau'));
             $filiere=$filiereRepository->find($sessionF);
+            $semestre=$semestreRepository->find($sessionSe);
             $niveau=$niveauRepository->find($sessionN);
             $ue=new Ue();
             $ue->setFiliere($filiere);
+            $ue->setSemestre($semestre);
             $ue->setUser($user);
             $ue->setNiveau($niveau);
             $ue->setMatiere($matiere);

@@ -42,6 +42,12 @@ class NotesEtudiant
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="notesEtudiants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $semestre;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +109,18 @@ class NotesEtudiant
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSemestre(): ?Semestre
+    {
+        return $this->semestre;
+    }
+
+    public function setSemestre(?Semestre $semestre): self
+    {
+        $this->semestre = $semestre;
 
         return $this;
     }
