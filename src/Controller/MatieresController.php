@@ -165,7 +165,7 @@ class MatieresController extends AbstractController
         $sessionF=$session->get('filiere',[]);
         $sessionSe=$session->get('semestre',[]);
         $sessionN=$session->get('niveau',[]);
-        if (!empty($sessionF) && !empty($sessionSe) && !empty($sessionN) && $request->request->get('ue')) {
+        if (!empty($sessionF) && !empty($sessionSe) && !empty($sessionN) && !empty($request->request->get('ue'))) {
             $matiere=$matiereRepository->find($request->request->get('ue'));    
             //dd($session->get('filiere'),$session->get('niveau'));
             $filiere=$filiereRepository->find($sessionF);
@@ -186,11 +186,12 @@ class MatieresController extends AbstractController
         }
         $filieresPasEncoreUe=$filiereRepository->find($sessionF);
         $niveauxPasEncoreUe=$niveauRepository->find($sessionN);
+        $semestrePasEncoreUe=$semestreRepository->find($sessionSe);
        
         return $this->render('matieres/transfert_matiere.html.twig', [
             'controller_name' => 'MatieresController',
             'filieres'=>$filiereRepository->filieresUser($user),
-            'matieres'=>$matiereRepository->matiereUserPasEncoreUe($user,$filieresPasEncoreUe,$niveauxPasEncoreUe),
+            'matieres'=>$matiereRepository->matiereUserPasEncoreUe($user,$filieresPasEncoreUe,$niveauxPasEncoreUe,$semestrePasEncoreUe),
             'niveaux'=>$niveauRepository->niveauxUser($user),
         ]);
     }

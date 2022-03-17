@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Niveau;
 use App\Entity\Filiere;
 use App\Entity\Matiere;
+use App\Entity\Semestre;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -33,13 +34,13 @@ class MatiereRepository extends ServiceEntityRepository
         
     }
 
-    public function matiereUserPasEncoreUe(User $user,Filiere $filiere, Niveau $niveau)
+    public function matiereUserPasEncoreUe(User $user,Filiere $filiere, Niveau $niveau, Semestre $semestre)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
         select * from matiere where id not in(
             SELECT matiere_id from ue where filiere_id= :filiere AND
-            niveau_id= :niveau
+            niveau_id= :niveau AND semestre_id= :semestre
             )
         AND matiere.user_id= :user
             ';
@@ -47,7 +48,8 @@ class MatiereRepository extends ServiceEntityRepository
         $stmt->executeQuery([
             'user'=>$user->getId(),
             'filiere'=>$filiere->getId(),
-            'niveau'=>$niveau->getId()
+            'niveau'=>$niveau->getId(),
+            'semestre'=>$semestre->getId()
         ]);
 
         // returns an array of arrays (i.e. a raw data set)
