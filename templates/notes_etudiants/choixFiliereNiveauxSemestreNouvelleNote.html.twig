@@ -14,11 +14,12 @@
 				<div class="row">
 					<div class="col-md-8 offset-1 position">
 						<p class='h5'>Veuillez choisir la filiere et le niveau de l'etudiant à noter :
-							<form action="{{path('notes_etudiants_filiereEtNiveau_etudiant')}}" method="post">
+							<form action="{{path('notes_etudiants_choixFiliereNiveauxSemestreNouvelleNote')}}" method="post">
 								<table class="table">
 									<tr>
 										<th>Filiere</th>
 										<th>Niveau</th>
+										<th>Semestre</th>
 									</tr>
 
 									<tr>
@@ -32,7 +33,6 @@
 												{% endfor %}
 											</select>
 										</td>
-
 										<td>
 											<select type="text" name="niveau" class="form-control" id="niveau">
 
@@ -43,10 +43,17 @@
 												{% endfor %}
 											</select>
 										</td>
+										<td>
+										<select type="text" name="semestre" class="form-control" id="filiere">
 
-										{# <td>
-																															<button type="submit" class="btn btn-success">Choisir</button>
-																														</td> #}
+											{% for semestre in semestres %}
+												<option value="{{semestre.id}}">{{semestre.nom}}</option>
+											{% else %}
+												<option value="">Liste vide !</option>
+											{% endfor %}
+										</select>
+									</td>																			
+									
 									</tr>
 
 								</table>

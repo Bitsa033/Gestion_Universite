@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Inscription;
 use App\Entity\NotesEtudiant;
+use App\Entity\Semestre;
 use App\Repository\UeRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\InscriptionRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\NotesEtudiantRepository;
+use App\Repository\SemestreRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -72,10 +74,10 @@ class NotesEtudiantsController extends AbstractController
     }
 
     /**
-     * on choisi la filiere et le niveau de l'etudiant a noter
-     * @Route("filiereEtNiveau_etudiant", name="filiereEtNiveau_etudiant")
+     * on choisi la filiere,le semestre et le niveau de l'etudiant a noter
+     * @Route("choixFiliereNiveauxSemestreNouvelleNote", name="choixFiliereNiveauxSemestreNouvelleNote")
      */
-    function filiere_niveau_etudiant(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+    function choixFiliereNiveauxSemestreNouvelleNote(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository){
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         //si l'utilisateur est n'est pas connecté,
@@ -87,27 +89,32 @@ class NotesEtudiantsController extends AbstractController
         if (!empty($request->request->all())) {
             $filiere=$filiereRepository->find($request->request->get("filiere"));
             $niveau=$niveauRepository->find($request->request->get('niveau'));
+            $semestre=$semestreRepository->find($request->request->get('semestre'));
             $get_filiere=$session->get('filiere',[]);
             if (!empty($get_filiere)) {
               $session->set('filiere',$filiere);
               $session->set('niveau',$niveau);
+              $session->set('semestre',$semestre);
             }
             //dd($session);
             $session->set('filiere',$filiere);
             $session->set('niveau',$niveau);
-            return $this->redirectToRoute('notes_etudiants_choixEtudiant_notes');
+            $session->set('semestre',$semestre);
+            return $this->redirectToRoute('notes_etudiants_choixEtudiantNouvelleNote');
         }
-        return $this->render('notes_etudiants/filiereEtNiveau_etudiant.html.twig',[
+        
+        return $this->render('notes_etudiants/choixFiliereNiveauxSemestreNouvelleNote.html.twig',[
             'filieres'=>$filiereRepository->filieresUser($user),
             'niveaux'=>$niveauRepository->niveauxUser($user),
+            'semestres'=>$semestreRepository->findAll()
         ]);
     }
 
     /**
      * on choisi l'etudiant a noter
-     * @Route("choixEtudiant_notes", name="choixEtudiant_notes")
+     * @Route("choixEtudiantNouvelleNote", name="choixEtudiantNouvelleNote")
      */
-    function choixEtudiant_notes(SessionInterface $session,Request $request,InscriptionRepository $inscriptionRepository,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
+    function choixEtudiantNouvelleNote(SessionInterface $session,Request $request,InscriptionRepository $inscriptionRepository,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){
        //on cherche l'utilisateur connecté
        $user= $this->getUser();
        //si l'utilisateur est n'est pas connecté,
@@ -129,7 +136,7 @@ class NotesEtudiantsController extends AbstractController
        $sessionF=$session->get('filiere',[]);
         $sessionN=$session->get('niveau',[]);
         $inscriptions=$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$sessionF,$sessionN);
-        return $this->render('notes_etudiants/choixEtudiant_notes.html.twig',[
+        return $this->render('notes_etudiants/choixEtudiantNouvelleNote.html.twig',[
             'inscriptions'=>$inscriptions
         ]);
     }
@@ -138,7 +145,7 @@ class NotesEtudiantsController extends AbstractController
      * on cree des notes pour l'etudiant
      * @Route("ajout_notes", name="ajout_notes")
      */
-    public function ajout_notes( SessionInterface $session,InscriptionRepository $inscriptionRepository, UeRepository $ueRepository,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,ManagerRegistry $end_e )
+    public function ajout_notes( SessionInterface $session,InscriptionRepository $inscriptionRepository, UeRepository $ueRepository,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,Request $request,ManagerRegistry $end_e ,SemestreRepository $semestreRepository)
         {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -150,16 +157,18 @@ class NotesEtudiantsController extends AbstractController
 
         //sinon on insert les données
         $sessionI=$session->get('inscription',[]);
-        if ( !empty($sessionI) && !empty($request->request->get('moyenne'))) {
+        $sessionS=$session->get('semestre',[]);
+        if ( !empty($sessionI) && !empty($sessionS) && !empty($request->request->get('moyenne'))) {
            
             $ue = $ueRepository->find($request->request->get("ue"));
             $inscription = $inscriptionRepository->find($sessionI);
-
+            $semestre=$semestreRepository->find($sessionS);
             $note=new NotesEtudiant();
             $note->setUser($user);
             $note->setInscription($inscription);
             $note->setUe($ue);
             $note->setMoyenne($request->request->get('moyenne'));
+            $note->setSemestre($semestre);
             $note->setCreatedAt(new \DateTime());
             $manager=$end_e->getManager();
             $manager->persist($note);

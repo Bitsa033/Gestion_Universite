@@ -43,7 +43,7 @@ class NotesEtudiant
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="notesEtudiants")
+     * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="notesEtudiants", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $semestre;
