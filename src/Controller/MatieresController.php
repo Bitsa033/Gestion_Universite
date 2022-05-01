@@ -21,11 +21,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class MatieresController extends AbstractController
 {
-
      /**
      * @Route("ajoutEt_liste", name="ajoutEt_liste")
      */
-    public function ajoutEt_liste (MatiereRepository $matiereRepository, Request $request, ManagerRegistry $end)
+    public function ajout (MatiereRepository $matiereRepository, Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -150,7 +149,7 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * on cree des ues pour les filieres et niveaux et on precise le semestre
+     * on cree des ues pour les filieres et niveaux et on precise le semestre tous enregistrees dans la session
      * @Route("transfert", name="transfert")
      */
     public function transfert(SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,MatiereRepository $matiereRepository , SemestreRepository $semestreRepository ,Request $request, ManagerRegistry $end)

@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NotesEtudiant index
+{% endblock %}
+
+{% block body %}
+    <div class="content-wrapper">
+
+        <h1>NotesEtudiant index</h1>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Liste des notes</h3>
+
+                <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Crée le</th>
+                                <th>Etudiant</th>
+                                <th>Filiere</th>
+                                <th>Classe</th>
+                                <th>Cours</th>
+                                <th>Moyenne</th>
+                                <th>Semestre</th>
+                                <th>actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for notes_etudiant in notes_etudiants %}
+                                <tr>
+                                    <td>{{ notes_etudiant.id }}</td>
+                                    <td>{{ notes_etudiant.createdAt ? notes_etudiant.createdAt|date('d-m-Y H:i:s') : '' }}</td>
+                                    <td>{{ notes_etudiant.inscription.etudiant.nom }}</td>
+                                    <td>{{ notes_etudiant.inscription.filiere.nom }}</td>
+                                    <td>{{ notes_etudiant.inscription.niveau.nom }}</td>
+
+                                    <td>{{ notes_etudiant.ue.matiere.nom }}</td>
+                                    <td>{{ notes_etudiant.moyenne }}</td>
+                                    <td>{{ notes_etudiant.semestre.nom }}</td>
+
+                                    <td>
+                                        <a class="btn btn-primary" href="{{ path('notes_etudiant_show', {'id': notes_etudiant.id}) }}">Consulter</a>
+
+                                        <a class="btn btn-primary" href="{{ path('notes_etudiant_edit', {'id': notes_etudiant.id}) }}">Mettre à jour</a>
+
+
+                                    </td>
+                                </tr>
+
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">Tableau vide...</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+
+            <a href="{{ path('notes_etudiant_new') }}" class="btn btn-primary offset-4">Creer une nouvelle note</a>
+        </div>
+    {% endblock %}

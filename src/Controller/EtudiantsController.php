@@ -22,7 +22,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class EtudiantsController extends AbstractController
 {
-
     /**
      * Creation des etudiants
      * @Route("ajout", name="ajout")
@@ -71,7 +70,7 @@ class EtudiantsController extends AbstractController
         //si l'utilisateur est n'est pas connecté,
         // on le redirige vers la page de connexion
         if (!$user) {
-          return $this->redirectToRoute('app_login');
+          return $this->redirectToRoute('app_login'); 
         }
         
         return $this->render('etudiants/etudiants.html.twig', [
