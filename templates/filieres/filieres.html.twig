@@ -38,7 +38,7 @@
 							<div class="card insert-filiere">
 
 								<div class="card-body">
-									<form action="{{path('filieres_ajoutEt_liste')}}" method="post">
+									<form action="{{path('filieres_index')}}" method="post">
 										<input type="text" name="nom_f" class="form-control" placeholder="Nom de la filiere" id="">
 										<input type="text" name="abbr_filiere" class="form-control" placeholder="Abbreviation" id="">
 										<button type="submit" class="btn btn-success">Valider</button>
@@ -51,20 +51,36 @@
 					<!-- /.col filiere -->
 				</div>
 				<!-- /.row -->
-
 				<div class="row">
-					<div class="col-md-10">
-						<h5 class='h5'>Liste des filieres
-							<a class="btn btn-primary" href="">
-								Generer un fichier pdf
-								<i class="fa fa-file"></i>
-							</a>
-						</h5>
-						<table class="table table-bordered">
-							<tr>
-								<th style="width:3%;">ID</th>
-								<th>filieres</th>
-								<th style="width:35%;">Action</th>
+					<div class="col-10">
+						<h5 class='h5'>Liste des filieres <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a> </h5>
+
+					<div class="card">
+					<div class="card-header">
+						<h3 class="card-title">Etat des cotisations courantes</h3>
+
+						<div class="card-tools">
+						<div class="input-group input-group-sm" style="width: 150px;">
+							<input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+							<div class="input-group-append">
+							<button type="submit" class="btn btn-default">
+								<i class="fas fa-search"></i>
+							</button>
+							</div>
+						</div>
+						</div>
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body table-responsive p-0" style="height: 300px;">
+						<table class="table table-head-fixed text-nowrap">
+						
+						<tbody>
+						<tr>
+							<th style="width:3%;">ID</th>
+							<th>filieres</th>
+							<th >Action</th>
+							
 							</tr>
 							{% for filiere in filieres %}
 								<tr>
@@ -75,7 +91,7 @@
 										<i>{{filiere.nom}}</i>
 									</td>
 									<td>
-										<a class="btn btn-info" href="{{path('filieres_ajoutEt_liste',{id:filiere.id})}}">Mettre à jour
+										<a class="btn btn-info" href="{{path('filieres_index',{id:filiere.id})}}">Mettre à jour
 											<i class="fa fa-edit"></i>
 										</a>
 										<a class="btn btn-warning" href="{{path('filieres_suppression',{id:filiere.id})}}">Supprimer
@@ -88,10 +104,15 @@
 									<td colspan="2">Liste vide !</td>
 								</tr>
 							{% endfor %}
+						</tbody>
 						</table>
 					</div>
-					<!-- /.col filieres -->
+					<!-- /.card-body -->
+					</div>
+					<!-- /.card -->
 				</div>
+				</div>
+				<!-- /.row -->
 
 			</section>
 			<!-- /.content -->

@@ -18,7 +18,7 @@ class NiveauxController extends AbstractController
    
     /**
      * Insertion et affichage des niveaux
-     * @Route("ajoutEt_liste", name="ajoutEt_liste")
+     * @Route("index", name="index")
      */
     public function ajoutEt_liste (NiveauRepository $niveauRepository,Request $request, ManagerRegistry $end)
     {
@@ -34,31 +34,51 @@ class NiveauxController extends AbstractController
             'user'=>$user]);
         if (empty($nbniveaux)) {
 
-            for ($i=1; $i <7 ; $i++) { 
+           
                
-                $niveau=new Niveau();
-                $niveau->setUser($user);
-                $niveau->setNom(strtoupper("Niveau $i"));
-                $niveau->setCreatedAt(new \DateTime());
-                $manager = $end->getManager();
-                $manager->persist($niveau);
-                $manager->flush();
-            }
+            for ($i=1; $i <7 ; $i++) { 
+                    $niveau=new Niveau();
+                    $niveau->setUser($user);
+                    if ($i==1) {
+                        $niveau->setNom(strtoupper("BTS 1"));
+                    }
+                    elseif ($i==2) {
+                        $niveau->setNom(strtoupper("BTS 2"));
+                    }
+                    elseif ($i==3) {
+                        $niveau->setNom(strtoupper("Licence"));
+                    }
+                    elseif ($i==4) {
+                        $niveau->setNom(strtoupper("Master 1"));
+                    }
+                    elseif ($i==5) {
+                        $niveau->setNom(strtoupper("Master 2"));
+                    }
+                    elseif ($i==6) {
+                        $niveau->setNom(strtoupper("Master 3"));
+                    }
+                   
+                    $niveau->setCreatedAt(new \DateTime());
+                    $manager = $end->getManager();
+                    $manager->persist($niveau);
+                    $manager->flush();
+                }
             
-            return $this->redirectToRoute('niveaux_ajoutEt_liste');
+            
+            return $this->redirectToRoute('niveaux_index');
         } 
 
         if (isset($_POST['boutton_niv'])) {
             $niv=$request->request->get('niv');
             $niveau=new Niveau();
                 $niveau->setUser($user);
-                $niveau->setNom(strtoupper("Niveau ".$niv));
+                $niveau->setNom(strtoupper($niv));
                 $niveau->setCreatedAt(new \DateTime());
                 $manager = $end->getManager();
                 $manager->persist($niveau);
                 $manager->flush();
 
-                return $this->redirectToRoute('niveaux_ajoutEt_liste');
+                return $this->redirectToRoute('niveaux_index');
         }
         
         return $this->render('niveaux/niveaux.html.twig', [

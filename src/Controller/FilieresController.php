@@ -18,7 +18,7 @@ class FilieresController extends AbstractController
 
     /**
      * Insertion et affichage des filieres
-     * @Route("ajoutEt_liste", name="ajoutEt_liste")
+     * @Route("index", name="index")
      */
     public function filiere(FiliereRepository $filiereRepository,Request $request, ManagerRegistry $end)
     {
@@ -41,7 +41,7 @@ class FilieresController extends AbstractController
             $manager->persist($filiere);
             $manager->flush();
 
-            return $this->redirectToRoute('filieres_ajoutEt_liste');
+            return $this->redirectToRoute('filieres_index');
         } 
          
         return $this->render('filieres/filieres.html.twig', [

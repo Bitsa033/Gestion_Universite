@@ -14,7 +14,7 @@
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Nb niveaux</span>
+                <span class="info-box-text">Nb classes</span>
                 <span class="info-box-number">
                 {{niveauxNb}}
                 </span>
@@ -37,9 +37,9 @@
               <div class="card insert-filiere">
 
                 <div class="card-body">
-                  <form action="{{path('niveaux_ajoutEt_liste')}}" method="post">
-                      <input type="number" class="form-control" placeholder="Ajouter un niveau" style="width:35%;" disabled>
-                      <input type="number" name="niv" class="form-control" value="1" style="width:10%;">
+                  <form action="{{path('niveaux_index')}}" method="post">
+                      
+                      <input type="text" name="niv" class="form-control" placeholder="Ajouter une classe" >
                       <button type="submit" name="boutton_niv" class="btn btn-success">Valider</button>
                   </form>
                 </div>
@@ -51,36 +51,69 @@
         </div>
          <!-- /.row -->
         
-        <div class="row">
-          <div class="col-md-10">
-            <h5 class='h5'> Liste des niveaux d'études <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a> </h5>
-            <table class="table table-bordered">
-              <tr>
-                  <th  style="width:3%;">ID</th>
-                  <th>Niveaux</th>
-                  <th  style="width:35%;">Action</th>
-              </tr>
-              {% for niveau in niveaux %}
-              <tr>
-                <td>{{niveau.id}}</td>
-                  <td> {{niveau.nom}}
-                  </td>
-                  <td>
-                  <a class="btn btn-info" href="{{path('niveaux_infos',{id:niveau.id})}}">Mettre à jour <i class="fa fa-edit"></i></a>
-                   <a class="btn btn-warning" href="{{path('niveaux_suppression',{id:niveau.id})}}">Supprimer <i class="fa fa-times"></i></a>
-                  </td>
-              </tr>
-              {% else %}
-                  <tr>
-                    <td colspan="2">Liste vide !</td>
-                  </tr>
-              {% endfor %}
-            </table>
-          </div>
-          
-        </div>
-        <!-- /.col niveaux --> 
-        </div>
+        <!-- /.row -->
+				<div class="row">
+					<div class="col-10">
+						<h5 class='h5'>Liste des Classes <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a> </h5>
+
+					<div class="card">
+					<div class="card-header">
+						<h3 class="card-title">Liste des classes</h3>
+
+						<div class="card-tools">
+						<div class="input-group input-group-sm" style="width: 150px;">
+							<input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+							<div class="input-group-append">
+							<button type="submit" class="btn btn-default">
+								<i class="fas fa-search"></i>
+							</button>
+							</div>
+						</div>
+						</div>
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body table-responsive p-0" style="height: 300px;">
+						<table class="table table-head-fixed text-nowrap">
+						
+						<tbody>
+						<tr>
+							<th style="width:3%;">ID</th>
+							<th>Classes</th>
+							<th >Action</th>
+							
+							</tr>
+							{% for niveau in niveaux %}
+								<tr>
+									<td>
+										{{niveau.id}}</td>
+									<td>
+										<strong>{{niveau.nom}}</strong><br>
+									
+									</td>
+									<td>
+										<a class="btn btn-info" href="{{path('niveaux_index',{id:niveau.id})}}">Mettre à jour
+											<i class="fa fa-edit"></i>
+										</a>
+										<a class="btn btn-warning" href="{{path('niveaux_suppression',{id:niveau.id})}}">Supprimer
+											<i class="fa fa-times"></i>
+										</a>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="2">Liste vide !</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+						</table>
+					</div>
+					<!-- /.card-body -->
+					</div>
+					<!-- /.card -->
+				</div>
+				</div>
+				<!-- /.row -->
             
     </section>
     <!-- /.content -->

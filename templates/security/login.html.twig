@@ -3,15 +3,17 @@
 <link rel="stylesheet" href="template/dist/css/adminlte.min.css">
 
 <style>
-    .card-body{
-        background:gray;
+    {# .card{
+        background:yellow;
          position:relative ;
           top:55px;
-    }
-    .card-header{
-      position: relative;
-      top: 55px;
-    }
+    } #}
+body {
+    background: rgb(243, 122, 45);
+    position: relative;
+    top: 55px;
+}
+
 </style>
 
 {% block body %}
@@ -33,25 +35,27 @@
             
 
                 {% if error %}
-                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    <div class="alert alert-danger">{{ "Ces informations sont incorrectes!"}}</div>
                 {% endif %}
 
                 {% if app.user %}
                     <div class="mb-3">
-                        You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    Vous êtes connectés en tant que {{app.user.username}}
+                    , <a href="{{ path('app_logout') }}">Se déconnecter</a>
+
                     </div>
                 {% endif %}
 
                 <label for="inputEmail">Email</label>
                 <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-                <label for="inputPassword">Password</label>
+                <label for="inputPassword">Mot de passe</label>
                 <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
                 <input type="hidden" name="_csrf_token"
                     value="{{ csrf_token('authenticate') }}"
                 >
                 <br>
-                <button class="btn btn-lg btn-info" type="submit">
+                <button class="btn btn-lg btn-warning col-12" type="submit">
                     Se connecter
                 </button>
             </div>

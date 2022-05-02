@@ -3,15 +3,12 @@
 <link rel="stylesheet" href="template/dist/css/adminlte.min.css">
 
 <style>
-    .card-body{
-        background:gray;
-         position:relative ;
-          top:55px;
+    body {
+        background: rgb(243, 122, 45);
+        position: relative;
+        top: 55px;
     }
-    .card-header{
-      position: relative;
-      top: 55px;
-    }
+
 </style>
 
 {% form_theme registrationForm 'bootstrap_4_layout.html.twig' %}
@@ -34,12 +31,12 @@
                     {{ form_row(registrationForm.email) }}
                     
                     {{ form_row(registrationForm.plainPassword, {
-                        label: 'Password'
+                        label: 'Mot de passe(au moins 06 caractères)'
                     }) }}
                     
                     {{ form_row(registrationForm.agreeTerms) }}
                     
-                    <button type="submit" class="btn btn-success">Creer mon compte</button>
+                    <button type="submit" class="btn btn-warning col-12">Creer mon compte</button>
                 </div>
                 <!-- /card-body -->
             

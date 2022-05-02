@@ -255,9 +255,9 @@
 						<ul
 							class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 							<!-- Add icons to the links using the .nav-icon class
-							               with font-awesome or any other icon font library -->
+																		with font-awesome or any other icon font library -->
 							<li class="nav-item">
-								 <a href="{{path('filieres_ajoutEt_liste')}}" class="nav-link">
+								<a href="{{path('filieres_index')}}" class="nav-link">
 									<i class="fa fa-th"></i>
 									<p>
 										Filieres
@@ -266,16 +266,25 @@
 							</li>
 
 							<li class="nav-item">
-								 <a href="{{path('niveaux_ajoutEt_liste')}}" class="nav-link">
+								<a href="{{path('niveaux_index')}}" class="nav-link">
 									<i class="fa fa-th"></i>
 									<p>
-										Niveaux d'etude
+										Classes
 									</p>
 								</a>
 							</li>
 
 							<li class="nav-item">
-								 <a href="{{path('matieres_ajoutEt_liste')}}" class="nav-link">
+								<a href="{{path('semestre_index')}}" class="nav-link">
+									<i class="fa fa-th"></i>
+									<p>
+										Semestres
+									</p>
+								</a>
+							</li>
+
+							<li class="nav-item">
+								<a href="{{path('matieres_ajoutEt_liste')}}" class="nav-link">
 									<i class="fa fa-th"></i>
 									<p>
 										Matieres
@@ -283,11 +292,21 @@
 								</a>
 							</li>
 
-                            <li class="nav-item">
-								 <a href="{{path('etudiants_liste')}}" class="nav-link">
+							<li class="nav-item">
+								<a href="{{path('etudiants_liste')}}" class="nav-link">
 									<i class="fa fa-users"></i>
 									<p>
 										Etudiants
+									</p>
+								</a>
+							</li>
+
+							<li class="nav-item">
+								<a href="{{path('notes_etudiant_index')}}" class="nav-link">
+
+									<i class="fa fa-th"></i>
+									<p>
+										Notes
 									</p>
 								</a>
 							</li>
