@@ -29,11 +29,12 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         $sql = '
         
         select notes_etudiant.id, etudiant.nom as nomE, matiere.nom as nomM, 
-        moyenne from notes_etudiant inner join inscription on
+        moyenne,notes_etudiant.created_at as dateN,semestre.nom as nomSe from 
+        notes_etudiant inner join inscription on
         inscription.id = notes_etudiant.inscription_id inner join etudiant 
         on etudiant.id= inscription.etudiant_id inner join 
         ue on ue.id= notes_etudiant.ue_id  inner join matiere on matiere.id
-        = ue.matiere_id
+        = ue.matiere_id inner join semestre on semestre.id=notes_etudiant.semestre_id
         WHERE inscription.filiere_id = :filiere AND 
         inscription.niveau_id = :niveau AND notes_etudiant.user_id = :user 
 

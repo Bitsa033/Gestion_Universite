@@ -196,7 +196,7 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * on choisi la filiere et le niveau  pour consulter des ues
+     * on choisi la filiere et le niveau  pour consulter des cours
      * @Route("choix_filiereEtNiveauUes_liste", name="choix_filiereEtNiveauUes_liste")
      */
     function choix_filiereEtNiveauUes_liste(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository){

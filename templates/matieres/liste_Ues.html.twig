@@ -23,7 +23,7 @@
 								<i class="fa fa-file"></i>
 							</a>
 							<a href="{{path('matieres_choix_filiereEtNiveau_Ue')}}" class="btn btn-primary">
-								Ajouter des Ues
+								Ajouter des Cours
 								<i class="fa fa-plus"></i>
 							</a>
 
@@ -36,19 +36,19 @@
 
 				<div class="row">
 					<div class="col-md-12">
-						<h5>Liste des unites d'enseignement</h5>
+						<h5>Liste des cours</h5>
 						<table class="table table-bordered">
 
 							<tr>
-								<th>Actions</th>
+								<th style="width:28%;">Actions</th>
 								<th>Matiere</th>
-								<th>Fifliere</th>
+								<th>Filiere</th>
 								<th>Niveau</th>
 							</tr>
 							{% for matiere in uesUserFiliereNiveau %}
 								<tr>
 									<td>
-										<a class="btn btn-info" href="{{path('matieres_transfert',{id:matiere.id})}}">modifier
+										<a class="btn btn-info" href="{{path('matieres_transfert',{id:matiere.id})}}">mettre à jour
 											<i class="fa fa-edit"></i>
 										</a>
 										<a class="btn btn-warning" href="{{path('matieres_ue_suppression',{id:matiere.id})}}">supprimer

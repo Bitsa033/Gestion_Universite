@@ -6,12 +6,17 @@ use App\Entity\Inscription;
 use App\Entity\NotesEtudiant;
 use App\Form\EditNotesType;
 use App\Form\NotesEtudiantType;
+use App\Repository\FiliereRepository;
+use App\Repository\NiveauRepository;
 use App\Repository\NotesEtudiantRepository;
+use App\Repository\SemestreRepository;
+use App\Repository\UeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -20,27 +25,54 @@ use Symfony\Component\Routing\Annotation\Route;
 class NotesEtudiantController extends AbstractController
 {
     /**
-     * @Route("index", name="notes_etudiant_index", methods={"GET"})
+     * @Route("choixFiliereNiveauxSemestreListeNote", name="notes_etudiant_choixFiliereNiveauxSemestreListeNote")
      */
-    public function index(NotesEtudiantRepository $notesEtudiantRepository): Response
+    public function choixFiliereNiveauxSemestreListeNote(Request $request,SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository): Response
     {
-        return $this->render('notes_etudiant/index.html.twig', [
-            'notes_etudiants' => $notesEtudiantRepository->findAll(),
+        
+        if (!empty($request->request->all())) {
+            $filiere=$filiereRepository->find($request->request->get("filiere"));
+            $niveau=$niveauRepository->find($request->request->get('niveau'));
+            $get_filiere=$session->get('filiere',[]);
+            if (!empty($get_filiere)) {
+              $session->set('filiere',$filiere);
+              $session->set('niveau',$niveau);
+            }
+            //dd($session);
+            $session->set('filiere',$filiere);
+            $session->set('niveau',$niveau);
+            return $this->redirectToRoute('notes_etudiant_index');
+        }
+        
+        $user=$this->getUser();
+
+        return $this->render('notes_etudiant/choixFiliereNiveauxSemestreListeNote.html.twig', [
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
+            'semestres'=>$semestreRepository->findAll()
         ]);
     }
 
     /**
-     * @Route("choixFiliereNiveauxSemestreNouvelleNote", name="choixFiliereNiveauxSemestreNouvelleNote")
+     * @Route("index", name="notes_etudiant_index", methods={"GET"})
      */
-    public function choixFiliereNiveauxSemestreNouvelleNote(): Response
+    public function index(SessionInterface $session,NotesEtudiantRepository $notesEtudiantRepository, UeRepository $ueRepository): Response
     {
-        return $this->render('index.html.twig', []);
+        $user=$this->getUser();
+
+        $sessionF=$session->get('filiere',[]);
+        $sessionN=$session->get('niveau',[]);
+        $notesUserFiliereNiveau=$notesEtudiantRepository->notesEtudiantUser($user,$sessionF,$sessionN);
+        return $this->render('notes_etudiant/index.html.twig', [
+            'notes_etudiants' => $notesEtudiantRepository->findAll(),
+            'notesUserFiliereNiveau'=>$notesUserFiliereNiveau
+        ]);
     }
 
     /**
      * @Route("new", name="notes_etudiant_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(SessionInterface $session,Request $request, EntityManagerInterface $entityManager): Response
     {
 
         //on cherche l'utilisateur connecté
@@ -51,7 +83,10 @@ class NotesEtudiantController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        //sinon on traite le formulaire des notes
+        //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
+        $sessionF=$session->get('filiere',[]);
+        $sessionN=$session->get('niveau',[]);
+
         $notesEtudiant = new NotesEtudiant();
         $form = $this->createForm(NotesEtudiantType::class, $notesEtudiant);
         $notesEtudiant->setCreatedAt(new \datetime());

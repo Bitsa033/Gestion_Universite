@@ -32,8 +32,8 @@
                                 <th>Id</th>
                                 <th>Crée le</th>
                                 <th>Etudiant</th>
-                                <th>Filiere</th>
-                                <th>Classe</th>
+                                {# <th>Filiere</th>
+                                <th>Classe</th> #}
                                 <th>Cours</th>
                                 <th>Moyenne</th>
                                 <th>Semestre</th>
@@ -41,17 +41,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for notes_etudiant in notes_etudiants %}
+                            {% for notes_etudiant in notesUserFiliereNiveau %}
                                 <tr>
                                     <td>{{ notes_etudiant.id }}</td>
-                                    <td>{{ notes_etudiant.createdAt ? notes_etudiant.createdAt|date('d-m-Y H:i:s') : '' }}</td>
-                                    <td>{{ notes_etudiant.inscription.etudiant.nom }}</td>
-                                    <td>{{ notes_etudiant.inscription.filiere.nom }}</td>
-                                    <td>{{ notes_etudiant.inscription.niveau.nom }}</td>
+                                    <td>{{ notes_etudiant.dateN ? notes_etudiant.dateN|date('d-m-Y H:i:s') : '' }}</td>
+                                    <td>{{ notes_etudiant.nomE }}</td>
+                                    {# <td>{{ notes_etudiant.filiere.nom }}</td>
+                                    <td>{{ notes_etudiant.niveau.nom }}</td> #}
 
-                                    <td>{{ notes_etudiant.ue.matiere.nom }}</td>
+                                    <td>{{ notes_etudiant.nomM }}</td>
                                     <td>{{ notes_etudiant.moyenne }}</td>
-                                    <td>{{ notes_etudiant.semestre.nom }}</td>
+                                    <td>{{ notes_etudiant.nomSe }}</td>
 
                                     <td>
                                         <a class="btn btn-primary" href="{{ path('notes_etudiant_show', {'id': notes_etudiant.id}) }}">Consulter</a>

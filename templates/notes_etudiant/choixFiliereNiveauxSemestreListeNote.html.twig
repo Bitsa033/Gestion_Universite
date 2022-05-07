@@ -13,12 +13,12 @@
 				
 				<div class="row">
 					<div class="col-md-8 offset-1 position">
-						<p class='h5'>Veuillez choisir la filiere, la classe et le semestre des cours à consulter :
-							<form action="{{path('matieres_choix_filiereEtNiveauUes_liste')}}" method="post">
+						<p class='h5'>Veuillez choisir la filiere,la classe et le semestre des notes à consulter :
+							<form action="{{path('notes_etudiant_choixFiliereNiveauxSemestreListeNote')}}" method="post">
 								<table class="table">
 									<tr>
 										<th>Filiere</th>
-										<th>Niveau</th>
+										<th>Classe</th>
 										<th>Semestre</th>
 									</tr>
 
@@ -48,8 +48,8 @@
 										<td>
 											<select type="text" name="semestre" class="form-control" id="niveau">
 
-												{% for niveau in niveaux %}
-													<option value="{{niveau.id}}">{{niveau.nom}}</option>
+												{% for semestre in semestres %}
+													<option value="{{semestre.id}}">{{semestre.nom}}</option>
 												{% else %}
 													<option value="">Liste vide !</option>
 												{% endfor %}
