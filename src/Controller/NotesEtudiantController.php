@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Inscription;
 use App\Entity\NotesEtudiant;
+use App\Entity\Semestre;
 use App\Form\EditNotesType;
 use App\Form\NotesEtudiantType;
 use App\Repository\FiliereRepository;
+use App\Repository\InscriptionRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\NotesEtudiantRepository;
 use App\Repository\SemestreRepository;
@@ -72,7 +74,7 @@ class NotesEtudiantController extends AbstractController
     /**
      * @Route("new", name="notes_etudiant_new", methods={"GET", "POST"})
      */
-    public function new(SessionInterface $session,Request $request, EntityManagerInterface $entityManager): Response
+    public function new(InscriptionRepository $inscriptionRepository,UeRepository $ueRepository,SessionInterface $session,Request $request, EntityManagerInterface $entityManager): Response
     {
 
         //on cherche l'utilisateur connecté
@@ -86,23 +88,31 @@ class NotesEtudiantController extends AbstractController
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
         $sessionF=$session->get('filiere',[]);
         $sessionN=$session->get('niveau',[]);
+        $sessionSe=$session->get('semestre',[]);
 
-        $notesEtudiant = new NotesEtudiant();
-        $form = $this->createForm(NotesEtudiantType::class, $notesEtudiant);
-        $notesEtudiant->setCreatedAt(new \datetime());
-        $notesEtudiant->setUser($user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (!empty($request->request->get("inscription")) && !empty($request->request->get("ue")) && !empty($request->request->get("moyenne"))) {
+           // on cherche les posts
+            $etudiant=$inscriptionRepository->find($request->request->get("inscription"));
+            $cours=$ueRepository->find($request->request->get("ue"));
+            $moyenne=$request->get("moyenne");
+            $notesEtudiant = new NotesEtudiant();
+            $notesEtudiant->setInscription($etudiant);
+            $notesEtudiant->setUe($cours);
+            $notesEtudiant->setMoyenne($moyenne);
+            $notesEtudiant->setSemestre($sessionSe);
+            $notesEtudiant->setCreatedAt(new \datetime());
+            $notesEtudiant->setUser($user);
             $entityManager->persist($notesEtudiant);
             $entityManager->flush();
+
+            //dd($request);
 
             return $this->redirectToRoute('notes_etudiant_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('notes_etudiant/new.html.twig', [
-            'notes_etudiant' => $notesEtudiant,
-            'form' => $form->createView(),
+            'inscriptions' => $inscriptionRepository->inscriptionsUserFiliereNiveau($user,$sessionF,$sessionN),
+            'cours' => $ueRepository->uesFiliereNiveau($sessionF,$sessionN)
         ]);
     }
 

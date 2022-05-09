@@ -6,9 +6,25 @@
 {% block body %}
     <h1 class="offset-4">Creer une nouvelle note</h1>
     <div class="content-wrapper container">
-        {{ include('notes_etudiant/_form.html.twig') }}
-        <br>
-        
-
-    </div>
-{% endblock %}
+        <div class="form-group col-4 offset-2">
+            <form action="{{path('notes_etudiant_new')}}" method="post">
+                Etudiant
+                <select name="inscription" id="" class="form-control">
+                    {% for inscr in inscriptions %}
+                    <option value="{{ inscr.id }}">{{ inscr.etudiant.nom}}</option>
+                    {% endfor %}
+                </select>
+                Cours
+                <select name="ue" id="" class="form-control">
+                    {% for cour in cours %}
+                    <option value="{{ cour.id }}">{{ cour.matiere.nom}}</option>
+                     {% endfor %}
+                </select>
+                Moyenne
+                <input type="text" name="moyenne" id="" class="form-control">
+                <br>
+                <button type="submit" class="form-control btn btn-success">Enregistrer</button>
+            </form>
+        </div>
+        <br></div>
+    {% endblock %}
