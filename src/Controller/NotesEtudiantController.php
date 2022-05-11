@@ -7,12 +7,14 @@ use App\Entity\NotesEtudiant;
 use App\Entity\Semestre;
 use App\Form\EditNotesType;
 use App\Form\NotesEtudiantType;
+use App\Repository\EtudiantRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\InscriptionRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\NotesEtudiantRepository;
 use App\Repository\SemestreRepository;
 use App\Repository\UeRepository;
+use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,52 +31,52 @@ class NotesEtudiantController extends AbstractController
     /**
      * @Route("choixFiliereNiveauxSemestreListeNote", name="notes_etudiant_choixFiliereNiveauxSemestreListeNote")
      */
-    public function choixFiliereNiveauxSemestreListeNote(Request $request,SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository): Response
+    public function choixFiliereNiveauxSemestreListeNote(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
     {
-        
+
         if (!empty($request->request->all())) {
-            $filiere=$filiereRepository->find($request->request->get("filiere"));
-            $niveau=$niveauRepository->find($request->request->get('niveau'));
-            $get_filiere=$session->get('filiere',[]);
+            $filiere = $filiereRepository->find($request->request->get("filiere"));
+            $niveau = $niveauRepository->find($request->request->get('niveau'));
+            $get_filiere = $session->get('filiere', []);
             if (!empty($get_filiere)) {
-              $session->set('filiere',$filiere);
-              $session->set('niveau',$niveau);
+                $session->set('filiere', $filiere);
+                $session->set('niveau', $niveau);
             }
             //dd($session);
-            $session->set('filiere',$filiere);
-            $session->set('niveau',$niveau);
+            $session->set('filiere', $filiere);
+            $session->set('niveau', $niveau);
             return $this->redirectToRoute('notes_etudiant_index');
         }
-        
-        $user=$this->getUser();
+
+        $user = $this->getUser();
 
         return $this->render('notes_etudiant/choixFiliereNiveauxSemestreListeNote.html.twig', [
-            'filieres'=>$filiereRepository->filieresUser($user),
-            'niveaux'=>$niveauRepository->niveauxUser($user),
-            'semestres'=>$semestreRepository->findAll()
+            'filieres' => $filiereRepository->filieresUser($user),
+            'niveaux' => $niveauRepository->niveauxUser($user),
+            'semestres' => $semestreRepository->findAll()
         ]);
     }
 
     /**
      * @Route("index", name="notes_etudiant_index", methods={"GET"})
      */
-    public function index(SessionInterface $session,NotesEtudiantRepository $notesEtudiantRepository, UeRepository $ueRepository): Response
+    public function index(SessionInterface $session, NotesEtudiantRepository $notesEtudiantRepository, UeRepository $ueRepository): Response
     {
-        $user=$this->getUser();
+        $user = $this->getUser();
 
-        $sessionF=$session->get('filiere',[]);
-        $sessionN=$session->get('niveau',[]);
-        $notesUserFiliereNiveau=$notesEtudiantRepository->notesEtudiantUser($user,$sessionF,$sessionN);
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $notesUserFiliereNiveau = $notesEtudiantRepository->notesEtudiantUser($user, $sessionF, $sessionN);
         return $this->render('notes_etudiant/index.html.twig', [
             'notes_etudiants' => $notesEtudiantRepository->findAll(),
-            'notesUserFiliereNiveau'=>$notesUserFiliereNiveau
+            'notesUserFiliereNiveau' => $notesUserFiliereNiveau
         ]);
     }
 
     /**
      * @Route("new", name="notes_etudiant_new", methods={"GET", "POST"})
      */
-    public function new(InscriptionRepository $inscriptionRepository,UeRepository $ueRepository,SessionInterface $session,Request $request, EntityManagerInterface $entityManager): Response
+    public function new(InscriptionRepository $inscriptionRepository, UeRepository $ueRepository, SessionInterface $session, Request $request, EntityManagerInterface $entityManager): Response
     {
 
         //on cherche l'utilisateur connecté
@@ -86,15 +88,15 @@ class NotesEtudiantController extends AbstractController
         }
 
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
-        $sessionF=$session->get('filiere',[]);
-        $sessionN=$session->get('niveau',[]);
-        $sessionSe=$session->get('semestre',[]);
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
 
         if (!empty($request->request->get("inscription")) && !empty($request->request->get("ue")) && !empty($request->request->get("moyenne"))) {
-           // on cherche les posts
-            $etudiant=$inscriptionRepository->find($request->request->get("inscription"));
-            $cours=$ueRepository->find($request->request->get("ue"));
-            $moyenne=$request->get("moyenne");
+            // on cherche les posts
+            $etudiant = $inscriptionRepository->find($request->request->get("inscription"));
+            $cours = $ueRepository->find($request->request->get("ue"));
+            $moyenne = $request->get("moyenne");
             $notesEtudiant = new NotesEtudiant();
             $notesEtudiant->setInscription($etudiant);
             $notesEtudiant->setUe($cours);
@@ -111,8 +113,8 @@ class NotesEtudiantController extends AbstractController
         }
 
         return $this->render('notes_etudiant/new.html.twig', [
-            'inscriptions' => $inscriptionRepository->inscriptionsUserFiliereNiveau($user,$sessionF,$sessionN),
-            'cours' => $ueRepository->uesFiliereNiveau($sessionF,$sessionN)
+            'inscriptions' => $inscriptionRepository->inscriptionsUserFiliereNiveau($user, $sessionF, $sessionN),
+            'cours' => $ueRepository->uesFiliereNiveau($sessionF, $sessionN)
         ]);
     }
 
@@ -143,7 +145,7 @@ class NotesEtudiantController extends AbstractController
         if (!empty($request->request->get('moyenne'))) {
             $notesEtudiant->setMoyenne($request->request->get('moyenne'));
             $notesEtudiant->setCreatedAt(new \DateTime());
-    
+
             $entityManager->flush();
 
             return $this->redirectToRoute('notes_etudiant_index');
@@ -151,36 +153,6 @@ class NotesEtudiantController extends AbstractController
 
         return $this->render('notes_etudiant/edit.html.twig', [
             'notes_etudiant' => $notesEtudiant,
-        ]);
-    }
-    /**
-     * @Route("miseAjour{id}_edit", name="miseAjour", methods={"GET", "POST"})
-     */
-    public function miseAjour(Request $request, NotesEtudiant $notes_etudiant, ManagerRegistry $end)
-    {
-        //on cherche l'utilisateur connecté
-        $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        //sinon on modifie les données
-        if (!empty($request->request->get('moyenne'))) {
-            $notes_etudiant->setMoyenne($request->request->get('moyenne'));
-            $notes_etudiant->setCreatedAt(new \DateTime());
-            $manager = $end->getManager();
-            $manager->flush();
-
-            return $this->redirectToRoute('notes_etudiant');
-        }
-
-        $repos = $this->getDoctrine()->getRepository(Matiere::class);
-        $matieres = $repos->findAll();
-        return $this->render('notes_etudiant/edit.html.twig', [
-            
-            'notes_etudiant' => $notes_etudiant,
         ]);
     }
 
@@ -195,5 +167,16 @@ class NotesEtudiantController extends AbstractController
         }
 
         return $this->redirectToRoute('notes_etudiant_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("t", name="t")
+     */
+    public function t(EtudiantRepository $m): Response
+    {
+
+        return $this->render('notes_etudiant/essaie.html.twig', [
+            'm' => $m->findAll()
+        ]);
     }
 }
