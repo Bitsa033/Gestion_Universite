@@ -9,30 +9,14 @@
         <section class="content">
             <div
                 class="container-fluid">
-                <!-- Info boxes -->
+                <!-- Info boxes --> <br>
+
                 <div class="row">
+                    <div class="col-md-6 offset-2">
+                        <div class="card ">
 
-                    <div class="col-12">
-                        <br>
-                            <h5 class="h5">
-
-                                <a class="btn btn-primary offset-2" href="{{ path('notes_etudiant_index') }}">
-                                    Retour vers les notes
-                                    <i class="fa fa-th"></i>
-                                </a>
-
-                            </h5>
-
-                        </div>
-                        <!-- /.col -->
-
-                    </div>
-                    <!-- /.row -->
-
-                    <div class="row">
-                        <div class="col-md-6 offset-2">
-                            <div class="card ">
-
+                            <div class="card-header">
+                                
                                 <div class="card-tools">
                                     <div class="input-group input-group-sm" style="width: 150px;">
                                         <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
@@ -46,47 +30,56 @@
                                     </div>
                                 </div>
 
-                                <div class="card-body table-responsive p-0" style="height: 400px;">
-                                    
-                                    <table class="table table-head-fixed text-nowrap">
-                                        Cours
-                                        <form action="" method="post">
-                                            <select name="cours" id="" class="form-control">
-                                                <option value=""></option>
-                                                {% for mr in mr %}
-                                                    <option value="{{ mr.id }}">{{ mr.matiere.nom }}</option>
-                                                {% endfor %}
+                            </div>
 
-                                            </select>
-                                            <hr>
+                            <div class="card-body table-responsive p-0" style="height: 400px;">
+
+                                <table class="table table-head-fixed text-nowrap">
+                                    Cours
+                                    <form action="" method="post">
+                                        <select name="cours" id="" class="form-control">
+                                            <option value=""></option>
+                                            {% for mr in mr %}
+                                                <option value="{{ mr.id }}">{{ mr.matiere.nom }}</option>
+                                            {% endfor %}
+
+                                        </select>
+                                        <hr>
                                             <tr>
                                                 <th>Id</th>
                                                 <th>Etudiant</th>
                                                 <th>Moyenne</th>
                                             </tr>
-                                            {% for ms in m %}
-                                                <tr>
+                                                {% for ms in m %}
+                                            <tr>
 
-                                                    <td><input type="checkbox" name="nom{{ ms.id }}" id="" value="{{ ms.id }}"></td>
-                                                        
-                                                        <td>{{ ms.etudiant.nom }}</td>
-                                                        <td><input type="text" class="form-control form-check" name="moyenne{{ ms.id }}" id=""></td>      
-                                                </tr>
-                                            {% endfor %}
+                                                <td>
+                                                    <input type="checkbox" name="inscription[]" id="" value="{{ ms.id }}"></td>
+
+                                                    <td>{{ ms.etudiant.nom }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="nom[]" id=""></td>
+                                                        <td>
+                                                            <input type="text" class="form-control" name="moyenne[]" required></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    
+                                            </tr>
                                             <tr>
                                                 <td colspan="3">
                                                     <button class="btn btn-success form-control" type="submit">Enregistrer</button>
                                                 </td>
                                             </tr>
-                                        </form>
-                                    </table>
+                                            </form>
 
-                                <!-- /.content -->
-                                </div>
+                                            </div>
+                                        
+                                    </div>
+                                </table>
+                                <!-- /.content-wrapper -->
+
                             </div>
                         </div>
+                        <!-- /.card -->
                     </div>
-                    <!-- /.content-wrapper -->
                 </div>
             </div>
         </section>

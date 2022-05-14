@@ -32,37 +32,45 @@ class NotesController extends AbstractController
     /**
      * @Route("s", name="s")
      */
-    public function t(ManagerRegistry $managerRegistry,Request $request,SessionInterface $session,InscriptionRepository $inscriptionRepository,UeRepository $ueRepository): Response
+    public function t(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, InscriptionRepository $inscriptionRepository, UeRepository $ueRepository): Response
     {
-        $user=$this->getUser();
-        $sessionSe = $this->getDoctrine()->getRepository(Semestre::class)->find(1);
-        $inscriptions=$inscriptionRepository->findAll();
-        foreach ($inscriptions as $i => $value) {
-        
-            if (!empty($request->request->get("cours")) ) {
-                $etudiant = $inscriptionRepository->find($request->request->get("nom").$value->getId());
-                $cours = $ueRepository->find($request->request->get("cours"));
-                $moyenne = $request->request->get("moyenne").$value->getId();
-                dd($moyenne);
+        //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+        $user = $this->getUser();
 
-                // $notesEtudiant = new NotesEtudiant();
-                // $notesEtudiant->setInscription($etudiant);
-                // $notesEtudiant->setUe($cours);
-                // $notesEtudiant->setMoyenne($moyenne);
-                // $notesEtudiant->setSemestre($sessionSe);
-                // $notesEtudiant->setCreatedAt(new \datetime());
-                // $notesEtudiant->setUser($user);
-                // $manager=$managerRegistry->getManager();
-                // $manager->persist($notesEtudiant);
-                // $manager->flush();
+        if (!empty($request->request->get("cours"))) {
+
+
+            $check_array = $request->request->get("inscription");
+            foreach ($request->request->get("nom") as $key => $value) {
+                if (in_array($request->request->get("nom")[$key], $check_array)) {
+                    //dd($request->request->get("inscription")[$key]);
+                    //echo $request->request->get("moyenne")[$key];
+                    //echo '<br>';
+                    $etudiant = $inscriptionRepository->find($request->request->get("inscription")[$key]);
+                    $cours = $ueRepository->find($request->request->get("cours"));
+                    $moyenne = $request->request->get("moyenne")[$key];
+                    $sessionSe = $this->getDoctrine()->getRepository(Semestre::class)->find(1);
+
+                    $notesEtudiant = new NotesEtudiant();
+                    $notesEtudiant->setInscription($etudiant);
+                    $notesEtudiant->setUe($cours);
+                    $notesEtudiant->setMoyenne($moyenne);
+                    $notesEtudiant->setSemestre($sessionSe);
+                    $notesEtudiant->setCreatedAt(new \datetime());
+                    $notesEtudiant->setUser($user);
+                    $manager = $managerRegistry->getManager();
+                    $manager->persist($notesEtudiant);
+                    $manager->flush();
+                }
             }
         }
 
-
-
         return $this->render('notes_etudiant/essaie.html.twig', [
-            'mr'=>$ueRepository->findAll(),
-            'm'=>$inscriptions
+            'mr' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN),
+            'm' =>  $inscriptionRepository->inscriptionsUserFiliereNiveau($user, $sessionF, $sessionN)
         ]);
     }
 }
