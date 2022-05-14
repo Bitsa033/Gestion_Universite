@@ -42,7 +42,6 @@ class NotesController extends AbstractController
 
         if (!empty($request->request->get("cours"))) {
 
-
             $check_array = $request->request->get("inscription");
             foreach ($request->request->get("nom") as $key => $value) {
                 if (in_array($request->request->get("nom")[$key], $check_array)) {
@@ -52,13 +51,13 @@ class NotesController extends AbstractController
                     $etudiant = $inscriptionRepository->find($request->request->get("inscription")[$key]);
                     $cours = $ueRepository->find($request->request->get("cours"));
                     $moyenne = $request->request->get("moyenne")[$key];
-                    $sessionSe = $this->getDoctrine()->getRepository(Semestre::class)->find(1);
+                    $semestre = $this->getDoctrine()->getRepository(Semestre::class)->find($sessionSe);
 
                     $notesEtudiant = new NotesEtudiant();
                     $notesEtudiant->setInscription($etudiant);
                     $notesEtudiant->setUe($cours);
                     $notesEtudiant->setMoyenne($moyenne);
-                    $notesEtudiant->setSemestre($sessionSe);
+                    $notesEtudiant->setSemestre($semestre);
                     $notesEtudiant->setCreatedAt(new \datetime());
                     $notesEtudiant->setUser($user);
                     $manager = $managerRegistry->getManager();

@@ -37,14 +37,17 @@ class NotesEtudiantController extends AbstractController
         if (!empty($request->request->all())) {
             $filiere = $filiereRepository->find($request->request->get("filiere"));
             $niveau = $niveauRepository->find($request->request->get('niveau'));
+            $semestre=$semestreRepository->find($request->request->get('semestre'));
             $get_filiere = $session->get('filiere', []);
             if (!empty($get_filiere)) {
                 $session->set('filiere', $filiere);
                 $session->set('niveau', $niveau);
+                $session->set('semestre',$semestre);
             }
             //dd($session);
             $session->set('filiere', $filiere);
             $session->set('niveau', $niveau);
+            $session->set('semestre',$semestre);
             return $this->redirectToRoute('notes_etudiant_index');
         }
 
@@ -66,7 +69,9 @@ class NotesEtudiantController extends AbstractController
 
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
-        $notesUserFiliereNiveau = $notesEtudiantRepository->notesEtudiantUser($user, $sessionF, $sessionN);
+        $sessionSe = $session->get('semestre', []);
+        //dd($session);
+        $notesUserFiliereNiveau = $notesEtudiantRepository->notesEtudiantUser($user, $sessionF, $sessionN,$sessionSe);
         return $this->render('notes_etudiant/index.html.twig', [
             'notes_etudiants' => $notesEtudiantRepository->findAll(),
             'notesUserFiliereNiveau' => $notesUserFiliereNiveau

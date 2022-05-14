@@ -17,6 +17,14 @@ class FilieresController extends AbstractController
 {
 
     /**
+     * @Route("nb", name="filiere_nb")
+     */
+    public function new(Request $request)
+    {
+       
+    }
+
+    /**
      * Insertion et affichage des filieres
      * @Route("index", name="index")
      */
@@ -30,22 +38,32 @@ class FilieresController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
 
-        //sinon on insert les données
-        if (!empty($request->request->get('nom_f')) && !empty($request->request->get('abbr_filiere'))) {
-            $filiere=new Filiere();
-            $filiere->setUser($user);
-            $filiere->setNom(ucfirst($request->request->get('nom_f')));
-            $filiere->setSigle(strtoupper($request->request->get('abbr_filiere')));
-            $filiere->setCreatedAt(new \datetime);
-            $manager = $end->getManager();
-            $manager->persist($filiere);
-            $manager->flush();
+        $filiere=$request->request->get('nom_f');
+        $sigle=$request->request->get('sigle');
+        $nb_row=array(1);
+        $input_nb=$request->query->get('nb_row');
 
-            return $this->redirectToRoute('filieres_index');
-        } 
+        for ($i=0; $i <$input_nb ; $i++) { 
+           $nb_row[$i]=$i;
+        }
+        
+        if (!empty($request->request->all())) {
+            for ($i=0; $i <$input_nb ; $i++) { 
+
+                $filiere=new Filiere();
+                $filiere->setUser($user);
+                $filiere->setNom(ucfirst('toto'));
+                $filiere->setSigle(strtoupper('toto'));
+                $filiere->setCreatedAt(new \datetime);
+                $manager = $end->getManager();
+                $manager->persist($filiere);
+                $manager->flush();
+            }
+           //dd($request);
+        }
          
         return $this->render('filieres/filieres.html.twig', [
-            'controller_name' => 'FilieresController',
+            'nb_rows' => $nb_row,
             'filieres'=>$filiereRepository->filieresUser($user),
             'filieresNb'=>$filiereRepository->count([
                 'user'=>$user

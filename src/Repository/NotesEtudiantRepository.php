@@ -7,6 +7,7 @@ use App\Entity\Niveau;
 use App\Entity\Filiere;
 use App\Entity\Inscription;
 use App\Entity\NotesEtudiant;
+use App\Entity\Semestre;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -23,7 +24,7 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, NotesEtudiant::class);
     }
 
-    public function notesEtudiantUser(User $user,Filiere $filiere, Niveau $niveau)
+    public function notesEtudiantUser(User $user,Filiere $filiere, Niveau $niveau, Semestre $semestre)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
@@ -35,15 +36,16 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         on etudiant.id= inscription.etudiant_id inner join 
         ue on ue.id= notes_etudiant.ue_id  inner join matiere on matiere.id
         = ue.matiere_id inner join semestre on semestre.id=notes_etudiant.semestre_id
-        WHERE inscription.filiere_id = :filiere AND 
-        inscription.niveau_id = :niveau AND notes_etudiant.user_id = :user 
+        WHERE notes_etudiant.user_id = :user AND inscription.filiere_id = :filiere AND  
+        inscription.niveau_id = :niveau AND semestre.id= :semestre
 
         ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([
             'user'=>$user->getId(),
             'filiere'=>$filiere->getId(),
-            'niveau'=>$niveau->getId()
+            'niveau'=>$niveau->getId(),
+            'semestre'=>$semestre->getId()
         ]);
 
         // returns an array of arrays (i.e. a raw data set)
