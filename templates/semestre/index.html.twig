@@ -1,9 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title  %}
-    Semestre index
-{% endblock %}
-
 {% block body %}
     <!-- Content Wrapper. Contains page content -->
     <div
@@ -15,80 +11,113 @@
                 class="container-fluid">
                 <!-- Info boxes -->
                 <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-info elevation-1">
-                                <i class="fas fa-th"></i>
-                            </span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Nb semestre</span>
-                                <span class="info-box-number"></span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
+                    <div class="col-12 col-sm-6 col-md-3"></div>
                     <!-- /.col -->
 
                 </div>
                 <!-- /.row -->
-
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-inline">
-                            <div class="card insert-filiere">
+					<div class="col-md-5">
+						<div class="card">
+						 <h3 class="card-title">Liste des semestres disponibles</h3>
+							<div class="card-body table-responsive p-0" style="height: 390px;">
+								<table class="table table-head-fixed text-nowrap">
 
-                                <div class="card-body">
-                                    <form action="{{ path('semestre_index') }}" method="post">
-                                        <input type="number" name="nom_s" class="form-control" placeholder="Numero du semestre" id="">
+									<tbody>
+										<tr>
+											<th style="width:3%;">ID</th>
+											<th>Classe</th>
+											
+										</tr>
+										{% for semestre in semestres %}
+											<tr>
+												<td>
+													{{ semestre.id }}</td>
+												<td>
+													<strong>{{ semestre.nom }}</strong>
+													</td>
+													{# <td>
+														<a class="btn btn-info" href="{{ path('filieres_index',{id:filiere.id}) }}">Mettre à jour
+															<i class="fa fa-edit"></i>
+														</a>
+														<a class="btn btn-warning" href="{{ path('filieres_suppression',{id:filiere.id}) }}">Supprimer
+															<i class="fa fa-times"></i>
+														</a>
+													</td> #}
+												</tr>
+												{% else %}
+												<tr>
+													<td colspan="2">Liste vide !</td>
+												</tr>
+										{% endfor %}
 
-                                        <button type="submit" class="btn btn-success">Enregistrer</button>
-                                    </form>
+									</tbody>
+								</table>
 
-                                    </div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+					</div>
+                    
+                    <div class="col-md-6">
+
+                        <div class="card">
+                            <div class="card-header">
+								<form action="{{ path('semestres_nb') }}" method="post">
+								<div class="form-inline">
+									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de classes à créer">
+									<button type="submit" class="form-control">Ok</button>
+								</div>
+								</form>
+                                
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0" style="height: 350px;">
+                                <form action="{{ path('semestres_new') }}" method="post">
+                                    <table class="table table-head-fixed text-nowrap">
+
+                                        <tbody>
+                                            <tr>
+                                                <th>Semestre</th>
+                                            </tr>
+
+											{% for nb_row in nb_rows %}
+                                            <tr>
+                                                <th>
+                                                    <input type="text" name="semestre{{nb_row}}" class="form-control" placeholder="Nom de la classe" id="">
+												</th>
+                                            </tr>
+												
+											{% endfor %}
+												
+											
+                                        </tbody>
+										<!-- /.tbody -->
+                                    </table>
+                                    <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
+									<br><br>
+                                </form>
+                                <!-- /.form -->
+
+								</div>
+								<!-- /.card-body -->
                                 </div>
+
                             </div>
-                            <!-- /.col filiere -->
+
+
                         </div>
-                        <!-- /.row -->
+                        <!-- /.card -->
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h5 class='h5'>Liste des Semestres
-                                    <a class="btn btn-primary" href="">
-                                        Generer un fichier pdf
-                                        <i class="fa fa-file"></i>
-                                    </a>
+                    </div>
+                    <!-- /.col -->
 
-                                </h5>
-                                <table class="table table-bordered">
-                                    <tr>
-                                        <th style="width:3%;">ID</th>
-                                        <th>semestre</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    {% for semestre in semestres %}
-                                        <tr>
-                                            <td>{{ semestre.id }}</td>
-                                            <td>Semestre {{ semestre.nom }}</td>
-                                            <td>
-                                                <a class="btn btn-info" href="{{ path('semestre_show', {'id': semestre.id}) }}"> Consulter <i class="fa fa-th"></i></a>
-                                                <a class="btn btn-warning" href="{{ path('semestre_edit', {'id': semestre.id}) }}">Mettre à jour <i class="fa fa-pen"></i></a>
-                                            </td>
-                                        </tr>
-                                    {% else %}
-                                        <tr>
-                                            <td colspan="3">no records found</td>
-                                        </tr>
-                                    {% endfor %}
-                                </table>
-                            </div>
-                            <!-- /.col filieres -->
-                        </div>
 
-                    </section>
-                    <!-- /.content -->
                 </div>
-                <!-- /.content-wrapper -->
-            {% endblock %}
+					
+                <!-- /.row -->
+            </div>
+
+        </section>
+    </div>
+{% endblock %}

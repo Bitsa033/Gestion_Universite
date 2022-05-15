@@ -1,89 +1,122 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+<!-- Content Wrapper. Contains page content -->
+<div
+class="content-wrapper">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
+<!-- Main content -->
+<section class="content">
+    <div
+        class="container-fluid">
         <!-- Info boxes -->
         <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th"></i></span>
+            <div class="col-12 col-sm-6 col-md-3"></div>
+            <!-- /.col -->
 
-              <div class="info-box-content">
-                <span class="info-box-text">Nb matieres</span>
-                <span class="info-box-number">
-                  {{matieresNb}}
-                 
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          
         </div>
         <!-- /.row -->
-
         <div class="row">
-          <div class="col-md-6">
-            <div class="form-inline">
-              <div class="card insert-filiere">
+            <div class="col-md-5">
+                <div class="card">
+                    <h3 class="card-title">Liste des matieres disponibles</h3>
+                    <div class="card-body table-responsive p-0" style="height: 390px;">
+                        <table class="table table-head-fixed text-nowrap">
 
-                <div class="card-body">
-                  <form action="{{path('matieres_ajoutEt_liste')}}" method="post">
-                      <input type="text" name="nom_mat" class="form-control" placeholder="Nom de la matiere" id="">
-                      <button type="submit" class="btn btn-success">Enregistrer</button>
-                  </form>
+                            <tbody>
+                                <tr>
+                                    <th style="width:3%;">ID</th>
+                                    <th>Mattieres</th>
+
+                                </tr>
+                                {% for matiere in matieres %}
+                                    <tr>
+                                        <td>
+                                            {{ matiere.id }}</td>
+                                        <td>
+                                            <strong>{{ matiere.nom }}</strong>
+                                        </td>
+                                    {# <td>
+                                    <a class="btn btn-info" href="{{ path('filieres_index',{id:filiere.id}) }}">Mettre à jour
+                                    <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-warning" href="{{ path('filieres_suppression',{id:filiere.id}) }}">Supprimer
+                                    <i class="fa fa-times"></i>
+                                    </a>
+                                </td> #}
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2">Liste vide !</td>
+                                    </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <!-- /.card-body -->
                 </div>
-              
-              </div>
             </div>
-          </div>
-          <!-- /.col niveau -->
-        </div>
-         <!-- /.row -->
-        
-        <div class="row">
-          <div class="col-md-8">
-            <h5 class="h5">Liste des matieres</h5>
-            <h5 class='h5'> 
-             <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a>
-              <a href="{{path('matieres_choix_filiereEtNiveau_Ue')}}"  class="btn btn-primary">Ajouter des Cours <i class="fa fa-plus"></i></a>
-              <a href="{{path('matieres_choix_filiereEtNiveauUes_liste')}}"  class="btn btn-primary">Consulter des Cours<i class="fa fa-th"></i></a>
-            </h5>
-            <table class="table table-bordered">
-            
-              <tr>
-                  <th>Matieres</th>
-                  <th style="width:48%;">Actions</th>
-              </tr>
-              {% for matiere in matieres %}
-              <tr>
-                  <td>{{matiere.nom}}</td>
-                  <td>
-                    <a class="btn btn-info" href="{{path('matieres_miseAjour',{id:matiere.id})}}">Mettre à jour <i class="fa fa-edit"></i></a>
-                    <a class="btn btn-warning" href="{{path('matieres_suppression',{id:matiere.id})}}">Supprimer <i class="fa fa-times"></i></a>
-                  </td>
-              </tr>
-              {% else %}
-                  <tr>
-                    <td colspan="5">Liste vide !</td>
-                  </tr>
-              {% endfor %}
-            </table>
-          </div>
-          
-        </div>
-        <!-- /.col niveaux --> 
-        </div>
-            
-    </section>
-    <!-- /.content -->
+
+            <div class="col-md-6">
+
+                <div class="card">
+                    <div class="card-header">
+                        <form action="{{ path('matieres_nb') }}" method="post">
+                            <div class="form-inline">
+                                <input type="number" name="nb_row" class="form-control" placeholder="Nbre de classes à créer">
+                                    <button type="submit" class="form-control">Ok</button>
+                                </div>
+                            </form>
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0" style="height: 350px;">
+                            <form action="{{ path('matiere_index') }}" method="post">
+                                <table class="table table-head-fixed text-nowrap">
+
+                                    <tbody>
+                                        <tr>
+                                            <th>Classe</th>
+                                        </tr>
+
+                                        {% for nb_row in nb_rows %}
+                                            <tr>
+                                                <th>
+                                                    <input type="text" name="classe{{ nb_row }}" class="form-control" placeholder="Nom de la classe" id=""></th>
+                                                </tr>
+
+                                            {% endfor %}
+
+
+                                        </tbody>
+                                        <!-- /.tbody -->
+                                    </table>
+                                    <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
+                                    <br>
+                                        <br></form>
+                                        <!-- /.form -->
+
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!-- /.col -->
+
+
+                </div>
+
+                <!-- /.row -->
+            </div>
+
+        </section>
     </div>
-    <!-- /.content-wrapper -->
 {% endblock %}

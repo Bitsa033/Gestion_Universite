@@ -65,7 +65,7 @@
 
                         <div class="card">
                             <div class="card-header">
-								<form action="{{ path('filieres_index') }}" method="get">
+								<form action="{{ path('filieres_nb') }}" method="post">
 								<div class="form-inline">
 									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de filieres à créer">
 									<button type="submit" class="form-control">Ok</button>
@@ -100,7 +100,7 @@
                                         </tbody>
 										<!-- /.tbody -->
                                     </table>
-                                    <button type="submit" name="submit" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
+                                    <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
 									<br><br>
                                 </form>
                                 <!-- /.form -->

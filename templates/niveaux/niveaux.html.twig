@@ -1,122 +1,123 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div
+        class="content-wrapper">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Info boxes -->
-        <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th"></i></span>
+        <!-- Main content -->
+        <section class="content">
+            <div
+                class="container-fluid">
+                <!-- Info boxes -->
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-3"></div>
+                    <!-- /.col -->
 
-              <div class="info-box-content">
-                <span class="info-box-text">Nb classes</span>
-                <span class="info-box-number">
-                {{niveauxNb}}
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
-          
-        </div>
-        <!-- /.row -->
-
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-inline">
-              <div class="card insert-filiere">
-
-                <div class="card-body">
-                  <form action="{{path('niveaux_index')}}" method="post">
-                      
-                      <input type="text" name="niv" class="form-control" placeholder="Ajouter une classe" >
-                      <button type="submit" name="boutton_niv" class="btn btn-success">Enregistrer</button>
-                  </form>
                 </div>
-              
-              </div>
-            </div>
-          </div>
-          <!-- /.col niveau -->
-        </div>
-         <!-- /.row -->
-        
-        <!-- /.row -->
-				<div class="row">
-					<div class="col-10">
-						<h5 class='h5'>Liste des Classes <a class="btn btn-primary" href=""> Generer un fichier pdf <i class="fa fa-file"></i> </a> </h5>
+                <!-- /.row -->
+                <div class="row">
+					<div class="col-md-5">
+						<div class="card">
+						 <h3 class="card-title">Liste des classes disponibles</h3>
+							<div class="card-body table-responsive p-0" style="height: 390px;">
+								<table class="table table-head-fixed text-nowrap">
 
-					<div class="card">
-					<div class="card-header">
-						<h3 class="card-title">Liste des classes</h3>
+									<tbody>
+										<tr>
+											<th style="width:3%;">ID</th>
+											<th>Classe</th>
+											
+										</tr>
+										{% for niveau in niveaux %}
+											<tr>
+												<td>
+													{{ niveau.id }}</td>
+												<td>
+													<strong>{{ niveau.nom }}</strong>
+													</td>
+													{# <td>
+														<a class="btn btn-info" href="{{ path('filieres_index',{id:filiere.id}) }}">Mettre à jour
+															<i class="fa fa-edit"></i>
+														</a>
+														<a class="btn btn-warning" href="{{ path('filieres_suppression',{id:filiere.id}) }}">Supprimer
+															<i class="fa fa-times"></i>
+														</a>
+													</td> #}
+												</tr>
+												{% else %}
+												<tr>
+													<td colspan="2">Liste vide !</td>
+												</tr>
+										{% endfor %}
 
-						<div class="card-tools">
-						<div class="input-group input-group-sm" style="width: 150px;">
-							<input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+									</tbody>
+								</table>
 
-							<div class="input-group-append">
-							<button type="submit" class="btn btn-default">
-								<i class="fas fa-search"></i>
-							</button>
 							</div>
+							<!-- /.card-body -->
 						</div>
-						</div>
 					</div>
-					<!-- /.card-header -->
-					<div class="card-body table-responsive p-0" style="height: 300px;">
-						<table class="table table-head-fixed text-nowrap">
-						
-						<tbody>
-						<tr>
-							<th style="width:3%;">ID</th>
-							<th>Classes</th>
-							<th >Action</th>
-							
-							</tr>
-							{% for niveau in niveaux %}
-								<tr>
-									<td>
-										{{niveau.id}}</td>
-									<td>
-										<strong>{{niveau.nom}}</strong><br>
-									
-									</td>
-									<td>
-										<a class="btn btn-info" href="{{path('niveaux_index',{id:niveau.id})}}">Mettre à jour
-											<i class="fa fa-edit"></i>
-										</a>
-										<a class="btn btn-warning" href="{{path('niveaux_suppression',{id:niveau.id})}}">Supprimer
-											<i class="fa fa-times"></i>
-										</a>
-									</td>
-								</tr>
-							{% else %}
-								<tr>
-									<td colspan="2">Liste vide !</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-						</table>
-					</div>
-					<!-- /.card-body -->
-					</div>
-					<!-- /.card -->
-				</div>
-				</div>
-				<!-- /.row -->
-            
-    </section>
-    <!-- /.content -->
+                    
+                    <div class="col-md-6">
+
+                        <div class="card">
+                            <div class="card-header">
+								<form action="{{ path('niveaux_nb') }}" method="post">
+								<div class="form-inline">
+									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de classes à créer">
+									<button type="submit" class="form-control">Ok</button>
+								</div>
+								</form>
+                                
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0" style="height: 350px;">
+                                <form action="{{ path('niveaux_index') }}" method="post">
+                                    <table class="table table-head-fixed text-nowrap">
+
+                                        <tbody>
+                                            <tr>
+                                                <th>Classe</th>
+                                            </tr>
+
+											{% for nb_row in nb_rows %}
+                                            <tr>
+                                                <th>
+                                                    <input type="text" name="classe{{nb_row}}" class="form-control" placeholder="Nom de la classe" id="">
+												</th>
+                                            </tr>
+												
+											{% endfor %}
+												
+											
+                                        </tbody>
+										<!-- /.tbody -->
+                                    </table>
+                                    <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
+									<br><br>
+                                </form>
+                                <!-- /.form -->
+
+								</div>
+								<!-- /.card-body -->
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!-- /.col -->
+
+
+                </div>
+					
+                <!-- /.row -->
+            </div>
+
+        </section>
     </div>
-    <!-- /.content-wrapper -->
 {% endblock %}
