@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Filiere;
 use App\Entity\Ue;
 use App\Entity\Matiere;
+use App\Entity\Niveau;
 use App\Repository\UeRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
@@ -162,7 +164,7 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * on choisi la filiere, le semestre et le niveau  pour la creation des ues
+     * on choisi la filiere, le semestre et la classe  pour la creation des cours
      * @Route("choix_filiereEtNiveau_Ue", name="choix_filiereEtNiveau_Ue")
      */
     function choix_filiereEtNiveau_Ue(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository){
@@ -190,12 +192,54 @@ class MatieresController extends AbstractController
             $session->set('filiere',$filiere);
             $session->set('semestre',$semestre);
             $session->set('niveau',$niveau);
-            return $this->redirectToRoute('matieres_transfert');
+            return $this->redirectToRoute('matieres_t');
         }
         return $this->render('matieres/filiereNiveau_Ue.html.twig',[
             'filieres'=>$filiereRepository->filieresUser($user),
             'semestres'=>$semestreRepository->findAll(),
             'niveaux'=>$niveauRepository->niveauxUser($user),
+        ]);
+    }
+
+    /**
+     * @Route("t", name="t")
+     */
+    public function t(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, MatiereRepository $matiereRepository,SemestreRepository $semestreRepository): Response
+    {
+        //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+        $user = $this->getUser();
+
+        if (isset($_POST['enregistrer'])) {
+
+            $check_array = $request->request->get("matiereId");
+            foreach ($request->request->get("matiereName") as $key => $value) {
+                if (in_array($request->request->get("matiereName")[$key], $check_array)) {
+                    //dd($request->request->get("inscription")[$key]);
+                    //echo $request->request->get("moyenne")[$key];
+                    //echo '<br>';
+                    $matiere = $matiereRepository->find($request->request->get("matiereId")[$key]);
+                    $semestre = $semestreRepository->find($sessionSe);
+                    $filiere = $this->getDoctrine()->getRepository(Filiere::class)->find($sessionF);
+                    $classe = $this->getDoctrine()->getRepository(Niveau::class)->find($sessionN);
+                    $ue = new Ue();
+                    $ue->setFiliere($filiere);
+                    $ue->setNiveau($classe);
+                    $ue->setMatiere($matiere);
+                    $ue->setSemestre($semestre);
+                    $ue->setCreatedAt(new \datetime());
+                    $ue->setUser($user);
+                    $manager = $managerRegistry->getManager();
+                    $manager->persist($ue);
+                    $manager->flush();
+                }
+            }
+        }
+
+        return $this->render('matieres/essaie.html.twig', [
+            'mr' =>  $matiereRepository->matiereUserPasEncoreUe($user,$sessionF,$sessionN,$sessionSe),
         ]);
     }
 
