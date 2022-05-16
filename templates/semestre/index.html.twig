@@ -26,7 +26,7 @@
 									<tbody>
 										<tr>
 											<th style="width:3%;">ID</th>
-											<th>Classe</th>
+											<th>Semestre</th>
 											
 										</tr>
 										{% for semestre in semestres %}
@@ -65,7 +65,7 @@
                             <div class="card-header">
 								<form action="{{ path('semestres_nb') }}" method="post">
 								<div class="form-inline">
-									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de classes à créer">
+									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de semestres">
 									<button type="submit" class="form-control">Ok</button>
 								</div>
 								</form>
@@ -73,7 +73,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 350px;">
-                                <form action="{{ path('semestres_new') }}" method="post">
+                                <form action="{{ path('semestres_index') }}" method="post">
                                     <table class="table table-head-fixed text-nowrap">
 
                                         <tbody>

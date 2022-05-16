@@ -54,9 +54,13 @@ class FilieresController extends AbstractController
         $nb_row = array(1);
         //pour chaque valeur du compteur i, on ajoutera un champs de plus en consirerant que 
         //nb_row par defaut=1
-        for ($i = 0; $i < $sessionNb; $i++) {
-            $nb_row[$i] = $i;
+        if (!empty( $sessionNb)) {
+           
+            for ($i = 0; $i < $sessionNb; $i++) {
+                $nb_row[$i] = $i;
+            }
         }
+        $session_nb_row=1;
         //on cree la methode qui permettra d'enregistrer les infos du post dans la bd
         function insert_into_db($data, ManagerRegistry $end,$user)
         {

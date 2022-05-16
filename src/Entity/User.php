@@ -73,6 +73,11 @@ class User implements UserInterface
      */
     private $ues;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Semestre::class, mappedBy="user")
+     */
+    private $semestres;
+
     public function __construct()
     {
         $this->etudiants = new ArrayCollection();
@@ -82,6 +87,7 @@ class User implements UserInterface
         $this->niveaux = new ArrayCollection();
         $this->notesEtudiants = new ArrayCollection();
         $this->ues = new ArrayCollection();
+        $this->semestres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -369,6 +375,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($ue->getUser() === $this) {
                 $ue->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Semestre[]
+     */
+    public function getSemestres(): Collection
+    {
+        return $this->semestres;
+    }
+
+    public function addSemestre(Semestre $semestre): self
+    {
+        if (!$this->semestres->contains($semestre)) {
+            $this->semestres[] = $semestre;
+            $semestre->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSemestre(Semestre $semestre): self
+    {
+        if ($this->semestres->removeElement($semestre)) {
+            // set the owning side to null (unless already changed)
+            if ($semestre->getUser() === $this) {
+                $semestre->setUser(null);
             }
         }
 

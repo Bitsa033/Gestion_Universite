@@ -21,10 +21,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class MatieresController extends AbstractController
 {
-     /**
-     * @Route("ajoutEt_liste", name="ajoutEt_liste")
+    /**
+     * @Route("nb", name="nb")
      */
-    public function ajout (MatiereRepository $matiereRepository, Request $request, ManagerRegistry $end)
+    public function nb(SessionInterface $session, Request $request)
+    {
+        if (!empty($request->request->get('nb_row'))) {
+            $nb_of_row = $request->request->get('nb_row');
+            $get_nb_row = $session->get('nb_row', []);
+            if (!empty($get_nb_row)) {
+                $session->set('nb_row', $nb_of_row);
+            }
+            $session->set('nb_row', $nb_of_row);
+            //   dd($session);
+        }
+        return $this->redirectToRoute('matieres_index');
+    }
+
+     /**
+     * @Route("index", name="index")
+     */
+    public function ajout (SessionInterface $session,MatiereRepository $matiereRepository, Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -34,21 +51,55 @@ class MatieresController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
 
-        //sinon on insert les données
-        if (!empty($request->request->get('nom_mat'))) {
-            $matiere=new Matiere();
+        //on recupere la valeur du nb_row stocker dans la session
+        
+        $sessionNb = $session->get('nb_row', []);
+        //on cree un tableau qui permettra de generer plusieurs champs dans le post
+        //en fonction de la valeur de nb_row
+        $nb_row = array(1);
+        //pour chaque valeur du compteur i, on ajoutera un champs de plus en consirerant que 
+        //nb_row par defaut=1
+        if (!empty( $sessionNb)) {
+           
+            for ($i = 0; $i < $sessionNb; $i++) {
+                $nb_row[$i] = $i;
+            }
+        }
+        $session_nb_row=1;
+        //on cree la methode qui permettra d'enregistrer les infos du post dans la bd
+        function insert_into_db($data, ManagerRegistry $end,$user)
+        {
+            foreach ($data as $key => $value) {
+                $k[] = $key;
+                $v[] =  $value;
+            }
+            $k = implode(",", $k);
+            $v = implode(",", $v);
+            $matiere = new Matiere();
+            // echo $v;
             $matiere->setUser($user);
-            $matiere->setNom($request->request->get('nom_mat'));
+            $matiere->setNom(strtoupper($v));
             $matiere->setCreatedAt(new \DateTime());
             $manager = $end->getManager();
             $manager->persist($matiere);
             $manager->flush();
+        }
 
-            return $this->redirectToRoute('matieres_ajoutEt_liste');
+        //si on clic sur le boutton enregistrer et que les champs du post ne sont pas vide
+        if (isset($_POST['enregistrer'])) {
+            $session_nb_row = $session->get('nb_row', []);
+            //dd($session_nb_row);
+            for ($i = 0; $i < $session_nb_row; $i++) {
+                $data = array(
+                    'matiere' => $_POST['matiere' . $i]
+                );
+
+                insert_into_db($data, $end,$user);
+            }
         } 
 
         return $this->render('matieres/matieres.html.twig', [
-            'controller_name' => 'UniversgController',
+            'nb_rows' => $nb_row,
             'matieres'=>$matiereRepository->matieresUser($user),
             'matieresNb'=>$matiereRepository->count([
                 'user'=>$user
