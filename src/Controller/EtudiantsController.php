@@ -22,17 +22,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class EtudiantsController extends AbstractController
 {
-    /**
-     * @Route("t", name="t")
-     */
-    public function t(EtudiantRepository $m): Response
-    {
-
-        return $this->render('notes_etudiant/essaie.html.twig', [
-            'm' => $m->findAll()
-        ]);
-    }
-
 
     /**
      * Creation des etudiants
@@ -116,6 +105,73 @@ class EtudiantsController extends AbstractController
         $manager->flush();
 
         return $this->redirectToRoute('etudiants_liste');
+    }
+
+    /**
+     * @Route("choixFiliereNiveauxI", name="choixFiliereNiveauxI")
+     */
+    public function choixFiliereNiveauxI(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository)
+    {
+
+        if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe'))) {
+            $filiere = $filiereRepository->find($request->request->get("filiere"));
+            $classe = $niveauRepository->find($request->request->get('classe'));
+            $get_filiere = $session->get('filiere', []);
+            $get_classe = $session->get('niveau', []);
+            if (!empty($get_filiere)) {
+                $session->set('filiere', $filiere);
+                $session->set('niveau', $classe);
+            }
+            $session->set('filiere', $filiere);
+            $session->set('niveau', $classe);
+            //dd($session);
+
+            //return $this->redirectToRoute('etudiants_i');
+        }
+
+        return $this->redirectToRoute('etudiants_i');
+    }
+
+    /**
+     * @Route("i", name="i")
+     */
+    public function i(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository): Response
+    {
+        //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $user = $this->getUser();
+
+        if (isset($_POST['enregistrer'])) {
+
+            $check_array = $request->request->get("etudiantId");
+            foreach ($request->request->get("etudiantName") as $key => $value) {
+                if (in_array($request->request->get("etudiantName")[$key], $check_array)) {
+                    //dd($request->request->get("inscription")[$key]);
+                    // echo $request->request->get("matiereName")[$key];
+                    // echo '<br>';
+                    $etudiant = $etudiantRepository->find($request->request->get("etudiantName")[$key]);
+                    $filiere = $filiereRepository->find($sessionF);
+                    $classe = $niveauRepository->find($sessionN);
+                    $inscription = new Inscription();
+                    $inscription->setUser($user);
+                    $inscription->setEtudiant($etudiant);
+                    $inscription->setFiliere($filiere);
+                    $inscription->setNiveau($classe);
+                    $inscription->setCreatedAt(new \DateTime());
+                    //$manager=$mg->getManager();
+                    $manager = $managerRegistry->getManager();
+                    $manager->persist($inscription);
+                    $manager->flush();
+                }
+            }
+        }
+
+        return $this->render('etudiants/essaie.html.twig', [
+            'mr' =>  $etudiantRepository->etudiantsUserPasInscris($user),
+            'filieres' =>$filiereRepository->filieresUser($user),
+            'classes'  =>$niveauRepository->niveauxUser($user)
+        ]);
     }
 
     /**

@@ -202,9 +202,38 @@ class MatieresController extends AbstractController
     }
 
     /**
+     * @Route("choixFiliereNiveauxSemestreC", name="choixFiliereNiveauxSemestreC")
+     */
+    public function choixFiliereNiveauxSemestreC(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
+    {
+
+        if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe')) && !empty($request->request->get('semestre'))) {
+            $filiere = $filiereRepository->find($request->request->get("filiere"));
+            $classe = $niveauRepository->find($request->request->get('classe'));
+            $semestre=$semestreRepository->find($request->request->get('semestre'));
+            $get_filiere = $session->get('filiere', []);
+            $get_classe = $session->get('niveau', []);
+            $get_semestre = $session->get('semestre', []);
+            if (!empty($get_filiere) && !empty($get_niveau) && !empty($get_semestre)) {
+                $session->set('filiere', $filiere);
+                $session->set('niveau', $classe);
+                $session->set('semestre', $semestre);
+            }
+            $session->set('filiere', $filiere);
+            $session->set('niveau', $classe);
+            $session->set('semestre', $semestre);
+            //dd($session);
+
+            //return $this->redirectToRoute('etudiants_i');
+        }
+
+        return $this->redirectToRoute('matieres_t');
+    }
+
+    /**
      * @Route("t", name="t")
      */
-    public function t(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, MatiereRepository $matiereRepository,SemestreRepository $semestreRepository): Response
+    public function t(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, MatiereRepository $matiereRepository,SemestreRepository $semestreRepository): Response
     {
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
         $sessionF = $session->get('filiere', []);
@@ -222,8 +251,8 @@ class MatieresController extends AbstractController
                     // echo '<br>';
                     $matiere = $matiereRepository->find($request->request->get("matiereName")[$key]);
                     $semestre = $semestreRepository->find($sessionSe);
-                    $filiere = $this->getDoctrine()->getRepository(Filiere::class)->find($sessionF);
-                    $classe = $this->getDoctrine()->getRepository(Niveau::class)->find($sessionN);
+                    $filiere = $filiereRepository->find($sessionF);
+                    $classe = $niveauRepository->find($sessionN);
                     $ue = new Ue();
                     $ue->setFiliere($filiere);
                     $ue->setNiveau($classe);
@@ -240,6 +269,9 @@ class MatieresController extends AbstractController
 
         return $this->render('matieres/essaie.html.twig', [
             'mr' =>  $matiereRepository->matiereUserPasEncoreUe($user,$sessionF,$sessionN,$sessionSe),
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'classes' =>$niveauRepository->niveauxUser($user),
+            'semestres' =>$semestreRepository->findAll()
         ]);
     }
 

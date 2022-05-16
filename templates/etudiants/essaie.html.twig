@@ -14,9 +14,10 @@
                 <div class="row">
                     <div class="col-md-8 offset-2">
                         <div class="card ">
-                             <h5 class="offset-2">Selectionnez un ou plusieurs Etudiants...</h5>
+                            <h5 class="offset-2">Selectionnez un ou plusieurs Etudiants...</h5>
                             {# <div class="card-header">
                                 
+                                Selectionnez un ou plusieurs Etudiants...
                                 <div class="card-tools">
                                     <div class="input-group input-group-sm" style="width: 150px;">
                                         <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
@@ -35,9 +36,9 @@
                             <div class="card-body table-responsive p-0" style="height: 400px;">
 
                                 <table class="table table-head-fixed text-nowrap">
-                                    <form action="{{path('notes_choixFiliereNiveauxSemestreN')}}" method="post">
+                                    <form action="{{path('etudiants_choixFiliereNiveauxI')}}" method="post">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-5">
                                                 <select name="filiere" id="" class="form-control">
                                                     <option value="">Choisir Filiere...</option>
                                                     {% for filiere in filieres %}
@@ -48,22 +49,11 @@
                                                 </select>
                                             </div>
                                             <!--/col -->
-                                            <div class="col-md-3">
+                                            <div class="col-md-5">
                                                 <select name="classe" id="" class="form-control">
                                                     <option value="">Choisir Classe...</option>
                                                     {% for classe in classes %}
                                                          <option value="{{classe.id}}">{{classe.nom}}</option>
-                                                    {% else %}
-                                                        <option value="">Tableau vide...</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                            <!--/col -->
-                                            <div class="col-md-3">
-                                                <select name="semestre" id="" class="form-control">
-                                                    <option value="">Choisir Semestre...</option>
-                                                    {% for semestre in semestres %}
-                                                         <option value="{{semestre.id}}">{{semestre.nom}}</option>
                                                     {% else %}
                                                         <option value="">Tableau vide...</option>
                                                     {% endfor %}
@@ -77,37 +67,25 @@
                                         </div>
                                         <!--/row -->
                                     </form>
-                                    Cours
                                     <form action="" method="post">
-                                        <select name="cours" id="" class="form-control">
-                                            <option value="">Choisir Cours ...</option>
-                                            {% for mr in mr %}
-                                                <option value="{{ mr.id }}">{{ mr.matiere.nom }}</option>
-                                            {% endfor %}
-
-                                        </select>
                                         <hr>
-                                            <tr>
+                                            {# <tr>
                                                 <th>Id</th>
-                                                <th>Etudiant</th>
-                                                <th>Moyenne</th>
-                                            </tr>
-                                                {% for ms in m %}
+                                                <th>Matiere</th>
+                                            </tr> #}
+                                                {% for ms in mr %}
                                             <tr>
 
-                                                <td>
-                                                    <input type="checkbox" name="inscription[]" id="" value="{{ ms.id }}"></td>
+                                                <td><input type="checkbox" name="etudiantId[]" id="" value="{{ ms.id }}"></td>
 
-                                                    <td>{{ ms.etudiant.nom }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="nom[]" id=""></td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="moyenne[]" required></td>
-                                                        </tr>
-                                                    {% endfor %}
+                                                <td>{{ ms.nom }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="etudiantName[]" id=""></td>
+                                                
+                                                {% endfor %}
                                                     
                                             </tr>
                                             <tr>
                                                 <td colspan="3">
-                                                    <button class="btn btn-success form-control" type="submit">Enregistrer</button>
+                                                    <button name="enregistrer" class="btn btn-success form-control" type="submit">Enregistrer</button>
                                                 </td>
                                             </tr>
                                             </form>

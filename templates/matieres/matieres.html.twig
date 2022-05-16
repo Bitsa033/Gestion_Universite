@@ -7,6 +7,7 @@
 
         <!-- Main content -->
         <section class="content">
+            <br>
             <div
                 class="container-fluid">
                 <!-- Info boxes -->
@@ -37,13 +38,13 @@
                                                     <strong>{{ matiere.nom }}</strong>
                                                 </td>
                                                 {# <td>
-                                                                                                                                    <a class="btn btn-info" href="{{ path('filieres_index',{id:filiere.id}) }}">Mettre à jour
-                                                                                                                                    <i class="fa fa-edit"></i>
-                                                                                                                                    </a>
-                                                                                                                                    <a class="btn btn-warning" href="{{ path('filieres_suppression',{id:filiere.id}) }}">Supprimer
-                                                                                                                                    <i class="fa fa-times"></i>
-                                                                                                                                    </a>
-                                                                                                                                </td> #}
+                                                    <a class="btn btn-info" href="{{ path('filieres_index',{id:filiere.id}) }}">Mettre à jour
+                                                    <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <a class="btn btn-warning" href="{{ path('filieres_suppression',{id:filiere.id}) }}">Supprimer
+                                                    <i class="fa fa-times"></i>
+                                                    </a>
+                                                </td> #}
                                             </tr>
                                         {% else %}
                                             <tr>
@@ -106,7 +107,6 @@
 
                                 </div>
                                 <!-- /.card -->
-                                <a class="btn btn-primary col-md-4 offset-3" href="{{path('matieres_choix_filiereEtNiveau_Ue')}}">Ajouter des cours...</a>
 
                             </div>
                             <!-- /.col -->
