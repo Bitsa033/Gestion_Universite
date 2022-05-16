@@ -218,9 +218,9 @@ class MatieresController extends AbstractController
             foreach ($request->request->get("matiereName") as $key => $value) {
                 if (in_array($request->request->get("matiereName")[$key], $check_array)) {
                     //dd($request->request->get("inscription")[$key]);
-                    //echo $request->request->get("moyenne")[$key];
-                    //echo '<br>';
-                    $matiere = $matiereRepository->find($request->request->get("matiereId")[$key]);
+                    // echo $request->request->get("matiereName")[$key];
+                    // echo '<br>';
+                    $matiere = $matiereRepository->find($request->request->get("matiereName")[$key]);
                     $semestre = $semestreRepository->find($sessionSe);
                     $filiere = $this->getDoctrine()->getRepository(Filiere::class)->find($sessionF);
                     $classe = $this->getDoctrine()->getRepository(Niveau::class)->find($sessionN);
