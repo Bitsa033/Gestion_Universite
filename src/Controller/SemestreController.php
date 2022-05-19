@@ -33,7 +33,7 @@ class SemestreController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //   dd($session);
         }
-        return $this->redirectToRoute('matieres_index');
+        return $this->redirectToRoute('semestres_index');
     }
    
     /**

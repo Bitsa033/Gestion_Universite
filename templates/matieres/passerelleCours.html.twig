@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- Content Wrapper. Contains page content -->
+    <div
+        class="content-wrapper">
+
+        <!-- Main content -->
+        <section class="content">
+            <div
+                class="container-fluid">
+                <!-- Info boxes -->
+                <br>
+
+                    <div class="row">
+                        <div class="col-md-8 offset-1">
+                            <div class="card ">
+                                <h5 class="offset-2">Selectionnez la filiere, la classe et le semestre...</h5>
+                                {# <div class="card-header">
+                                                                                                                                
+                                    Selectionnez un cou plusieurs cours...
+                                    <div class="card-tools">
+                                        <div class="input-group input-group-sm" style="width: 150px;">
+                                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+    
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-default">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                </div> #}
+
+                                <div class="card-body table-responsive p-0" style="height: 400px;">
+
+                                    <table class="table table-head-fixed text-nowrap">
+                                        <form action="{{ path('matieres_choixFiliereNiveauxSemestreC') }}" method="post">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <select name="filiere" id="" class="form-control">
+                                                        <option value="">Choisir Filiere...</option>
+                                                        {% for filiere in filieres %}
+                                                            <option value="{{ filiere.id }}">{{ filiere.nom }}</option>
+                                                        {% else %}
+                                                            <option value="">Tableau vide...</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <!--/col -->
+                                                <div class="col-md-3">
+                                                    <select name="classe" id="" class="form-control">
+                                                        <option value="">Choisir Classe...</option>
+                                                        {% for classe in niveaux %}
+                                                            <option value="{{ classe.id }}">{{ classe.nom }}</option>
+                                                        {% else %}
+                                                            <option value="">Tableau vide...</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <!--/col -->
+                                                <div class="col-md-3">
+                                                    <select name="semestre" id="" class="form-control">
+                                                        <option value="">Choisir Semestre...</option>
+                                                        {% for semestre in semestres %}
+                                                            <option value="{{ semestre.id }}">{{ semestre.nom }}</option>
+                                                        {% else %}
+                                                            <option value="">Tableau vide...</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <!--/col -->
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-default" type="submit">Choisir</button>
+                                                </div>
+                                                <!--/col -->
+                                            </div>
+                                            <!--/row -->
+                                        </form>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

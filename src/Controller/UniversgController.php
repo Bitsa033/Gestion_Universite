@@ -39,20 +39,15 @@ class UniversgController extends AbstractController
 
         //sinon on consulte les données
         return $this->render('universg/index.html.twig', [
-            'controller_name' => 'UniversgController',
-            'inscriptions'=>$inscriptionRepository->inscriptionssUser($user),
             'inscriptionsNb'=>$inscriptionRepository->count([
                 'user'=>$user
             ]),
-            'filieres'=>$filiereRepository->filieresUser($user),
             'filieresNb'=>$filiereRepository->count([
                 'user'=>$user
             ]),
-            'niveaux'=>$niveauRepository->niveauxUser($user),
             'niveauxNb'=>$niveauRepository->count([
                 'user'=>$user
             ]),
-            'matieres'=>$matiereRepository->matieresUser($user),
             'matieresNb'=>$matiereRepository->count([
                 'user'=>$user
             ]),

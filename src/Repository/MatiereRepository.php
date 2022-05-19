@@ -34,6 +34,17 @@ class MatiereRepository extends ServiceEntityRepository
         
     }
 
+    // public function uesFiliereNiveau($filiere,$niveau)
+    // {
+    //     $a= $this->createQueryBuilder('u') ->andWhere('u.filiere = :val1')->andWhere('u.niveau = :val2')
+    //         ->setParameter('val1', $filiere)->setParameter('val2', $niveau)
+    //         ->orderBy('u.id', 'ASC');
+    //     $query=$a->getQuery();
+
+    //     return $query->execute();
+        
+    // }
+
     public function matiereUserPasEncoreUe(User $user,Filiere $filiere, Niveau $niveau, Semestre $semestre)
     {
         $conn = $this->getEntityManager()->getConnection();
