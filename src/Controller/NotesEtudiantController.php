@@ -28,37 +28,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class NotesEtudiantController extends AbstractController
 {
-    /**
-     * @Route("choixFiliereNiveauxSemestreListeNote", name="notes_etudiant_choixFiliereNiveauxSemestreListeNote")
-     */
-    public function choixFiliereNiveauxSemestreListeNote(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
-    {
-
-        if (!empty($request->request->all())) {
-            $filiere = $filiereRepository->find($request->request->get("filiere"));
-            $niveau = $niveauRepository->find($request->request->get('niveau'));
-            $semestre=$semestreRepository->find($request->request->get('semestre'));
-            $get_filiere = $session->get('filiere', []);
-            if (!empty($get_filiere)) {
-                $session->set('filiere', $filiere);
-                $session->set('niveau', $niveau);
-                $session->set('semestre',$semestre);
-            }
-            //dd($session);
-            $session->set('filiere', $filiere);
-            $session->set('niveau', $niveau);
-            $session->set('semestre',$semestre);
-            return $this->redirectToRoute('notes_etudiant_index');
-        }
-
-        $user = $this->getUser();
-
-        return $this->render('notes_etudiant/choixFiliereNiveauxSemestreListeNote.html.twig', [
-            'filieres' => $filiereRepository->filieresUser($user),
-            'niveaux' => $niveauRepository->niveauxUser($user),
-            'semestres' => $semestreRepository->findAll()
-        ]);
-    }
 
     /**
      * @Route("index", name="notes_etudiant_index", methods={"GET"})
@@ -174,14 +143,4 @@ class NotesEtudiantController extends AbstractController
         return $this->redirectToRoute('notes_etudiant_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    /**
-     * @Route("t", name="t")
-     */
-    public function t(EtudiantRepository $m): Response
-    {
-
-        return $this->render('notes_etudiant/essaie.html.twig', [
-            'm' => $m->findAll()
-        ]);
-    }
 }
