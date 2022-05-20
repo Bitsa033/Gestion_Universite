@@ -28,7 +28,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class NotesEtudiantController extends AbstractController
 {
-
     /**
      * @Route("index", name="notes_etudiant_index", methods={"GET"})
      */
@@ -88,7 +87,7 @@ class NotesEtudiantController extends AbstractController
 
         return $this->render('notes_etudiant/new.html.twig', [
             'inscriptions' => $inscriptionRepository->inscriptionsUserFiliereNiveau($user, $sessionF, $sessionN),
-            'cours' => $ueRepository->uesFiliereNiveau($sessionF, $sessionN)
+            'cours' => $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe)
         ]);
     }
 

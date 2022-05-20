@@ -100,7 +100,7 @@ class NotesController extends AbstractController
         }
 
         return $this->render('notes_etudiant/essaie.html.twig', [
-            'mr' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN),
+            'mr' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
             'm' =>  $inscriptionRepository->inscriptionsUserFiliereNiveau($user, $sessionF, $sessionN),
             'filieres'=>$filiereRepository->filieresUser($user),
             'classes' =>$niveauRepository->niveauxUser($user),

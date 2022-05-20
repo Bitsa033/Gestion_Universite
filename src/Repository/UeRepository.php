@@ -34,10 +34,10 @@ class UeRepository extends ServiceEntityRepository
         
     }
 
-    public function uesFiliereNiveau($filiere,$niveau)
+    public function uesFiliereNiveau($filiere,$niveau,$semestre)
     {
-        $a= $this->createQueryBuilder('u') ->andWhere('u.filiere = :val1')->andWhere('u.niveau = :val2')
-            ->setParameter('val1', $filiere)->setParameter('val2', $niveau)
+        $a= $this->createQueryBuilder('u') ->andWhere('u.filiere = :val1')->andWhere('u.niveau = :val2')->andWhere('u.semestre = :val3')
+            ->setParameter('val1', $filiere)->setParameter('val2', $niveau)->setParameter('val3', $semestre)
             ->orderBy('u.id', 'ASC');
         $query=$a->getQuery();
 
