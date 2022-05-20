@@ -30,10 +30,7 @@
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Crée le</th>
                                 <th>Etudiant</th>
-                                {# <th>Filiere</th>
-                                <th>Classe</th> #}
                                 <th>Cours</th>
                                 <th>Moyenne</th>
                                 <th>Semestre</th>
@@ -44,7 +41,7 @@
                             {% for notes_etudiant in notesUserFiliereNiveau %}
                                 <tr>
                                     <td>{{ notes_etudiant.id }}</td>
-                                    <td>{{ notes_etudiant.dateN ? notes_etudiant.dateN|date('d-m-Y H:i:s') : '' }}</td>
+                                    {# <td>{{ notes_etudiant.dateN ? notes_etudiant.dateN|date('d-m-Y H:i:s') : '' }}</td> #}
                                     <td>{{ notes_etudiant.nomE }}</td>
                                     {# <td>{{ notes_etudiant.filiere.nom }}</td>
                                     <td>{{ notes_etudiant.niveau.nom }}</td> #}

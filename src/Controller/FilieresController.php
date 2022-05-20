@@ -70,11 +70,11 @@ class FilieresController extends AbstractController
             }
             $k = implode(",", $k);
             $v = implode(",", $v);
-            //echo $v;
+            //echo $data['filiere'];
             $filiere = new Filiere();
             $filiere->setUser($user);
-            $filiere->setNom(ucfirst($v));
-            $filiere->setSigle(strtoupper($data[$key]));
+            $filiere->setNom(ucfirst($data['filiere']));
+            $filiere->setSigle(strtoupper($data['abbr']));
             $filiere->setCreatedAt(new \datetime);
             $manager = $end->getManager();
             $manager->persist($filiere);

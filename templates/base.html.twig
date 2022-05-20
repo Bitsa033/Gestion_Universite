@@ -72,7 +72,7 @@ class="main-header navbar navbar-expand navbar-warning navbar-light">
     </a>
 </li>
 <li class="nav-item d-none d-sm-inline-block">
-    <a href="index3.html" class="nav-link">Home</a>
+    <a href="{{path('notes_etudiant_index')}}" class="nav-link">Lire les notes</a>
 </li>
 <li class="nav-item d-none d-sm-inline-block">
     <a href="#" class="nav-link">Contact</a>
@@ -87,22 +87,6 @@ class="navbar-nav ml-auto">
     <a class="nav-link" data-widget="navbar-search" href="#" role="button">
         <i class="fas fa-search"></i>
     </a>
-    <div class="navbar-search-block">
-        <form class="form-inline">
-            <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-navbar" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
-                        <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </li>
 
     <!-- Messages Dropdown Menu -->
     <li class="nav-item dropdown">
@@ -364,7 +348,7 @@ class="navbar-nav ml-auto">
                                         </ul>
                                     </li> #}
 
-                                    <li class="nav-item">
+                                    {# <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="nav-icon fas fa-search"></i>
                                             <p>
@@ -386,7 +370,7 @@ class="navbar-nav ml-auto">
                                                 </a>
                                             </li>
                                         </ul>
-                                    </li>
+                                    </li> #}
 
                                 </ul>
                             </nav>

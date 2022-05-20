@@ -27,7 +27,7 @@
                             <tr>
                                 <th style="width:1%;">ID</th>
                                 <th style="width:1%;">Action</th>
-                                <th >Etudiants</th>
+                                <th >Etudiant</th>
                                 <th>Inscrit</th>
                             </tr>
                             {% for etudiant in etudiants %}
@@ -39,7 +39,7 @@
                                 <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-info"><i class="fa fa-edit"></i></a> #}
                                 </td>
                                 <td>
-                                  <a class='btn btn-default col-5' href="">{{etudiant.nom}} </a>
+                                  <a  href="">{{etudiant.nom}} </a>
                                 </td>
                                 <td><span class="btn btn-success">oui !</span></td>
                                 {% else %}
@@ -48,7 +48,7 @@
                                 <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-info"><i class="fa fa-edit"></i></a>
                                 </td>
                                 <td>
-                                   <a class='btn btn-default col-5' href="">{{etudiant.nom}}</a>
+                                   <a  href="">{{etudiant.nom}}</a>
                                 </td>
                                  <td><span class="btn btn-danger">non !</span></td>
                                 {% endif %}

@@ -37,7 +37,7 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         ue on ue.id= notes_etudiant.ue_id  inner join matiere on matiere.id
         = ue.matiere_id inner join semestre on semestre.id=notes_etudiant.semestre_id
         WHERE notes_etudiant.user_id = :user AND inscription.filiere_id = :filiere AND  
-        inscription.niveau_id = :niveau AND semestre.id= :semestre
+        inscription.niveau_id = :niveau AND semestre.id= :semestre order by etudiant_id
 
         ';
         $stmt = $conn->prepare($sql);
