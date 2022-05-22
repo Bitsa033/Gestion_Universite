@@ -1,4 +1,4 @@
-{% extends 'layout/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block body %}
     <!-- Content Wrapper. Contains page content -->
@@ -16,7 +16,7 @@
                         <br>
                             <h5 class="h5">
 
-                                <a class="btn btn-primary offset-2" href="{{path('notes_etudiant_index')}}">
+                                <a class="btn btn-primary offset-2" href="{{ path('notes_etudiant_index') }}">
                                     Retour vers les notes
                                     <i class="fa fa-th"></i>
                                 </a>
@@ -36,13 +36,13 @@
 
                                 <div class="card-body">
                                     <form action="" method="post">
-                                        <input type="text" name="moyenne" value="{{notes_etudiant.moyenne}}" class="form-control" id="">
+                                        <input type="text" name="moyenne" value="{{ notes_etudiant.moyenne }}" class="form-control" id="">
                                             <br>
                                                 <button type="submit" class="btn btn-primary form-control">Mettre à jour</button>
                                             </form>
                                         </div>
 
-                                    </div>
+                                    </form>
 
                                 </div>
                                 <!-- /.col niveau -->
@@ -51,8 +51,11 @@
 
                         </div>
 
-                    </section>
+                    </div>
                     <!-- /.content -->
                 </div>
                 <!-- /.content-wrapper -->
-            {% endblock %}
+            </div>
+        </section>
+    </div>
+{% endblock %}

@@ -47,51 +47,6 @@ class NotesEtudiantController extends AbstractController
     }
 
     /**
-     * @Route("new", name="notes_etudiant_new", methods={"GET", "POST"})
-     */
-    public function new(InscriptionRepository $inscriptionRepository, UeRepository $ueRepository, SessionInterface $session, Request $request, EntityManagerInterface $entityManager): Response
-    {
-
-        //on cherche l'utilisateur connecté
-        $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
-        $sessionF = $session->get('filiere', []);
-        $sessionN = $session->get('niveau', []);
-        $sessionSe = $session->get('semestre', []);
-
-        if (!empty($request->request->get("inscription")) && !empty($request->request->get("ue")) && !empty($request->request->get("moyenne"))) {
-            // on cherche les posts
-            $etudiant = $inscriptionRepository->find($request->request->get("inscription"));
-            $cours = $ueRepository->find($request->request->get("ue"));
-            $moyenne = $request->get("moyenne");
-            $notesEtudiant = new NotesEtudiant();
-            $notesEtudiant->setInscription($etudiant);
-            $notesEtudiant->setUe($cours);
-            $notesEtudiant->setMoyenne($moyenne);
-            $notesEtudiant->setSemestre($sessionSe);
-            $notesEtudiant->setCreatedAt(new \datetime());
-            $notesEtudiant->setUser($user);
-            $entityManager->persist($notesEtudiant);
-            $entityManager->flush();
-
-            //dd($request);
-
-            return $this->redirectToRoute('notes_etudiant_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('notes_etudiant/new.html.twig', [
-            'inscriptions' => $inscriptionRepository->inscriptionsUserFiliereNiveau($user, $sessionF, $sessionN),
-            'cours' => $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe)
-        ]);
-    }
-
-    /**
      * @Route("{id}", name="notes_etudiant_show", methods={"GET"})
      */
     public function show(NotesEtudiant $notesEtudiant): Response
@@ -102,7 +57,7 @@ class NotesEtudiantController extends AbstractController
     }
 
     /**
-     * @Route("{id}/edit", name="notes_etudiant_edit", methods={"GET", "POST"})
+     * @Route("{id}_edit", name="notes_etudiant_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, NotesEtudiant $notesEtudiant, EntityManagerInterface $entityManager): Response
     {
