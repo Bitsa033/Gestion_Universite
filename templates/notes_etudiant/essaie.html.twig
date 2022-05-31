@@ -77,15 +77,23 @@
                                         </div>
                                         <!--/row -->
                                     </form>
-                                    Cours
-                                    <form action="" method="post">
-                                        <select name="cours" id="" class="form-control">
-                                            <option value="">Choisir Cours ...</option>
-                                            {% for mr in mr %}
-                                                <option value="{{ mr.id }}">{{ mr.matiere.nom }}</option>
-                                            {% endfor %}
+                                    <br>
+                                    <div class="form-inline">
+                                        Cours
+                                        <form action="" method="post">
+                                            <select name="cours" id="" class="form-control">
+                                                <option value="">Choisir Cours ...</option>
+                                                {% for mr in mr %}
+                                                    <option value="{{ mr.id }}">{{ mr.matiere.nom }}</option>
+                                                {% endfor %}
 
-                                        </select>
+                                            </select>
+                                            <button class="btn btn-default" type="submit">Ok</button>
+                                        
+                                        </form>
+                                    </div>
+                                    <form action="" method="post">
+                                        
                                         <hr>
                                             <tr>
                                                 <th>Id</th>
