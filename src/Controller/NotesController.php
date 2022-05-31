@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class NotesController extends AbstractController
 {
+
     /**
      * @Route("/notes", name="notes")
      */
@@ -62,6 +63,23 @@ class NotesController extends AbstractController
     }
 
     /**
+     * @Route("sessionCours", name="sessionCours")
+     */
+    public function sessionCours(SessionInterface $session, Request $request)
+    {
+        if (!empty($request->request->get('cours'))) {
+            $cours = $request->request->get('cours');
+            $get_cours = $session->get('cours', []);
+            if (!empty($get_cours)) {
+                $session->set('cours', $cours);
+            }
+            $session->set('cours', $cours);
+            //dd($session);
+        }
+        return $this->redirectToRoute('notes_s');
+    }
+
+    /**
      * @Route("s", name="s")
      */
     public function t(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, InscriptionRepository $inscriptionRepository, UeRepository $ueRepository,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
@@ -70,19 +88,20 @@ class NotesController extends AbstractController
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
+        $sessionCours = $session->get('cours', []);
         $user = $this->getUser();
 
-        if (!empty($request->request->get("cours"))) {
+        if (!empty($sessionCours) && isset($_POST['enregistrer'])) {
 
-            $check_array = $request->request->get("inscription");
-            foreach ($request->request->get("nom") as $key => $value) {
-                if (in_array($request->request->get("nom")[$key], $check_array)) {
+            $check_array = $_POST['inscription'];
+            foreach ($_POST['nom'] as $key => $value) {
+                if (in_array($_POST['nom'][$key], $check_array)) {
                     //dd($request->request->get("inscription")[$key]);
                     //echo $request->request->get("moyenne")[$key];
                     //echo '<br>';
-                    $etudiant = $inscriptionRepository->find($request->request->get("inscription")[$key]);
-                    $cours = $ueRepository->find($request->request->get("cours"));
-                    $moyenne = $request->request->get("moyenne")[$key];
+                    $etudiant = $inscriptionRepository->find($_POST['nom'][$key]);
+                    $cours = $ueRepository->find($sessionCours);
+                    $moyenne = $_POST['moyenne'][$key];
                     $semestre = $semestreRepository->find($sessionSe);
 
                     $notesEtudiant = new NotesEtudiant();
@@ -101,7 +120,7 @@ class NotesController extends AbstractController
 
         return $this->render('notes_etudiant/essaie.html.twig', [
             'mr' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
-            'm' =>  $inscriptionRepository->inscriptionsUserFiliereNiveau($user, $sessionF, $sessionN),
+            'm' =>  $inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$ueRepository->find($sessionCours)),
             'filieres'=>$filiereRepository->filieresUser($user),
             'classes' =>$niveauRepository->niveauxUser($user),
             'semestres' =>$semestreRepository->findAll()

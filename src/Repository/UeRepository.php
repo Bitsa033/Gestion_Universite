@@ -45,30 +45,6 @@ class UeRepository extends ServiceEntityRepository
         
     }
 
-    public function uePasEncoreNoterPourInscription(User $user,Filiere $filiere, Niveau $niveau, Inscription $inscription)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = '
-        
-        select ue.id, matiere.nom from ue inner join matiere on
-        matiere.id = ue.matiere_id WHERE filiere_id = :filiere AND 
-        niveau_id = :niveau AND ue.user_id = :user AND ue.id not in(
-        SELECT ue_id FROM notes_etudiant where 
-        notes_etudiant.inscription_id = :inscription)
-
-        ';
-        $stmt = $conn->prepare($sql);
-        $stmt->executeQuery([
-            'user'=>$user->getId(),
-            'filiere'=>$filiere->getId(),
-            'niveau'=>$niveau->getId(),
-            'inscription'=>$inscription->getId()
-        ]);
-
-        // returns an array of arrays (i.e. a raw data set)
-        return $stmt;
-        
-
     // /**
     //  * @return Ue[] Returns an array of Ue objects
     //  */
@@ -97,5 +73,4 @@ class UeRepository extends ServiceEntityRepository
         ;
     }
     */
-}
 }

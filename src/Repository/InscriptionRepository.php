@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Filiere;
 use App\Entity\User;
 use App\Entity\Inscription;
+use App\Entity\Niveau;
+use App\Entity\Ue;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -18,6 +21,32 @@ class InscriptionRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Inscription::class);
+    }
+
+    public function EtudiantPasDeNote(User $user,Filiere $filiere, Niveau $niveau, Ue $ue)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        
+        select distinct inscription.id, etudiant.nom as nomE from inscription inner join notes_etudiant on
+        notes_etudiant.inscription_id = inscription.id inner join etudiant on etudiant.id=
+        inscription.etudiant_id WHERE filiere_id = :filiere AND 
+        niveau_id = :niveau AND notes_etudiant.user_id = :user AND inscription.id not in(
+        SELECT inscription_id FROM notes_etudiant where 
+        notes_etudiant.ue_id = :ue)
+
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'user'=>$user->getId(),
+            'filiere'=>$filiere->getId(),
+            'niveau'=>$niveau->getId(),
+            'ue'=>$ue->getId()
+        ]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
+        
     }
 
     public function inscriptionssUser(User $user)

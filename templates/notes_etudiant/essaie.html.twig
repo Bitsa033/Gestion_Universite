@@ -80,7 +80,7 @@
                                     <br>
                                     <div class="form-inline">
                                         Cours
-                                        <form action="" method="post">
+                                        <form action="{{path('notes_sessionCours')}}" method="post">
                                             <select name="cours" id="" class="form-control">
                                                 <option value="">Choisir Cours ...</option>
                                                 {% for mr in mr %}
@@ -106,7 +106,7 @@
                                                 <td>
                                                     <input type="checkbox" name="inscription[]" id="" value="{{ ms.id }}"></td>
 
-                                                    <td>{{ ms.etudiant.nom }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="nom[]" id=""></td>
+                                                    <td>{{ ms.nomE }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="nom[]" id=""></td>
                                                         <td>
                                                             <input type="text" class="form-control" name="moyenne[]" required></td>
                                                         </tr>
@@ -115,7 +115,7 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="3">
-                                                    <button class="btn btn-success form-control" type="submit">Enregistrer</button>
+                                                    <button class="btn btn-success col-5 offset-3" name='enregistrer' type="submit">Enregistrer</button>
                                                 </td>
                                             </tr>
                                             </form>
