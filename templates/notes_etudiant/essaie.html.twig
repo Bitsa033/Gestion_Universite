@@ -35,7 +35,7 @@
                             <div class="card-body table-responsive p-0" style="height: 400px;">
 
                                 <table class="table table-head-fixed text-nowrap">
-                                    <form action="{{path('notes_choixFiliereNiveauxSemestreN')}}" method="post">
+                                    <form action="{{path('notes_choixFiliereNiveauxSemestreNc')}}" method="post">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <select name="filiere" id="" class="form-control">
@@ -104,9 +104,9 @@
                                             <tr>
 
                                                 <td>
-                                                    <input type="checkbox" name="inscription[]" id="" value="{{ ms.id }}"></td>
+                                                    <input type="checkbox" name="inscription[]" id="" value="{{ ms.idI }}"></td>
 
-                                                    <td>{{ ms.nomE }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="nom[]" id=""></td>
+                                                    <td>{{ ms.nomE }}<input type="hidden" value="{{ ms.idI }}" class="form-control form-check" name="nom[]" id=""></td>
                                                         <td>
                                                             <input type="text" class="form-control" name="moyenne[]" required></td>
                                                         </tr>

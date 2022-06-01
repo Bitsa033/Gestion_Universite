@@ -6,6 +6,7 @@ use App\Entity\Filiere;
 use App\Entity\User;
 use App\Entity\Inscription;
 use App\Entity\Niveau;
+use App\Entity\Semestre;
 use App\Entity\Ue;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -23,17 +24,22 @@ class InscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Inscription::class);
     }
 
-    public function EtudiantPasDeNote()
+    public function EtudiantPasDeNote(User $user, Filiere $filiere, Niveau $niveau, Semestre $semestre)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-            select inscription.id, etudiant.nom as nomE from inscription inner join etudiant on etudiant.id=
-            inscription.etudiant_id
+        select inscription.id as idI,etudiant.nom as nomE from inscription inner JOIN etudiant
+        on etudiant.id=inscription.etudiant_id where inscription.id not in( SELECT inscription_id 
+        from notes_etudiant where filiere_id= :filiere AND niveau_id= :niveau AND semestre_id= :semestre ) 
+        AND inscription.user_id = :user and filiere_id= :filiere AND niveau_id= :niveau 
 
         ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([
-            
+            'user'=>$user->getId(),
+            'filiere'=>$filiere->getId(),
+            'niveau'=>$niveau->getId(),
+            'semestre'=>$semestre->getId()
         ]);
 
         // returns an array of arrays (i.e. a raw data set)

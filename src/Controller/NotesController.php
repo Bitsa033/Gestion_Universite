@@ -34,7 +34,7 @@ class NotesController extends AbstractController
     }
 
     /**
-     * on choisi la filiere, le semestre et la classe  pour la creation ou la consultation des cours
+     * on se dirige vers le template [passerelleNotes]
      * @Route("passerelleNotes", name="passerelleNotes")
      */
     function passerelleNotes(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository,UeRepository $ueRepository){
@@ -46,24 +46,24 @@ class NotesController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
 
-        if (!empty($request->request->get('filiere')) && !empty($request->request->get('niveau')) && !empty($request->request->get('semestre'))) {
-            $filiere=$filiereRepository->find($request->request->get("filiere"));
-            $semestre=$semestreRepository->find($request->request->get('semestre'));
-            $niveau=$niveauRepository->find($request->request->get('niveau'));
-            $get_filiere=$session->get('filiere',[]);
-            $get_semestre=$session->get('semestre',[]);
-            $get_niveau=$session->get('niveau',[]);
-            if (!empty($get_filiere) && !empty($get_semestre) && !empty($get_niveau)) {
-              $session->set('filiere',$filiere);
-              $session->set('semestre',$semestre);
-              $session->set('niveau',$niveau);
-            }
-            //dd($session);
-            $session->set('filiere',$filiere);
-            $session->set('semestre',$semestre);
-            $session->set('niveau',$niveau);
-            return $this->redirectToRoute('notes_passerelleNotes');
-        }
+        // if (!empty($request->request->get('filiere')) && !empty($request->request->get('niveau')) && !empty($request->request->get('semestre'))) {
+        //     $filiere=$filiereRepository->find($request->request->get("filiere"));
+        //     $semestre=$semestreRepository->find($request->request->get('semestre'));
+        //     $niveau=$niveauRepository->find($request->request->get('niveau'));
+        //     $get_filiere=$session->get('filiere',[]);
+        //     $get_semestre=$session->get('semestre',[]);
+        //     $get_niveau=$session->get('niveau',[]);
+        //     if (!empty($get_filiere) && !empty($get_semestre) && !empty($get_niveau)) {
+        //       $session->set('filiere',$filiere);
+        //       $session->set('semestre',$semestre);
+        //       $session->set('niveau',$niveau);
+        //     }
+        //     //dd($session);
+        //     $session->set('filiere',$filiere);
+        //     $session->set('semestre',$semestre);
+        //     $session->set('niveau',$niveau);
+        //     return $this->redirectToRoute('notes_s');
+        // }
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
@@ -77,9 +77,10 @@ class NotesController extends AbstractController
     }
 
     /**
+     * on traite le template [passerelleNotes]
      * @Route("choixFiliereNiveauxSemestreN", name="choixFiliereNiveauxSemestreN")
      */
-    public function choixFiliereNiveauxSemestreC(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
+    public function choixFiliereNiveauxSemestreN(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
     {
 
         if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe')) && !empty($request->request->get('semestre'))) {
@@ -106,18 +107,48 @@ class NotesController extends AbstractController
     }
 
     /**
+     * on traite la route qui se trouve  dans le template [notes_etudiant/essaie]
+     * @Route("choixFiliereNiveauxSemestreNc", name="choixFiliereNiveauxSemestreNc")
+     */
+    public function choixFiliereNiveauxSemestreNc(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
+    {
+
+        if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe')) && !empty($request->request->get('semestre'))) {
+            $filiere = $filiereRepository->find($request->request->get("filiere"));
+            $classe = $niveauRepository->find($request->request->get('classe'));
+            $semestre=$semestreRepository->find($request->request->get('semestre'));
+            $get_filiere = $session->get('filiere', []);
+            $get_classe = $session->get('niveau', []);
+            $get_semestre = $session->get('semestre', []);
+            if (!empty($get_filiere) && !empty($get_niveau) && !empty($get_semestre)) {
+                $session->set('filiere', $filiere);
+                $session->set('niveau', $classe);
+                $session->set('semestre', $semestre);
+            }
+            $session->set('filiere', $filiere);
+            $session->set('niveau', $classe);
+            $session->set('semestre', $semestre);
+            //dd($session);
+
+            //return $this->redirectToRoute('etudiants_i');
+        }
+
+        return $this->redirectToRoute('notes_s');
+    }
+
+    /**
      * @Route("sessionCours", name="sessionCours")
      */
-    public function sessionCours(SessionInterface $session, Request $request)
+    public function sessionCours(SessionInterface $session, Request $request,UeRepository $ueRepository)
     {
         if (!empty($request->request->get('cours'))) {
-            $cours = $request->request->get('cours');
+            $cours = $ueRepository->find($request->request->get('cours'));
             $get_cours = $session->get('cours', []);
             if (!empty($get_cours)) {
                 $session->set('cours', $cours);
             }
             $session->set('cours', $cours);
-            dd($session);
+            //dd($session);
         }
        return $this->redirectToRoute('notes_s');
     }
@@ -146,24 +177,24 @@ class NotesController extends AbstractController
                     $cours = $ueRepository->find($sessionCours);
                     $moyenne = $_POST['moyenne'][$key];
                     $semestre = $semestreRepository->find($sessionSe);
-                    dd($session);
-                    // $notesEtudiant = new NotesEtudiant();
-                    // $notesEtudiant->setInscription($etudiant);
-                    // $notesEtudiant->setUe($cours);
-                    // $notesEtudiant->setMoyenne($moyenne);
-                    // $notesEtudiant->setSemestre($semestre);
-                    // $notesEtudiant->setCreatedAt(new \datetime());
-                    // $notesEtudiant->setUser($user);
-                    // $manager = $managerRegistry->getManager();
-                    // $manager->persist($notesEtudiant);
-                    // $manager->flush();
+                    //dd($session);
+                    $notesEtudiant = new NotesEtudiant();
+                    $notesEtudiant->setInscription($etudiant);
+                    $notesEtudiant->setUe($cours);
+                    $notesEtudiant->setMoyenne($moyenne);
+                    $notesEtudiant->setSemestre($semestre);
+                    $notesEtudiant->setCreatedAt(new \datetime());
+                    $notesEtudiant->setUser($user);
+                    $manager = $managerRegistry->getManager();
+                    $manager->persist($notesEtudiant);
+                    $manager->flush();
                 }
             }
         }
        
         return $this->render('notes_etudiant/essaie.html.twig', [
             'cours'=>$ueRepository->findAll(),
-            'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote(),
+            'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$sessionSe),
             'filieres'=>$filiereRepository->filieresUser($user),
             'classes' =>$niveauRepository->niveauxUser($user),
             'semestres' =>$semestreRepository->findAll()
