@@ -83,7 +83,7 @@
                                         <form action="{{path('notes_sessionCours')}}" method="post">
                                             <select name="cours" id="" class="form-control">
                                                 <option value="">Choisir Cours ...</option>
-                                                {% for mr in mr %}
+                                                {% for mr in cours %}
                                                     <option value="{{ mr.id }}">{{ mr.matiere.nom }}</option>
                                                 {% endfor %}
 
@@ -100,7 +100,7 @@
                                                 <th>Etudiant</th>
                                                 <th>Moyenne</th>
                                             </tr>
-                                                {% for ms in m %}
+                                                {% for ms in inscriptions %}
                                             <tr>
 
                                                 <td>

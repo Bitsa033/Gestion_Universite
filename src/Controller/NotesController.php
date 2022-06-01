@@ -34,6 +34,49 @@ class NotesController extends AbstractController
     }
 
     /**
+     * on choisi la filiere, le semestre et la classe  pour la creation ou la consultation des cours
+     * @Route("passerelleNotes", name="passerelleNotes")
+     */
+    function passerelleNotes(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository,UeRepository $ueRepository){
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        if (!empty($request->request->get('filiere')) && !empty($request->request->get('niveau')) && !empty($request->request->get('semestre'))) {
+            $filiere=$filiereRepository->find($request->request->get("filiere"));
+            $semestre=$semestreRepository->find($request->request->get('semestre'));
+            $niveau=$niveauRepository->find($request->request->get('niveau'));
+            $get_filiere=$session->get('filiere',[]);
+            $get_semestre=$session->get('semestre',[]);
+            $get_niveau=$session->get('niveau',[]);
+            if (!empty($get_filiere) && !empty($get_semestre) && !empty($get_niveau)) {
+              $session->set('filiere',$filiere);
+              $session->set('semestre',$semestre);
+              $session->set('niveau',$niveau);
+            }
+            //dd($session);
+            $session->set('filiere',$filiere);
+            $session->set('semestre',$semestre);
+            $session->set('niveau',$niveau);
+            return $this->redirectToRoute('notes_passerelleNotes');
+        }
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+
+        return $this->render('notes_etudiant/passerelleNotes.html.twig',[
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'semestres'=>$semestreRepository->findAll(),
+            'niveaux'=>$niveauRepository->niveauxUser($user),
+            'cours' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
+        ]);
+    }
+
+    /**
      * @Route("choixFiliereNiveauxSemestreN", name="choixFiliereNiveauxSemestreN")
      */
     public function choixFiliereNiveauxSemestreC(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
@@ -59,7 +102,7 @@ class NotesController extends AbstractController
             //return $this->redirectToRoute('etudiants_i');
         }
 
-        return $this->redirectToRoute('notes_s');
+        return $this->redirectToRoute('notes_passerelleNotes');
     }
 
     /**
@@ -74,9 +117,9 @@ class NotesController extends AbstractController
                 $session->set('cours', $cours);
             }
             $session->set('cours', $cours);
-            //dd($session);
+            dd($session);
         }
-        return $this->redirectToRoute('notes_s');
+       return $this->redirectToRoute('notes_s');
     }
 
     /**
@@ -103,24 +146,24 @@ class NotesController extends AbstractController
                     $cours = $ueRepository->find($sessionCours);
                     $moyenne = $_POST['moyenne'][$key];
                     $semestre = $semestreRepository->find($sessionSe);
-
-                    $notesEtudiant = new NotesEtudiant();
-                    $notesEtudiant->setInscription($etudiant);
-                    $notesEtudiant->setUe($cours);
-                    $notesEtudiant->setMoyenne($moyenne);
-                    $notesEtudiant->setSemestre($semestre);
-                    $notesEtudiant->setCreatedAt(new \datetime());
-                    $notesEtudiant->setUser($user);
-                    $manager = $managerRegistry->getManager();
-                    $manager->persist($notesEtudiant);
-                    $manager->flush();
+                    dd($session);
+                    // $notesEtudiant = new NotesEtudiant();
+                    // $notesEtudiant->setInscription($etudiant);
+                    // $notesEtudiant->setUe($cours);
+                    // $notesEtudiant->setMoyenne($moyenne);
+                    // $notesEtudiant->setSemestre($semestre);
+                    // $notesEtudiant->setCreatedAt(new \datetime());
+                    // $notesEtudiant->setUser($user);
+                    // $manager = $managerRegistry->getManager();
+                    // $manager->persist($notesEtudiant);
+                    // $manager->flush();
                 }
             }
         }
-
+       
         return $this->render('notes_etudiant/essaie.html.twig', [
-            'mr' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
-            'm' =>  $inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$ueRepository->find($sessionCours)),
+            'cours'=>$ueRepository->findAll(),
+            'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote(),
             'filieres'=>$filiereRepository->filieresUser($user),
             'classes' =>$niveauRepository->niveauxUser($user),
             'semestres' =>$semestreRepository->findAll()

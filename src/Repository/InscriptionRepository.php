@@ -23,25 +23,17 @@ class InscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Inscription::class);
     }
 
-    public function EtudiantPasDeNote(User $user,Filiere $filiere, Niveau $niveau, Ue $ue)
+    public function EtudiantPasDeNote()
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-        
-        select distinct inscription.id, etudiant.nom as nomE from inscription inner join notes_etudiant on
-        notes_etudiant.inscription_id = inscription.id inner join etudiant on etudiant.id=
-        inscription.etudiant_id WHERE filiere_id = :filiere AND 
-        niveau_id = :niveau AND notes_etudiant.user_id = :user AND inscription.id not in(
-        SELECT inscription_id FROM notes_etudiant where 
-        notes_etudiant.ue_id = :ue)
+            select inscription.id, etudiant.nom as nomE from inscription inner join etudiant on etudiant.id=
+            inscription.etudiant_id
 
         ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([
-            'user'=>$user->getId(),
-            'filiere'=>$filiere->getId(),
-            'niveau'=>$niveau->getId(),
-            'ue'=>$ue->getId()
+            
         ]);
 
         // returns an array of arrays (i.e. a raw data set)
