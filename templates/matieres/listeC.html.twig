@@ -22,11 +22,7 @@
 								Generer un fichier pdf
 								<i class="fa fa-file"></i>
 							</a>
-							<a href="{{path('matieres_choix_filiereEtNiveau_Ue')}}" class="btn btn-primary">
-								Ajouter des Cours
-								<i class="fa fa-plus"></i>
-							</a>
-
+							
 						</h5>
 					</div>
 					<!-- /.col -->
@@ -43,7 +39,8 @@
 								<th style="width:28%;">Actions</th>
 								<th>Matiere</th>
 								<th>Filiere</th>
-								<th>Niveau</th>
+								<th>Classe</th>
+								<th>Semestre</th>
 							</tr>
 							{% for matiere in uesUserFiliereNiveau %}
 								<tr>
@@ -58,6 +55,7 @@
 									<td>{{matiere.matiere.nom}}</td>
 									<td>{{matiere.filiere.sigle}}</td>
 									<td>{{matiere.niveau.nom}}</td>
+									<td>{{matiere.semestre.nom}}</td>
 								</tr>
 							{% else %}
 								<tr>
@@ -72,15 +70,6 @@
 				</div>
 				<!-- row -->
 
-            <div class="row">
-					<div class="col offset-3">
-						<div class="form-group">
-							<a href="{{path('matieres_choix_filiereEtNiveauUes_liste')}}" style="width:190px;" class="btn btn-success">Retour</a>
-						</div>
-					</div>
-				</div>
-            <!-- row -->
-			</section>
 			<!-- /.content -->
 		</div>
 		<!-- /.content-wrapper -->

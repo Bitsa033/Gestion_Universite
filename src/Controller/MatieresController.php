@@ -371,9 +371,9 @@ class MatieresController extends AbstractController
         //sinon on consulte les données
         $sessionF=$session->get('filiere',[]);
         $sessionN=$session->get('niveau',[]);
-        $uesUserFiliereNiveau=$ueRepository->uesFiliereNiveau($user,$sessionF,$sessionN);
-        return $this->render('matieres/liste_Ues.html.twig', [
-            'controller_name' => 'MatieresController',
+        $sessionSe=$session->get('semestre',[]);
+        $uesUserFiliereNiveau=$ueRepository->uesFiliereNiveau($sessionF,$sessionN,$sessionSe);
+        return $this->render('matieres/listeC.html.twig', [
             'filieres'=>$filiereRepository->filieresUser($user),
             'niveaux'=>$niveauRepository->niveauxUser($user),
             'uesUserFiliereNiveau'=>$uesUserFiliereNiveau
