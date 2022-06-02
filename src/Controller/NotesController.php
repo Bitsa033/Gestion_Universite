@@ -90,7 +90,7 @@ class NotesController extends AbstractController
             $get_filiere = $session->get('filiere', []);
             $get_classe = $session->get('niveau', []);
             $get_semestre = $session->get('semestre', []);
-            if (!empty($get_filiere) && !empty($get_niveau) && !empty($get_semestre)) {
+            if (!empty($get_filiere) && !empty($get_classe) && !empty($get_semestre)) {
                 $session->set('filiere', $filiere);
                 $session->set('niveau', $classe);
                 $session->set('semestre', $semestre);
@@ -120,7 +120,7 @@ class NotesController extends AbstractController
             $get_filiere = $session->get('filiere', []);
             $get_classe = $session->get('niveau', []);
             $get_semestre = $session->get('semestre', []);
-            if (!empty($get_filiere) && !empty($get_niveau) && !empty($get_semestre)) {
+            if (!empty($get_filiere) && !empty($get_classe) && !empty($get_semestre)) {
                 $session->set('filiere', $filiere);
                 $session->set('niveau', $classe);
                 $session->set('semestre', $semestre);
@@ -194,7 +194,7 @@ class NotesController extends AbstractController
        
         return $this->render('notes_etudiant/essaie.html.twig', [
             'cours'=>$ueRepository->uesFiliereNiveau($user,$sessionF,$sessionN,$sessionSe),
-            'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$sessionSe),
+            'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$sessionSe,$sessionCours),
             'filieres'=>$filiereRepository->filieresUser($user),
             'classes' =>$niveauRepository->niveauxUser($user),
             'semestres' =>$semestreRepository->findAll()
