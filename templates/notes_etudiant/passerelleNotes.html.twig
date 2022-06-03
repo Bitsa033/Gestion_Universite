@@ -66,7 +66,7 @@
                                         <form action="{{ path('notes_sessionCours') }}" method="post">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <select name="filiere" id="" class="form-control">
+                                                    <select name="cours" id="" class="form-control">
                                                         <option value="">Choisir Cours...</option>
                                                         {% for cour in cours %}
                                                             <option value="{{ cour.id }}">{{ cour.matiere.nom }}</option>

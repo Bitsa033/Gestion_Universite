@@ -13,49 +13,30 @@
 			<div
 				class="container-fluid">
 				<!-- Info boxes -->
-				<div class="row">
-
-					<div class="col-12 ">
-						<br>
-						<h5 class="h5">
-							<a class="btn btn-primary" href="">
-								Generer un fichier pdf
-								<i class="fa fa-file"></i>
-							</a>
-							
-						</h5>
-					</div>
-					<!-- /.col -->
-
-				</div>
-				<!-- /.row -->
 
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-md-6">
 						<h5>Liste des cours</h5>
+						<div class="btn btn-warning">
+							<p>Filiere: | Classe: | Semestre:</p>
+						</div>
 						<table class="table table-bordered">
 
 							<tr>
-								<th style="width:28%;">Actions</th>
+								<th style="width:25%;">Actions</th>
 								<th>Matiere</th>
-								<th>Filiere</th>
-								<th>Classe</th>
-								<th>Semestre</th>
 							</tr>
 							{% for matiere in uesUserFiliereNiveau %}
 								<tr>
 									<td>
-										<a class="btn btn-info" href="{{path('matieres_transfert',{id:matiere.id})}}">mettre à jour
+										<a class="btn btn-info" href="{{path('matieres_transfert',{id:matiere.id})}}">
 											<i class="fa fa-edit"></i>
 										</a>
-										<a class="btn btn-warning" href="{{path('matieres_ue_suppression',{id:matiere.id})}}">supprimer
+										<a class="btn btn-danger" href="{{path('matieres_ue_suppression',{id:matiere.id})}}">
 											<i class="fa fa-times"></i>
 										</a>
 									</td>
 									<td>{{matiere.matiere.nom}}</td>
-									<td>{{matiere.filiere.sigle}}</td>
-									<td>{{matiere.niveau.nom}}</td>
-									<td>{{matiere.semestre.nom}}</td>
 								</tr>
 							{% else %}
 								<tr>
@@ -67,9 +48,12 @@
 						</table>
 					</div>
 					<!-- col -->
+
+					
 				</div>
 				<!-- row -->
-
+				</div>
+				
 			<!-- /.content -->
 		</div>
 		<!-- /.content-wrapper -->

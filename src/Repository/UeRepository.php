@@ -45,6 +45,18 @@ class UeRepository extends ServiceEntityRepository
         
     }
 
+    public function coursFiliereClasse($filiere,$classe)
+    {
+        $a= $this->createQueryBuilder('u') ->andWhere('u.filiere = :val1')->andWhere('u.niveau = :val2')
+            ->setParameter('val1', $filiere)->setParameter('val2', $classe)
+            ->orderBy('u.id', 'ASC');
+        $query=$a->getQuery();
+
+        return $query->execute();
+        
+    }
+
+
     // /**
     //  * @return Ue[] Returns an array of Ue objects
     //  */
