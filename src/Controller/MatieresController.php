@@ -80,7 +80,7 @@ class MatieresController extends AbstractController
             $matiere = new Matiere();
             // echo $v;
             $matiere->setUser($user);
-            $matiere->setNom(strtoupper($v));
+            $matiere->setNom(ucfirst($v));
             $matiere->setCreatedAt(new \DateTime());
             $manager = $end->getManager();
             $manager->persist($matiere);

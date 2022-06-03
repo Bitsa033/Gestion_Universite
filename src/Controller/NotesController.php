@@ -191,10 +191,14 @@ class NotesController extends AbstractController
                 }
             }
         }
-       
+       //$ueRepository->find(1)
+       if (!empty($sessionCours)) {
+            $x=$ueRepository->find($sessionCours);
+       }
+       $x=$ueRepository->find(1);
         return $this->render('notes_etudiant/essaie.html.twig', [
             'cours' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
-            'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$sessionSe,$sessionCours),
+            'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$sessionSe,$ueRepository->find($x)),
             'filieres'=>$filiereRepository->filieresUser($user),
             'classes' =>$niveauRepository->niveauxUser($user),
             'semestres' =>$semestreRepository->findAll()
