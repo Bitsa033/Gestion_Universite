@@ -22,6 +22,7 @@
                             </div>
                         </form>
                     </div>
+                    <a href="">Imprimer</a>
                     <div class="card-body table-responsive p-0" style="height: 400px;">
                         <table class="table table-bordered table-head-fixed text-nowrap">
                             <tr>
@@ -35,8 +36,7 @@
                                 <td >{{etudiant.id}}</td>
                                 {% if etudiant.filiere and etudiant.niveau  %}
                                 <td>
-                                {# <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-warning"><i class="fa fa-times"></i></a>
-                                <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-info"><i class="fa fa-edit"></i></a> #}
+                                
                                 </td>
                                 <td>
                                   <a  href="">{{etudiant.nom}} </a>
@@ -63,6 +63,8 @@
                         </table>
                         
                     </div>
+
+
                 </div>
           </div>
           <!-- col -->

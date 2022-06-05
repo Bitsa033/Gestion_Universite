@@ -46,24 +46,6 @@ class NotesController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
 
-        // if (!empty($request->request->get('filiere')) && !empty($request->request->get('niveau')) && !empty($request->request->get('semestre'))) {
-        //     $filiere=$filiereRepository->find($request->request->get("filiere"));
-        //     $semestre=$semestreRepository->find($request->request->get('semestre'));
-        //     $niveau=$niveauRepository->find($request->request->get('niveau'));
-        //     $get_filiere=$session->get('filiere',[]);
-        //     $get_semestre=$session->get('semestre',[]);
-        //     $get_niveau=$session->get('niveau',[]);
-        //     if (!empty($get_filiere) && !empty($get_semestre) && !empty($get_niveau)) {
-        //       $session->set('filiere',$filiere);
-        //       $session->set('semestre',$semestre);
-        //       $session->set('niveau',$niveau);
-        //     }
-        //     //dd($session);
-        //     $session->set('filiere',$filiere);
-        //     $session->set('semestre',$semestre);
-        //     $session->set('niveau',$niveau);
-        //     return $this->redirectToRoute('notes_s');
-        // }
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);

@@ -20,7 +20,7 @@
                 <div class="row">
 					<div class="col-md-5">
 						<div class="card">
-						 <h3 class="card-title">Liste des semestres disponibles</h3>
+						 <h3 class="card-title">Liste des semestres disponibles <a href="">Imprimer</a> </h3>
 							<div class="card-body table-responsive p-0" style="height: 390px;">
 								<table class="table table-head-fixed text-nowrap">
 
@@ -35,21 +35,14 @@
 												<td>
 													{{ semestre.id }}</td>
 												<td>
-													<strong>{{ semestre.nom }}</strong>
-													</td>
-													{# <td>
-														<a class="btn btn-info" href="{{ path('filieres_index',{id:filiere.id}) }}">Mettre à jour
-															<i class="fa fa-edit"></i>
-														</a>
-														<a class="btn btn-warning" href="{{ path('filieres_suppression',{id:filiere.id}) }}">Supprimer
-															<i class="fa fa-times"></i>
-														</a>
-													</td> #}
-												</tr>
-												{% else %}
-												<tr>
-													<td colspan="2">Liste vide !</td>
-												</tr>
+													<strong>Semestre {{ semestre.nom }}</strong>
+												</td>
+													
+											</tr>
+											{% else %}
+											<tr>
+												<td colspan="2">Liste vide !</td>
+											</tr>
 										{% endfor %}
 
 									</tbody>
@@ -66,7 +59,7 @@
                             <div class="card-header">
 								<form action="{{ path('semestres_nb') }}" method="post">
 								<div class="form-inline">
-									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de semestres">
+									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de lignes">
 									<button type="submit" class="form-control">Ok</button>
 								</div>
 								</form>
@@ -85,7 +78,7 @@
 											{% for nb_row in nb_rows %}
                                             <tr>
                                                 <th>
-                                                    <input type="text" name="semestre{{nb_row}}" class="form-control" placeholder="Nom de la classe" id="">
+                                                    <input type="number" name="semestre{{nb_row}}" class="form-control" placeholder="Numero du semestre Ex: 3" id="">
 												</th>
                                             </tr>
 												

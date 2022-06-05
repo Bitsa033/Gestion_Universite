@@ -1,78 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}NotesEtudiant index
+{% block title %}UniversgController!
 {% endblock %}
 
 {% block body %}
-    <div class="content-wrapper">
+	<!-- Content Wrapper. Contains page content -->
+	<div
+		class="content-wrapper">
 
-        <h1>NotesEtudiant index</h1>
+		<!-- Main content -->
+		<section class="content">
+			<div
+				class="container-fluid">
+				<!-- Info boxes -->
 
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Liste des notes</h3>
+				<div class="row">
+					<div class="col-md-6">
+						<h5>Liste des notes <a href="{{path('notes_etudiant_test')}}">Imprimer</a> </h5>
+						<div class="btn btn-warning">
+							<p>Filiere: | Classe: | Semestre:</p>
+						</div>
+						<table class="table table-bordered">
 
-                <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body table-responsive p-0" style="height: 300px;">
-                    <table class="table table-head-fixed text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Etudiant</th>
-                                <th>Cours</th>
-                                <th>Moyenne</th>
-                                <th>Semestre</th>
-                                <th>actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for notes_etudiant in notesUserFiliereNiveau %}
-                                <tr>
-                                    <td>{{ notes_etudiant.id }}</td>
-                                    {# <td>{{ notes_etudiant.dateN ? notes_etudiant.dateN|date('d-m-Y H:i:s') : '' }}</td> #}
-                                    <td>{{ notes_etudiant.nomE }}</td>
-                                    {# <td>{{ notes_etudiant.filiere.nom }}</td>
-                                    <td>{{ notes_etudiant.niveau.nom }}</td> #}
-
-                                    <td>{{ notes_etudiant.nomM }}</td>
-                                    <td>{{ notes_etudiant.moyenne }}</td>
-                                    <td>{{ notes_etudiant.nomSe }}</td>
-
-                                    <td>
-                                        <a class="btn btn-primary" href="{{ path('notes_etudiant_show', {'id': notes_etudiant.id}) }}">Consulter</a>
-
-                                        <a class="btn btn-primary" href="{{ path('notes_etudiant_edit', {'id': notes_etudiant.id}) }}">Mettre à jour</a>
+							<tr>
+								<th style="width:25%;">Actions</th>
+								<th>Etudiant</th>
+								<th>Matiere</th>
+                                <th>Note</th>
+							</tr>
+							{% for matiere in notesUserFiliereNiveau %}
+								<tr>
+									<td>
+										<a class="btn btn-info" href="{{path('matieres_transfert',{id:matiere.idN})}}">
+											<i class="fa fa-edit"></i>
+										</a>
+										<a class="btn btn-danger" href="{{path('matieres_ue_suppression',{id:matiere.idN})}}">
+											<i class="fa fa-times"></i>
+										</a>
+									</td>
+									<td>{{matiere.nomE}}</td>
+									<td>{{matiere.nomM}}</td>
+                                    <td>{{matiere.moyenne}}</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="4">Liste vide !</td>
+								</tr>
+							{% endfor %}
 
 
-                                    </td>
-                                </tr>
+						</table>
+					</div>
+					<!-- col -->
 
-                            {% else %}
-                                <tr>
-                                    <td colspan="4">Tableau vide...</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-
-                    </table>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
-
-            <a href="{{ path('notes_s') }}" class="btn btn-primary offset-4">Creer une nouvelle note</a>
-        </div>
-    {% endblock %}
+					
+				</div>
+				<!-- row -->
+				</div>
+				
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+	{% endblock %}

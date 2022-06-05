@@ -47,6 +47,26 @@ class NotesEtudiantController extends AbstractController
     }
 
     /**
+     * @Route("test", name="notes_etudiant_test", methods={"GET"})
+     */
+    public function test(SessionInterface $session,InscriptionRepository $inscriptionRepository, NotesEtudiantRepository $notesEtudiantRepository, UeRepository $ueRepository): Response
+    {
+        $user = $this->getUser();
+
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+        //dd($session);
+        $notesUserFiliereNiveau = $notesEtudiantRepository->notesEtudiantUser($user, $sessionF, $sessionN,$sessionSe);
+        return $this->render('notes_etudiant/test.html.twig', [
+            'notes_etudiants' => $notesEtudiantRepository->findAll(),
+            'notesUserFiliereNiveau' => $notesUserFiliereNiveau,
+            'n2' => $ueRepository->uesFiliereNiveau($sessionF,$sessionN,$sessionSe),
+            'inscriptions'=>$inscriptionRepository->etudiantsFiliereClasse($sessionF,$sessionN)
+        ]);
+    }
+
+    /**
      * @Route("{id}", name="notes_etudiant_show", methods={"GET"})
      */
     public function show(NotesEtudiant $notesEtudiant): Response

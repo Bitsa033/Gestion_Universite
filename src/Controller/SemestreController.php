@@ -43,13 +43,34 @@ class SemestreController extends AbstractController
     {
         
         //on cherche l'utilisateur connecté
-        $user= $this->getUser();
+        $user = $this->getUser();
         //si l'utilisateur est n'est pas connecté,
         // on le redirige vers la page de connexion
         if (!$user) {
-          return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_login');
         }
+        //on compte le nbre de classes presentes dans la base de donnees
+        $nbsemestre = $semestreRepository->count([
+            
+        ]);
 
+        //si le nombre de classes est == 0 donc vide, on enregistre 6 classes
+        if (empty($nbsemestre)) {
+
+            for ($i = 1; $i < 3; $i++) {
+                $semestre = new Semestre();
+                $semestre->setUser($user);
+                $semestre->setNom($i);
+                
+                $semestre->setCreatedAt(new \DateTime());
+                $manager = $end->getManager();
+                $manager->persist($semestre);
+                $manager->flush();
+            }
+
+            return $this->redirectToRoute('semestres_index');
+        }
+        
         //on recupere la valeur du nb_row stocker dans la session
         
         $sessionNb = $session->get('nb_row', []);
@@ -90,39 +111,16 @@ class SemestreController extends AbstractController
             //dd($session_nb_row);
             for ($i = 0; $i < $session_nb_row; $i++) {
                 $data = array(
-                    'semestre' => $_POST['semestre' . $i]
+                    'semestre' => $_POST['semestre'.$i]
                 );
 
                 insert_into_db($data, $end,$user);
             }
 
-            //return $this->redirectToRoute('semestre_index', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('semestre/index.html.twig', [
             'nb_rows' => $nb_row,
             'semestres' => $semestreRepository->findAll(),
-        ]);
-    }
-
-    /**
-     * @Route("new", name="new", methods={"GET", "POST"})
-     */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $semestre = new Semestre();
-        $form = $this->createForm(SemestreType::class, $semestre);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($semestre);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('semestre_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('semestre/new.html.twig', [
-            'semestre' => $semestre,
-            'form' => $form->createView(),
         ]);
     }
 

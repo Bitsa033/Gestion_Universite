@@ -24,12 +24,26 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, NotesEtudiant::class);
     }
 
+    // public function coursFiliereClasse($filiere,$niveau)
+    // {
+    //     return $this->createQueryBuilder('n')
+    //         ->andWhere('n.filiere = :val1')
+    //         ->andWhere('n.niveau = :val2')
+    //         ->setParameter('val1', $filiere)
+    //         ->setParameter('val2', $niveau)
+    //         ->orderBy('n.id', 'ASC')
+    //         // ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
+
     public function notesEtudiantUser(User $user,Filiere $filiere, Niveau $niveau, Semestre $semestre)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
         
-        select notes_etudiant.id, etudiant.nom as nomE, matiere.nom as nomM, 
+        select notes_etudiant.id as idN, etudiant.nom as nomE, matiere.nom as nomM, 
         moyenne,notes_etudiant.created_at as dateN,semestre.nom as nomSe from 
         notes_etudiant inner join inscription on
         inscription.id = notes_etudiant.inscription_id inner join etudiant 
@@ -37,7 +51,7 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         ue on ue.id= notes_etudiant.ue_id  inner join matiere on matiere.id
         = ue.matiere_id inner join semestre on semestre.id=notes_etudiant.semestre_id
         WHERE notes_etudiant.user_id = :user AND inscription.filiere_id = :filiere AND  
-        inscription.niveau_id = :niveau AND semestre.id= :semestre order by etudiant_id
+        inscription.niveau_id = :niveau AND semestre.id= :semestre order by etudiant_id 
 
         ';
         $stmt = $conn->prepare($sql);

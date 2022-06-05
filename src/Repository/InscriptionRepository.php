@@ -72,38 +72,25 @@ class InscriptionRepository extends ServiceEntityRepository
         
     }
 
-    public function inscriptionsFiliereNiveau($filiere,$niveau)
+    public function etudiantsFiliereClasse(Filiere $filiere, Niveau $niveau)
     {
-        if ( empty($niveau)) {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        
+        select distinct etudiant.nom as nomE, filiere.nom as nomF from inscription inner join etudiant 
+        on etudiant.id=inscription.etudiant_id inner join filiere on filiere.id=inscription.filiere_id
+        inner join
+        notes_etudiant on inscription_id=inscription.id where filiere_id= :filiere and niveau_id=:niveau
 
-            $a= $this->createQueryBuilder('i') 
-            ->andWhere('i.filiere = :val1')
-            ->setParameter('val1', $filiere)
-            ->orderBy('i.id', 'ASC');
-            $query=$a->getQuery();
-            
-            return $query->execute();
-            
-        }
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'filiere'=>$filiere->getId(),
+            'niveau'=>$niveau->getId(),
+        ]);
 
-        elseif (empty($fililere)) {
-
-            $a= $this->createQueryBuilder('i') ->andWhere('i.niveau = :val1')
-            ->setParameter('val1', $niveau)
-            ->orderBy('i.id', 'ASC');
-            $query=$a->getQuery();
-
-            return $query->execute();
-            
-        }
-    
-        $a= $this->createQueryBuilder('i') ->andWhere('i.filiere = :val1')
-        ->andWhere('i.niveau = :val2')
-        ->setParameter('val1', $filiere)->setParameter('val2', $niveau)
-        ->orderBy('i.id', 'ASC');
-        $query=$a->getQuery();
-
-        return $query->execute();
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
         
     }
 

@@ -159,24 +159,4 @@ class NiveauxController extends AbstractController
         return $this->redirectToRoute('niveaux_ajoutEt_liste');
     }
 
-    /**
-     * @Route("infos/{id}", name="infos")
-     */
-    public function infos(Niveau $niveau)
-    {
-        //on cherche l'utilisateur connecté
-        $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        //sinon on consulte les données
-        //affichage d'un niveau particulier
-        return $this->render('niveaux/consultation_niveau.html.twig', [
-            'controller_name' => 'UniversgController',
-            'niveau' => $niveau
-        ]);
-    }
 }
