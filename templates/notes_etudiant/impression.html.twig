@@ -1,33 +1,18 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}UniversgController!
-{% endblock %}
-
-{% block body %}
-    <!-- Content Wrapper. Contains page content -->
+<link rel="stylesheet" href="template/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="template/plugins/fontawesome-free/css/all.min.css">
+<link rel="stylesheet" href="template/dist/css/adminlte.min.css">
+<!-- overlayScrollbars -->
+           
+<!-- Ionicons -->
+<!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Apperçu de la apge</h1>
-          </div>
-          
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
 
     <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <div class="callout callout-info">
-              <h5><i class="fas fa-info"></i> Note:</h5>
-              Cette page a été conçue pour l'impression. Cliquez le boutton d'impression pour generer le fichier pdf de la page.
-            </div>
-
-
+            
             <!-- Main content -->
             <div class="invoice p-3 mb-3">
               <!-- title row -->
@@ -130,14 +115,7 @@
               <!-- /.row -->
 				<br>
               <!-- this row will not appear when printing -->
-              <div class="row no-print">
-                <div class="col-12">
-                  <a href="{{path('notes_etudiant_impression')}}" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Imprimer</a>
-                  <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                    <i class="fas fa-download"></i> Generer au format PDF
-                  </button>
-                </div>
-              </div>
+              
             </div>
             <!-- /.invoice -->
           </div><!-- /.col -->
@@ -147,4 +125,3 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-{% endblock %}

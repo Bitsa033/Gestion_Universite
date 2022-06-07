@@ -81,5 +81,28 @@ class NotesEtudiantController extends AbstractController
         return $this->render('notes_etudiant/edit.html.twig', []);
     }
 
+    /**
+     * @Route("impression", name="notes_etudiant_impression", methods={"GET"})
+     */
+    public function impression(SessionInterface $session,InscriptionRepository $inscriptionRepository, NotesEtudiantRepository $notesEtudiantRepository,UeRepository $cours, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository ): Response
+    {
+        $user = $this->getUser();
+
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+        $sessionInsc=$session->get('inscription');
+        //dd($session);
+        $notesUserFiliereNiveau = $notesEtudiantRepository->notesEtudiantUser($user, $sessionF, $sessionN,$sessionSe,$sessionInsc);
+        return $this->render('notes_etudiant/impression.html.twig', [
+            'coursSemestre'=>$cours->uesFiliereNiveau($sessionF,$sessionN,$sessionSe),
+            'notesUserFiliereNiveau' => $notesUserFiliereNiveau,
+            'filiere'=>$filiereRepository->find($sessionF),
+            'classe'=>$niveauRepository->find($sessionN),
+            'semestre'=>$semestreRepository->find($sessionSe),
+            'inscription'=>$inscriptionRepository->find($sessionInsc)
+        ]);
+    }
+
 
 }
