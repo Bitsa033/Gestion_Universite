@@ -24,21 +24,7 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, NotesEtudiant::class);
     }
 
-    // public function coursFiliereClasse($filiere,$niveau)
-    // {
-    //     return $this->createQueryBuilder('n')
-    //         ->andWhere('n.filiere = :val1')
-    //         ->andWhere('n.niveau = :val2')
-    //         ->setParameter('val1', $filiere)
-    //         ->setParameter('val2', $niveau)
-    //         ->orderBy('n.id', 'ASC')
-    //         // ->setMaxResults(10)
-    //         ->getQuery()
-    //         ->getResult()
-    //     ;
-    // }
-
-    public function notesEtudiantUser(User $user,Filiere $filiere, Niveau $niveau, Semestre $semestre)
+    public function notesEtudiantUser(User $user,Filiere $filiere, Niveau $niveau, Semestre $semestre,Inscription $inscription)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
@@ -51,7 +37,9 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         ue on ue.id= notes_etudiant.ue_id  inner join matiere on matiere.id
         = ue.matiere_id inner join semestre on semestre.id=notes_etudiant.semestre_id
         WHERE notes_etudiant.user_id = :user AND inscription.filiere_id = :filiere AND  
-        inscription.niveau_id = :niveau AND semestre.id= :semestre order by etudiant_id 
+        inscription.niveau_id = :niveau AND semestre.id= :semestre and notes_etudiant.inscription_id = :inscription
+        order by etudiant_id 
+        
 
         ';
         $stmt = $conn->prepare($sql);
@@ -59,7 +47,8 @@ class NotesEtudiantRepository extends ServiceEntityRepository
             'user'=>$user->getId(),
             'filiere'=>$filiere->getId(),
             'niveau'=>$niveau->getId(),
-            'semestre'=>$semestre->getId()
+            'semestre'=>$semestre->getId(),
+            'inscription'=>$inscription->getId()
         ]);
 
         // returns an array of arrays (i.e. a raw data set)

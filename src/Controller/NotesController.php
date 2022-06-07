@@ -3,13 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\NotesEtudiant;
-use App\Entity\Semestre;
 use App\Repository\FiliereRepository;
 use App\Repository\InscriptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\MatiereRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\SemestreRepository;
 use App\Repository\UeRepository;
@@ -56,6 +54,55 @@ class NotesController extends AbstractController
             'niveaux'=>$niveauRepository->niveauxUser($user),
             'cours' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
         ]);
+    }
+
+    /**
+     * on se dirige vers le template [passerelleEtudiants]
+     * @Route("passerelleEtudiants", name="passerelleEtudiants")
+     */
+    function passerelleEtudiants(SessionInterface $session,Request $request, FiliereRepository $filiereRepository,NiveauRepository $niveauRepository,SemestreRepository $semestreRepository, InscriptionRepository $inscriptionRepository){
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        //si l'utilisateur est n'est pas connecté,
+        // on le redirige vers la page de connexion
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+
+        return $this->render('notes_etudiant/passerelleEtudiant.html.twig',[
+            'filieres'=>$filiereRepository->filieresUser($user),
+            'semestres'=>$semestreRepository->findAll(),
+            'classes'=>$niveauRepository->niveauxUser($user),
+            'inscriptions2'=>$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$sessionF,$sessionN),
+        ]);
+    }
+
+    /**
+     * on traite le template [passerelleEtudiant]
+     * @Route("choixEtudiant", name="choixEtudiant")
+     */
+    public function choixEtudiant(Request $request, SessionInterface $session, InscriptionRepository $inscriptionRepository)
+    {
+
+        if (isset($_POST['enregistrer'])) {
+            $inscription = $inscriptionRepository->find($_POST['etudiantId']);
+            $get_filiere = $session->get('filiere', []);
+            $get_inscription= $session->get('niveau', []);
+            $get_semestre = $session->get('semestre', []);
+            if (!empty($get_inscription)) {
+                $session->set('inscription', $inscription);
+            }
+            $session->set('inscription', $inscription);
+            //dd($session);
+
+            //return $this->redirectToRoute('etudiants_i');
+        }
+
+        return $this->redirectToRoute('notes_etudiant_index');
     }
 
     /**
@@ -138,7 +185,7 @@ class NotesController extends AbstractController
     /**
      * @Route("s", name="s")
      */
-    public function t(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, InscriptionRepository $inscriptionRepository, UeRepository $ueRepository,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
+    public function Note(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, InscriptionRepository $inscriptionRepository, UeRepository $ueRepository,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
     {
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
         $sessionF = $session->get('filiere', []);
