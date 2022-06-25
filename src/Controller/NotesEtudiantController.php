@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\NotesEtudiant;
+use App\Repository\EtudiantRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\InscriptionRepository;
 use App\Repository\NiveauRepository;
@@ -24,7 +25,7 @@ class NotesEtudiantController extends AbstractController
     /**
      * @Route("index", name="notes_etudiant_index", methods={"GET"})
      */
-    public function index(SessionInterface $session,InscriptionRepository $inscriptionRepository, NotesEtudiantRepository $notesEtudiantRepository,UeRepository $cours, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository ): Response
+    public function index(EtudiantRepository $etudiantRepository,SessionInterface $session,InscriptionRepository $inscriptionRepository, NotesEtudiantRepository $notesEtudiantRepository,UeRepository $cours, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository ): Response
     {
         $user = $this->getUser();
 
@@ -40,7 +41,15 @@ class NotesEtudiantController extends AbstractController
             'filiere'=>$filiereRepository->find($sessionF),
             'classe'=>$niveauRepository->find($sessionN),
             'semestre'=>$semestreRepository->find($sessionSe),
-            'inscription'=>$inscriptionRepository->find($sessionInsc)
+            'inscription'=>$inscriptionRepository->find($sessionInsc),
+            'etudiant' => $etudiantRepository->findBy(['id'=>$sessionInsc]),
+            'etudiant' => $etudiantRepository->findBy(['id'=>$sessionInsc]),
+            'matieres'=>$notesEtudiantRepository->findBy(
+                ['inscription'=>$sessionInsc,
+            ]),
+            'notes' => $notesEtudiantRepository->findBy(
+                ['inscription'=>$sessionInsc,
+            ]),
         ]);
     }
 

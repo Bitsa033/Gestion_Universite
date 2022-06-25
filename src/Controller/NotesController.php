@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\NotesEtudiant;
+use App\Repository\EtudiantRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\InscriptionRepository;
 use App\Repository\MatiereRepository;
@@ -24,13 +25,34 @@ class NotesController extends AbstractController
 {
 
     /**
-     * @Route("index", name="notesCollectives")
+     * @Route("index", name="notesIndividuelles")
      */
-    public function index(NotesEtudiantRepository $notesEtudiantRepository,MatiereRepository $matiereRepository): Response
+    public function index(NotesEtudiantRepository $notesEtudiantRepository,UeRepository $matiereRepository,EtudiantRepository $etudiantRepository): Response
     {
         return $this->render('notes/index.html.twig', [
-            'matieres'=>$matiereRepository->findAll(),
-            'notes' => $notesEtudiantRepository->findBy(['semestre'=>1]),
+            'etudiant' => $etudiantRepository->findBy(['id'=>1]),
+            'matieres'=>$notesEtudiantRepository->findBy(
+                ['inscription'=>1,
+            ]),
+            'notes' => $notesEtudiantRepository->findBy(
+                ['inscription'=>1,
+            ]),
+        ]);
+    }
+
+    /**
+     * @Route("notesC", name="notesCollectives")
+     */
+    public function notesC(NotesEtudiantRepository $notesEtudiantRepository,UeRepository $matiereRepository,EtudiantRepository $etudiantRepository): Response
+    {
+        return $this->render('notes/notesC.html.twig', [
+            'etudiant' => $etudiantRepository->findBy(['id'=>1]),
+            'matieres'=>$notesEtudiantRepository->findBy(
+                ['inscription'=>1,
+            ]),
+            'notes' => $notesEtudiantRepository->findBy(
+                ['inscription'=>1,
+            ]),
         ]);
     }
 
