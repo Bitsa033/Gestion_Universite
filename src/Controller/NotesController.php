@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\NotesEtudiant;
 use App\Repository\FiliereRepository;
 use App\Repository\InscriptionRepository;
+use App\Repository\MatiereRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\NiveauRepository;
+use App\Repository\NotesEtudiantRepository;
 use App\Repository\SemestreRepository;
 use App\Repository\UeRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,18 +18,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * @Route("/notes_", name="notes_")
+ * @Route("notes", name="notes_")
  */
 class NotesController extends AbstractController
 {
 
     /**
-     * @Route("/notes", name="notes")
+     * @Route("index", name="notesCollectives")
      */
-    public function index(): Response
+    public function index(NotesEtudiantRepository $notesEtudiantRepository,MatiereRepository $matiereRepository): Response
     {
         return $this->render('notes/index.html.twig', [
-            'controller_name' => 'NotesController',
+            'matieres'=>$matiereRepository->findAll(),
+            'notes' => $notesEtudiantRepository->findBy(['semestre'=>1]),
         ]);
     }
 

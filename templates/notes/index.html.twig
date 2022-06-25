@@ -1,20 +1,47 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Hello NotesController!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'E:/projets/Projets symfony/Symfony4/exampleT/src/Controller/NotesController.php'|file_link(0) }}">src/Controller/NotesController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'E:/projets/Projets symfony/Symfony4/exampleT/templates/notes/index.html.twig'|file_link(0) }}">templates/notes/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="content-wrapper">
+        <section class="content">
+          <div class="card">
+            <div class="card-header"><p class="h5">Notes Collectives</p></div>
+            <div class="card-body table-responsive p-0" style="height: 390px;" >
+                <div class="row">
+                    <div class="col-4">
+                        <table class="table table-head-fixed text-nowrap table-bordered">
+                            <tr>
+                                <td>Matiere</td>
+                               {% for row in notes %}
+                                    <td>{{row.inscription.etudiant.nom}}</td>
+                                {% endfor %}
+                            </tr>
+                            {% for row in matieres %}
+                            <tr>
+                                <td>{{row.nom}}</td>
+                                {% for row in notes %}
+                                    <td>{{row.moyenne}}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            
+                        </table>
+                    </div>
+                    <!--/col-->
+                    {# <div class="col">
+                        <table class="table table-head-fixed text-nowrap table-bordered">
+                            <tr>
+                                {% for row in notes %}
+                                    <td>{{row.inscription.etudiant.nom}}</td>
+                                {% endfor %}
+                            </tr>
+                        </table>
+                    </div> #}
+                </div>
+                <!--/row-->
+            
+            </div>
+            <div class="card-footer"><p class="h5">Pied de Page ...</p></div>
+          </div>
+          <!--/card-->
+        </section>
+    </div>
 {% endblock %}
