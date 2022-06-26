@@ -43,16 +43,20 @@ class NotesController extends AbstractController
     /**
      * @Route("notesC", name="notesCollectives")
      */
-    public function notesC(NotesEtudiantRepository $notesEtudiantRepository,UeRepository $matiereRepository,EtudiantRepository $etudiantRepository): Response
+    public function notesC(InscriptionRepository $inscriptionRepository,NotesEtudiantRepository $notesEtudiantRepository): Response
     {
+        $user=$this->getUser();
         return $this->render('notes/notesC.html.twig', [
-            'etudiant' => $etudiantRepository->findBy(['id'=>1]),
+            'etudiant' => $inscriptionRepository->findBy([
+                'filiere'=>4,
+                'niveau'=>1
+            ]),
             'matieres'=>$notesEtudiantRepository->findBy(
-                ['inscription'=>1,
+                ['inscription'=>1
             ]),
-            'notes' => $notesEtudiantRepository->findBy(
-                ['inscription'=>1,
-            ]),
+            'notes' => $notesEtudiantRepository->notesEtudiant($user),
+            'notes2' => $notesEtudiantRepository->notesEtudiant2($user),
+            'notes3' => $notesEtudiantRepository->notesEtudiant($user),
         ]);
     }
 
@@ -252,7 +256,7 @@ class NotesController extends AbstractController
             'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$sessionSe,$sessionCours),
             'filieres'=>$filiereRepository->filieresUser($user),
             'classes' =>$niveauRepository->niveauxUser($user),
-            'semestres' =>$semestreRepository->findAll()
+            'semestres' =>$semestreRepository->findAll(),
         ]);
     }
 }

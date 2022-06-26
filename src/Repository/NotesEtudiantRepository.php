@@ -24,31 +24,40 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, NotesEtudiant::class);
     }
 
-    public function notesEtudiantUser(User $user,Filiere $filiere, Niveau $niveau, Semestre $semestre,Inscription $inscription)
+    public function notesEtudiant(User $user)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-        
-        select notes_etudiant.id as idN, etudiant.nom as nomE, matiere.nom as nomM, 
-        moyenne,notes_etudiant.created_at as dateN,semestre.nom as nomSe from 
-        notes_etudiant inner join inscription on
-        inscription.id = notes_etudiant.inscription_id inner join etudiant 
-        on etudiant.id= inscription.etudiant_id inner join 
-        ue on ue.id= notes_etudiant.ue_id  inner join matiere on matiere.id
-        = ue.matiere_id inner join semestre on semestre.id=notes_etudiant.semestre_id
-        WHERE notes_etudiant.user_id = :user AND inscription.filiere_id = :filiere AND  
-        inscription.niveau_id = :niveau AND semestre.id= :semestre and notes_etudiant.inscription_id = :inscription
-        order by etudiant_id 
-        
-
+        SELECT moyenne,semestre.nom as semestre, etudiant.nom as etudiant, matiere.nom as matiere
+        from notes_etudiant INNER JOIN inscription on inscription.id = notes_etudiant.inscription_id 
+        inner join etudiant on etudiant.id = inscription.etudiant_id INNER JOIN semestre on semestre.id = 
+        notes_etudiant.semestre_id INNER JOIN ue on ue.id = notes_etudiant.ue_id INNER JOIN matiere ON matiere.id
+        = ue.matiere_id WHERE inscription.filiere_id = 4 and inscription.niveau_id = 1  AND matiere.nom = 
+        "culture internationale" And semestre.nom= "1"
         ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([
             'user'=>$user->getId(),
-            'filiere'=>$filiere->getId(),
-            'niveau'=>$niveau->getId(),
-            'semestre'=>$semestre->getId(),
-            'inscription'=>$inscription->getId()
+        ]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt;
+        
+    }
+
+    public function notesEtudiant2(User $user)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        SELECT distinct semestre.nom as semestre, matiere.nom as matiere
+        from notes_etudiant INNER JOIN inscription on inscription.id = notes_etudiant.inscription_id 
+        inner join etudiant on etudiant.id = inscription.etudiant_id INNER JOIN semestre on semestre.id = 
+        notes_etudiant.semestre_id INNER JOIN ue on ue.id = notes_etudiant.ue_id INNER JOIN matiere ON matiere.id
+        = ue.matiere_id WHERE inscription.filiere_id = 4 and inscription.niveau_id = 1 
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery([
+            'user'=>$user->getId(),
         ]);
 
         // returns an array of arrays (i.e. a raw data set)

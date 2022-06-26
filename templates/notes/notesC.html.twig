@@ -11,17 +11,17 @@
                             <tr>
                                 <td>Semestre</td>
                                 <td>Matiere</td>
-                                <td>Note</td>
-                                <td>Credit</td>
-                                <td>Total</td>
+                                {% for row in notes %}
+                                    <td>{{row.etudiant}}</td>
+                                {% endfor %}
                             </tr>
-                            {% for row in matieres %}
+                            {% for row in notes2 %}
                             <tr>
-                                <td>{{row.semestre.nom}}</td>
-                                <td>{{row.ue.matiere.nom}}</td>
-                                <td>{{row.moyenne}}</td>
-                                <td>3</td>
-                                <td>50/60</td>
+                                <td>{{row.semestre}}</td>
+                                <td>{{row.matiere}}</td>
+                                {% for row in notes3 %}
+                                    <td>{{row.moyenne}}</td>
+                                {% endfor %}
                             </tr>
                             {% endfor %}
                             
