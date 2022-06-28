@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="content-wrapper">
+        <section class="content">
+          <div class="card col-10 offset-1">
+            <div class="card-header form-inline">Notes Collectives</div>
+            <div class="card-body table-responsive p-0" style="height: 390px;" >
+            
+                <table class='table table-bordered'> 
+                    <div class='row '>
+                        <thead>
+                            <tr>
+                                <td>Anglais</td>
+                                <td>Mathematiques</td>
+                                <td>Science techno</td>
+                                <td>Ecm</td>
+                                <td>Svt</td>
+                                <td>Economie</td>
+                                <td>Francais</td>
+                            </tr>
+                        </thead>
+                    </div>
+                    <div class='row '>
+                        <div class='col '>
+                            <tbody>
+                                <tr>
+                                    <td>Alain</td>
+                                    <td>10</td>
+                                    <td>15</td>
+                                    <td>17.5</td>
+                                    <td>6</td>
+                                    <td>12</td>
+                                    <td>14</td>
+                                </tr>
+                            </tbody>
+                        </div>
+                        <div class='col '>
+                            <tbody>
+                                <tr>
+                                    <td>Jules</td>
+                                    <td>11</td>
+                                    <td>15</td>
+                                    <td>11.5</td>
+                                    <td>6</td>
+                                    <td>13</td>
+                                    <td>9</td>
+                                </tr>
+                            </tbody>
+                        </div>
+                        <div class='col '>
+                            <tbody>
+                                <tr>
+                                    <td>Bernard</td>
+                                    <td>15</td>
+                                    <td>15</td>
+                                    <td>12.5</td>
+                                    <td>6.5</td>
+                                    <td>5</td>
+                                    <td>7</td>
+                                </tr>
+                            </tbody>
+                        </div>
+                    </div>
+                </table>
+            
+            </div>
+            <div class="card-footer"><p class="h5">Pied de Page ...</p></div>
+          </div>
+          <!--/card-->
+        </section>
+    </div>
+{% endblock %}

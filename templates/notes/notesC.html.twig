@@ -3,45 +3,59 @@
     <div class="content-wrapper">
         <section class="content">
           <div class="card col-10 offset-1">
-            <div class="card-header form-inline">Notes Collectives</div>
-            <div class="card-body table-responsive p-0" style="height: 390px;" >
+            <div class="card-header">
                 <div class="row">
-                    <div class="col-12">
-                        <table class="table table-head-fixed text-nowrap table-bordered">
-                            <tr>
-                                <td>Semestre</td>
-                                <td>Matiere</td>
-                                {% for row in notes %}
-                                    <td>{{row.etudiant}}</td>
-                                {% endfor %}
-                            </tr>
-                            {% for row in notes2 %}
-                            <tr>
-                                <td>{{row.semestre}}</td>
-                                <td>{{row.matiere}}</td>
-                                {% for row in notes3 %}
-                                    <td>{{row.moyenne}}</td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                            
-                        </table>
+                    <div class="col-5">
+                        
+                        UNIVERSITE CATHOLIQUE SAINT BENOIT DE YAOUNDE <br>
+                        TEL: 654-567-876 <br> EMAIL: contactsaintbenoit@gmail.com
                     </div>
                     <!--/col-->
-                    {# <div class="col">
-                        <table class="table table-head-fixed text-nowrap table-bordered">
-                            <tr>
-                                {% for row in notes %}
-                                    <td>{{row.inscription.etudiant.nom}}</td>
-                                {% endfor %}
-                                {% for row in notes %}
-                                    <td>{{row.moyenne}}</td>
-                                {% endfor %}
-                            </tr>
-                        </table>
-                    </div> #}
+                    <div class="col">
+                        <img src="{{asset('images/logo1.jfif')}}" alt="Logo" srcset="" height='150'>
+                    </div>
+                    <!--/col-->
+                    <div class="col-5">
+                        
+                        MINISTRE DE L'ENSEIGNEMENT SUPERIEUR PAIX-TRAVAIL-PATRIE
+                        CHANCELIER DES ORDRES ACADEMIQUES
+                    </div>
+                    <!--/col-->
                 </div>
-                <!--/row-->
+            </div>
+            <div class="card-body table-responsive p-0" style="height: 390px;" >
+            
+                <table class='table table-bordered'> 
+                    <div class='row '>
+                        <div class="col-12">
+                            <thead>
+                                <tr>
+                                <td>Semestre</td>
+                                <td>Matiere</td>
+                                <td>Note</td>
+                                <td>Etudiant</td>
+
+                                </tr>
+                            </thead>
+                        </div>
+                    </div>
+                    <div class='row '>
+                        <div class='col '>
+                            {% for note in notes %}
+                            <tbody>
+                                <tr>
+                                    <td>{{note.semestre}}</td>
+                                    <td>{{note.matiere}}</td>
+                                    <td>{{note.moyenne}}</td>
+                                    <td>{{note.etudiant}}</td>
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+                        </div>
+                        
+                        </div>
+                    </div>
+                </table>
             
             </div>
             <div class="card-footer"><p class="h5">Pied de Page ...</p></div>

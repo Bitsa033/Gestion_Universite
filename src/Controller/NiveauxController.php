@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Niveau;
 use App\Repository\NiveauRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Enregistrement\EcritureClasse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -34,18 +34,16 @@ class NiveauxController extends AbstractController
     }
 
     /**
-     * Insertion et affichage des classes
      * @Route("index", name="index")
      */
     public function classe(SessionInterface $session, NiveauRepository $niveauRepository, Request $request, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
+        
         //on compte le nbre de classes presentes dans la base de donnees
         $nbniveaux = $niveauRepository->count([
             'user' => $user
@@ -80,73 +78,50 @@ class NiveauxController extends AbstractController
             return $this->redirectToRoute('niveaux_index');
         }
 
-        //on recupere la valeur du nb_row stocker dans la session
-        $sessionNb = $session->get('nb_row', []);
-        //on cree un tableau qui permettra de generer plusieurs champs dans le post
-        //en fonction de la valeur de nb_row
+        if (!empty($session->get('nb_row', []))) {
+            $sessionLigne = $session->get('nb_row', []);
+        }
+        else{
+            $sessionLigne = 1;
+        }
+        $sessionNb = $sessionLigne;
+        //on cree un tableau 
         $nb_row = array(1);
-        //pour chaque valeur du compteur i, on ajoutera un champs de plus en consirerant que 
-        //nb_row par defaut=1
         if (!empty( $sessionNb)) {
            
             for ($i = 0; $i < $sessionNb; $i++) {
                 $nb_row[$i] = $i;
             }
         }
-        $session_nb_row=1;
-        //on cree la methode qui permettra d'enregistrer les infos du post dans la bd
-        function insert_into_db($data, ManagerRegistry $end,$user)
-        {
-            foreach ($data as $key => $value) {
-                $k[] = $key;
-                $v[] =  $value;
-            }
-            $k = implode(",", $k);
-            $v = implode(",", $v);
-            $niveau = new Niveau();
-            // echo $v;
-            $niveau->setUser($user);
-            $niveau->setNom(strtoupper($v));
-            $niveau->setCreatedAt(new \DateTime());
-            $manager = $end->getManager();
-            $manager->persist($niveau);
-            $manager->flush();
-        }
-
+        
         //si on clic sur le boutton enregistrer et que les champs du post ne sont pas vide
         if (isset($_POST['enregistrer'])) {
-            $session_nb_row = $session->get('nb_row', []);
-            //dd($session_nb_row);
-            for ($i = 0; $i < $session_nb_row; $i++) {
+
+            for ($i = 0; $i < $sessionNb; $i++) {
                 $data = array(
-                    'classe' => $_POST['classe' . $i]
+                    'nom' => $_POST['classe' . $i]
                 );
 
-                insert_into_db($data, $end,$user);
+                $ecritureClasse=new EcritureClasse;
+                $ecritureClasse->Enregistrer($data,$user,$end);
             }
 
-            // return $this->redirectToRoute('niveaux_index');
+           
         }
 
         return $this->render('niveaux/niveaux.html.twig', [
             'nb_rows' => $nb_row,
             'niveaux' => $niveauRepository->niveauxUser($user),
-            'niveauxNb' => $niveauRepository->count([
-                'user' => $user
-            ]),
         ]);
     }
 
     /**
-     * Suppression des niveaux
      * @Route("suppression/{id}", name="suppression")
      */
     public function suppression(Niveau $niveau, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }

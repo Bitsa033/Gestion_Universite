@@ -34,10 +34,9 @@ class NotesEtudiantController extends AbstractController
         $sessionSe = $session->get('semestre', []);
         $sessionInsc=$session->get('inscription');
         //dd($session);
-        $notesUserFiliereNiveau = $notesEtudiantRepository->notesEtudiantUser($user, $sessionF, $sessionN,$sessionSe,$sessionInsc);
+        
         return $this->render('notes_etudiant/index.html.twig', [
             'coursSemestre'=>$cours->uesFiliereNiveau($sessionF,$sessionN,$sessionSe),
-            'notesUserFiliereNiveau' => $notesUserFiliereNiveau,
             'filiere'=>$filiereRepository->find($sessionF),
             'classe'=>$niveauRepository->find($sessionN),
             'semestre'=>$semestreRepository->find($sessionSe),

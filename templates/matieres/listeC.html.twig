@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}UniversgController!
+{% block title %}Liste des cours!
 {% endblock %}
 
 {% block body %}
@@ -23,20 +23,12 @@
 						<table class="table table-bordered">
 
 							<tr>
-								<th style="width:25%;">Actions</th>
 								<th>Matiere</th>
 							</tr>
-							{% for matiere in uesUserFiliereNiveau %}
+							{% for cours in listeCours %}
 								<tr>
-									<td>
-										<a class="btn btn-info" href="{{path('matieres_transfert',{id:matiere.id})}}">
-											<i class="fa fa-edit"></i>
-										</a>
-										<a class="btn btn-danger" href="{{path('matieres_ue_suppression',{id:matiere.id})}}">
-											<i class="fa fa-times"></i>
-										</a>
-									</td>
-									<td>{{matiere.matiere.nom}}</td>
+									
+									<td>{{cours.matiere.nom}}</td>
 								</tr>
 							{% else %}
 								<tr>

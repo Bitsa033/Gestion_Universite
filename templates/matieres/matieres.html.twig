@@ -18,9 +18,9 @@
                 </div>
                 <!-- /.row -->
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <div class="card">
-                            <h3 class="card-title">Liste des matieres disponibles <a href="">Imprimer</a> </h3>
+                            <h5 class="card-header">Liste des matieres disponibles | <a href="">Imprimer</a> </h5>
                             <div class="card-body table-responsive p-0" style="height: 390px;">
                                 <table class="table table-head-fixed text-nowrap">
 
@@ -37,14 +37,7 @@
                                                 <td>
                                                     <strong>{{ matiere.nom }}</strong>
                                                 </td>
-                                                {# <td>
-                                                    <a class="btn btn-info" href="{{ path('filieres_index',{id:filiere.id}) }}">Mettre à jour
-                                                    <i class="fa fa-edit"></i>
-                                                    </a>
-                                                    <a class="btn btn-warning" href="{{ path('filieres_suppression',{id:filiere.id}) }}">Supprimer
-                                                    <i class="fa fa-times"></i>
-                                                    </a>
-                                                </td> #}
+                                                
                                             </tr>
                                         {% else %}
                                             <tr>
@@ -57,6 +50,7 @@
 
                             </div>
                             <!-- /.card-body -->
+                            <h5 class="card-footer">@Developpé par: BITSA NDZIE PASCAL</h5>
                         </div>
                     </div>
 
@@ -94,13 +88,16 @@
                                                 </tbody>
                                                 <!-- /.tbody -->
                                             </table>
-                                            <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
-                                            <br>
-                                                <br></form>
-                                                <!-- /.form -->
 
                                             </div>
                                             <!-- /.card-body -->
+                                            <div class="card-footer">
+                                                <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
+                                                <br>
+                                                <br></form>
+                                                <!-- /.form -->
+                                            
+                                            </div>
                                         </div>
 
                                     </div>

@@ -3,19 +3,67 @@
     <div class="content-wrapper">
         <section class="content">
           <div class="card col-10 offset-1">
-            <div class="card-header form-inline">Notes Individuelles,Etudiant:
-                {% for row in etudiant %}
-                    <strong>{{row.nom}}</strong>
-                {% endfor %}
-                <form action="">
-                    <select name="" id="" class='form-control'>
-                        <option value="">Nom Etudiant ...</option>
-                        <option value="">Toto</option>
-                    </select>
-                    <button class='btn btn-success'>Ok</button>
-                </form>
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <table class="table-bordered">
+                            <tr>
+                                <td>
+                                     <p> <strong> Nom: </strong> {{etudiant.etudiant.nom}} </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p> <strong> Matricule: </strong> XXXXXXXXXX</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p> <strong> Filiere: </strong> {{etudiant.filiere.nom}}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                     <p> <strong> Classe: </strong> {{etudiant.niveau.nom}}</p>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <!--/col-->
+                    <div class="col">
+                        <img src="{{asset('images/logo1.jfif')}}" alt="Logo" srcset="" >
+                    </div>
+                    <!--/col-->
+                    <div class="col">
+                        <table class="table-bordered">
+                            <tr>
+                                <td>
+                                     <p> <strong> Nom: </strong> {{etudiant.etudiant.nom}} </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p> <strong> Matricule: </strong> XXXXXXXXXX</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p> <strong> Filiere: </strong> {{etudiant.filiere.nom}}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                     <p> <strong> Classe: </strong> {{etudiant.niveau.nom}}</p>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <!--/col-->
+                </div>
             </div>
-            <div class="card-body table-responsive p-0" style="height: 390px;" >
+            <div class="card-body p-0" style="height: 390px;" >
                 <div class="row">
                     <div class="col-12">
                         <table class="table table-head-fixed text-nowrap table-bordered">

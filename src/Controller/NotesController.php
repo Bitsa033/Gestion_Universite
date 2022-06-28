@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Inscription;
 use App\Entity\NotesEtudiant;
 use App\Repository\EtudiantRepository;
 use App\Repository\FiliereRepository;
@@ -27,10 +28,10 @@ class NotesController extends AbstractController
     /**
      * @Route("index", name="notesIndividuelles")
      */
-    public function index(NotesEtudiantRepository $notesEtudiantRepository,UeRepository $matiereRepository,EtudiantRepository $etudiantRepository): Response
+    public function index(NotesEtudiantRepository $notesEtudiantRepository,UeRepository $matiereRepository,InscriptionRepository $etudiantRepository): Response
     {
         return $this->render('notes/index.html.twig', [
-            'etudiant' => $etudiantRepository->findBy(['id'=>1]),
+            'etudiant' => $etudiantRepository->find(1),
             'matieres'=>$notesEtudiantRepository->findBy(
                 ['inscription'=>1,
             ]),
@@ -43,20 +44,42 @@ class NotesController extends AbstractController
     /**
      * @Route("notesC", name="notesCollectives")
      */
-    public function notesC(InscriptionRepository $inscriptionRepository,NotesEtudiantRepository $notesEtudiantRepository): Response
+    public function notesC(InscriptionRepository $inscriptionRepository,UeRepository $ueRepository,NotesEtudiantRepository $notesEtudiantRepository): Response
     {
         $user=$this->getUser();
+        // $rep=$inscriptionRepository->find(1);
+
         return $this->render('notes/notesC.html.twig', [
-            'etudiant' => $inscriptionRepository->findBy([
+            'notes'=>$notesEtudiantRepository->notesEtudiant($user),
+            'etudiant1' => $inscriptionRepository->findBy([
                 'filiere'=>4,
-                'niveau'=>1
+                'niveau'=>1,
+                'etudiant'=>1
             ]),
-            'matieres'=>$notesEtudiantRepository->findBy(
-                ['inscription'=>1
+            'etudiant2' => $inscriptionRepository->findBy([
+                'filiere'=>4,
+                'niveau'=>1,
+                'etudiant'=>2
             ]),
-            'notes' => $notesEtudiantRepository->notesEtudiant($user),
-            'notes2' => $notesEtudiantRepository->notesEtudiant2($user),
-            'notes3' => $notesEtudiantRepository->notesEtudiant($user),
+            'etudiant3' => $inscriptionRepository->findBy([
+                'filiere'=>4,
+                'niveau'=>1,
+                'etudiant'=>4
+            ]),
+            'matieres'=>$ueRepository->findBy(
+                ['filiere'=>4,
+                 'niveau'=>1
+            ]),
+            'notes1' => $notesEtudiantRepository->findBy([
+                'inscription'=>1
+            ]),
+            'notes2' => $notesEtudiantRepository->findBy([
+                'inscription'=>2
+            ]),
+            'notes3' => $notesEtudiantRepository->findBy([
+                'inscription'=>3
+            ]),
+        
         ]);
     }
 

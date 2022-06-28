@@ -27,12 +27,12 @@ class EtudiantRepository extends ServiceEntityRepository
         $sql = '
         SELECT etudiant.id as id , etudiant.nom as nom ,
         etudiant.prenom as prenom , etudiant.sexe as sexe , 
-        inscription.filiere_id as filiere, filiere.nom as sigle ,
-        inscription.niveau_id as niveau, niveau.nom as nomN FROM 
+        inscription.filiere_id as filiere, filiere.nom as filiere ,
+        inscription.niveau_id as niveau, niveau.nom as niveau FROM 
         etudiant LEFT JOIN inscription ON inscription.etudiant_id
         = etudiant.id LEFT join niveau on niveau.id=inscription.niveau_id 
         LEFT JOIN filiere on filiere.id=inscription.filiere_id 
-        where etudiant.user_id= :user
+        where etudiant.user_id= :user order by etudiant.id desc
             ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([

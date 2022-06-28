@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Filiere;
 use App\Repository\FiliereRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Enregistrement\EcritureFiliere;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,91 +36,64 @@ class FilieresController extends AbstractController
     }
 
     /**
-     * Insertion et affichage des filieres
      * @Route("index", name="index")
      */
-    public function filiere(SessionInterface $session, FiliereRepository $filiereRepository, Request $request, ManagerRegistry $end)
+    public function filiere(SessionInterface $session, FiliereRepository $filiereRepository, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-        //on recupere la valeur du nb_row stocker dans la session
-        $sessionNb = $session->get('nb_row', []);
-        //on cree un tableau qui permettra de generer plusieurs champs dans le post
-        //en fonction de la valeur de nb_row
+        // on cherche la session nb
+        if (!empty($session->get('nb_row', []))) {
+            $sessionLigne = $session->get('nb_row', []);
+        }
+        else{
+            $sessionLigne = 1;
+        }
+        $sessionNb = $sessionLigne;
+        //on cree un tableau
         $nb_row = array(1);
-        //pour chaque valeur du compteur i, on ajoutera un champs de plus en consirerant que 
-        //nb_row par defaut=1
         if (!empty( $sessionNb)) {
            
             for ($i = 0; $i < $sessionNb; $i++) {
                 $nb_row[$i] = $i;
             }
         }
-        $session_nb_row=1;
-        //on cree la methode qui permettra d'enregistrer les infos du post dans la bd
-        function insert_into_db($data, ManagerRegistry $end,$user)
-        {
-            foreach ($data as $key => $value) {
-                $k[] = $key;
-                $v[] = $value;
-            }
-            $k = implode(",", $k);
-            $v = implode(",", $v);
-            //echo $data['filiere'];
-            $filiere = new Filiere();
-            $filiere->setUser($user);
-            $filiere->setNom(ucfirst($data['filiere']));
-            $filiere->setSigle(strtoupper($data['abbr']));
-            $filiere->setCreatedAt(new \datetime);
-            $manager = $end->getManager();
-            $manager->persist($filiere);
-            $manager->flush();
-        }
-
+       
         //si on clic sur le boutton enregistrer et que les champs du post ne sont pas vide
         if (isset($_POST['enregistrer'])) {
-            $session_nb_row = $session->get('nb_row', []);
-            //dd($session_nb_row);
-            for ($i = 0; $i < $session_nb_row; $i++) {
+            
+            for ($i = 0; $i < $sessionNb; $i++) {
                 $data = array(
-                    'filiere' => $_POST['filiere' . $i],
-                    'abbr'    => $_POST['abbr' . $i]
+                    'nom' => $_POST['filiere' . $i],
+                    'sigle'    => $_POST['abbr' . $i]
                 );
-               
-                insert_into_db($data, $end,$user);
+
+                $ecritureFiliere=new EcritureFiliere;
+                $ecritureFiliere->Enregistrer($data,$user,$end);
             }
 
-            // return $this->redirectToRoute('niveaux_index');
         }
 
         return $this->render('filieres/filieres.html.twig', [
             'nb_rows' => $nb_row,
             'filieres' => $filiereRepository->filieresUser($user),
-            'filieresNb' => $filiereRepository->count([
-                'user' => $user
-            ]),
         ]);
     }
 
     /**
-     * Suppression des filieres
      * @Route("suppression/{id}", name="suppression")
      */
     public function suppression_filiere(Filiere $filiere, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-
+        
         //sinon on supprime les données
         $manager = $end->getManager();
         $manager->remove($filiere);
