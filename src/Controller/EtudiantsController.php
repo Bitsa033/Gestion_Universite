@@ -3,15 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Etudiant;
-use App\Entity\Inscription;
-use App\Entity\NotesEtudiant;
-use App\Repository\UeRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\EtudiantRepository;
-use App\Repository\InscriptionRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Enregistrement\EcritureEtudiant;
+use Enregistrement\EcritureInscription;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -52,7 +49,7 @@ class EtudiantsController extends AbstractController
 
             return $this->redirectToRoute('etudiants_ajout');
         }
-        return $this->render('etudiants/ajout_etudiants.html.twig', [
+        return $this->render('etudiants/ajout.html.twig', [
             
         ]);
     }
@@ -144,16 +141,9 @@ class EtudiantsController extends AbstractController
                     $etudiant = $etudiantRepository->find($request->request->get("etudiantName")[$key]);
                     $filiere = $filiereRepository->find($sessionF);
                     $classe = $niveauRepository->find($sessionN);
-                    $inscription = new Inscription();
-                    $inscription->setUser($user);
-                    $inscription->setEtudiant($etudiant);
-                    $inscription->setFiliere($filiere);
-                    $inscription->setNiveau($classe);
-                    $inscription->setCreatedAt(new \DateTime());
-                    //$manager=$mg->getManager();
-                    $manager = $managerRegistry->getManager();
-                    $manager->persist($inscription);
-                    $manager->flush();
+                    
+                    $inscrireEtudiant= new EcritureInscription;
+                    $inscrireEtudiant->Enregistrer($etudiant,$classe,$filiere,$user,$managerRegistry);
                 }
             }
         }
@@ -165,80 +155,5 @@ class EtudiantsController extends AbstractController
         ]);
     }
 
-    /**
-     * On inscrit l'etudiant
-     * @Route("inscription", name="inscription")
-     */
-    public function inscription(EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, Request $request, ManagerRegistry $end_e)
-    {
-
-        //on cherche l'utilisateur connecté
-        $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        //sinon on insert les données
-
-        if (
-            !empty($request->request->get('niveau')) &&
-            !empty($request->request->get('filiere')) &&
-            !empty($request->request->get('etudiant'))
-        ) {
-
-            $niveau = $niveauRepository->find($request->request->get("niveau"));
-            $filiere = $filiereRepository->find($request->request->get("filiere"));
-            $etudiant = $etudiantRepository->find($request->request->get("etudiant"));
-
-            $inscription = new Inscription();
-            $inscription->setUser($user);
-            $inscription->setEtudiant($etudiant);
-            $inscription->setFiliere($filiere);
-            $inscription->setNiveau($niveau);
-            $inscription->setCreatedAt(new \DateTime());
-            //$manager=$mg->getManager();
-            $manager = $end_e->getManager();
-            $manager->persist($inscription);
-            $manager->flush();
-
-            return $this->redirectToRoute('etudiants_inscription');
-        }
-
-
-        return $this->render('etudiants/inscription_etudiants.html.twig', [
-            'controller_name' => 'EtudiantsController',
-            'niveaux' => $niveauRepository->niveauxUser($user),
-            'filieres' => $filiereRepository->filieresUser($user),
-            'etudiants' => $etudiantRepository->etudiantsUserPasInscris($user)
-        ]);
-    }
-
-    /**
-     * on consulte les donnees des inscriptions
-     * @Route("liste_Inscriptions", name="liste_Inscriptions")
-     */
-    public function liste_Inscriptions(FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, Request $request, UeRepository $ueRepository, InscriptionRepository $inscriptionRepository)
-    {
-        //on cherche l'utilisateur connecté
-        $user = $this->getUser();
-        //si l'utilisateur est n'est pas connecté,
-        // on le redirige vers la page de connexion
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        //sinon on consulte les données
-        $postFiliere = $request->request->get('filiere');
-        $postNiveau = $request->request->get('niveau');
-        $inscriptions = $inscriptionRepository->inscriptionsFiliereNiveau($postFiliere, $postNiveau, $user);
-        return $this->render('etudiants/liste_inscriptions_etudiants.html.twig', [
-            'controller_name' => 'EtudiantsController',
-            'ues' => $ueRepository->uesUser($user),
-            'filieres' => $filiereRepository->filieresUser($user),
-            'niveaux' => $niveauRepository->niveauxUser($user),
-            'inscriptions' => $inscriptions
-        ]);
-    }
+    
 }
