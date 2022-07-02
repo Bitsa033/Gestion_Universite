@@ -18,7 +18,7 @@
                 </div>
                 <!-- /.row -->
                 <div class="row">
-					<div class="col-md-8">
+					<div class="col-md-6">
 						<div class="card">
 						 <h5 class="card-header">Liste des classes disponibles | <a href="">Imprimer</a> </h5>
 							<div class="card-body table-responsive p-0" style="height: 390px;">
@@ -53,7 +53,7 @@
 						</div>
 					</div>
                     
-                    <div class="col-md-4">
+                    <div class="col-4">
 
                         <div class="card">
                             <div class="card-header">
@@ -67,7 +67,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 250px;">
-                                <form action="{{ path('niveaux_index') }}" method="post">
+                                <form action="" method="post">
                                     <table class="table table-head-fixed text-nowrap">
 
                                         <tbody>
@@ -78,7 +78,7 @@
 											{% for nb_row in nb_rows %}
                                             <tr>
                                                 <th>
-                                                    <input type="text" name="classe{{nb_row}}" class="form-control" placeholder="Nom de la classe" id="">
+                                                    <input type="text" name="classe{{nb_row}}" class="form-control" placeholder="Nom de la classe" id="" required>
 												</th>
                                             </tr>
 												

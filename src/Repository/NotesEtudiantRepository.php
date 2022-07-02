@@ -28,11 +28,13 @@ class NotesEtudiantRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-        SELECT semestre.nom as semestre, etudiant.nom as etudiant, matiere.nom as matiere, moyenne from notes_etudiant
-        inner join inscription on inscription.id=notes_etudiant.inscription_id inner join etudiant
-        on etudiant.id=inscription.etudiant_id inner join ue on ue.id=notes_etudiant.ue_id inner JOIN
-        matiere on matiere.id=ue.matiere_id inner join semestre on semestre.id= notes_etudiant.semestre_id
-        order by ue_id
+        SELECT semestre.nom as semestre, etudiant.nom as etudiant,
+        matiere.nom as matiere, moyenne from notes_etudiant inner
+        join inscription on inscription.id=notes_etudiant.inscription_id
+        inner join etudiant on etudiant.id=inscription.etudiant_id inner join ue on ue.id = 
+        notes_etudiant.ue_id inner JOIN matiere on matiere.id = ue.matiere_id inner join semestre
+        on semestre.id= notes_etudiant.semestre_id WHERE inscription.filiere_id=1 AND etudiant.nom =
+        "Josiane Brenda"
         ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([
@@ -48,11 +50,11 @@ class NotesEtudiantRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-        SELECT distinct semestre.nom as semestre,moyenne, matiere.nom as matiere
-        from notes_etudiant INNER JOIN inscription on inscription.id = notes_etudiant.inscription_id 
-        inner join etudiant on etudiant.id = inscription.etudiant_id INNER JOIN semestre on semestre.id = 
-        notes_etudiant.semestre_id INNER JOIN ue on ue.id = notes_etudiant.ue_id INNER JOIN matiere ON matiere.id
-        = ue.matiere_id WHERE inscription.filiere_id = 4 and inscription.niveau_id = 1 and inscription.id=1
+        SELECT DISTINCT etudiant.nom as etudiant from notes_etudiant 
+        inner join inscription on inscription.id=notes_etudiant.inscription_id 
+        inner join etudiant on etudiant.id=inscription.etudiant_id inner join ue on ue.id =
+        notes_etudiant.ue_id inner JOIN matiere on matiere.id=ue.matiere_id inner join semestre 
+        on semestre.id= notes_etudiant.semestre_id WHERE inscription.filiere_id=1
         ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([

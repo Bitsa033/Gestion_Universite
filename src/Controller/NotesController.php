@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\NotesEtudiant;
 use App\Repository\FiliereRepository;
 use App\Repository\InscriptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,24 +17,23 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * @Route("notes", name="notes_")
+ * @Route("notes_", name="notes_")
  */
 class NotesController extends AbstractController
 {
 
     /**
-     * @Route("index", name="notesIndividuelles")
+     * @Route("notesIndividuelles", name="notesIndividuelles")
      */
     public function index(NotesEtudiantRepository $notesEtudiantRepository,UeRepository $matiereRepository,InscriptionRepository $etudiantRepository): Response
     {
+        $user=$this->getUser();
         return $this->render('notes/index.html.twig', [
-            'etudiant' => $etudiantRepository->find(1),
-            'matieres'=>$notesEtudiantRepository->findBy(
-                ['inscription'=>1,
-            ]),
-            'notes' => $notesEtudiantRepository->findBy(
-                ['inscription'=>1,
-            ]),
+            // 'etudiant' => $etudiantRepository->find(1),
+            // 'matieres'=>$notesEtudiantRepository->findBy(
+            //     ['inscription'=>1,
+            // ]),
+            'notes' => $notesEtudiantRepository->notesEtudiant($user)
         ]);
     }
 
@@ -49,34 +47,7 @@ class NotesController extends AbstractController
 
         return $this->render('notes/notesC.html.twig', [
             'notes'=>$notesEtudiantRepository->notesEtudiant($user),
-            'etudiant1' => $inscriptionRepository->findBy([
-                'filiere'=>4,
-                'niveau'=>1,
-                'etudiant'=>1
-            ]),
-            'etudiant2' => $inscriptionRepository->findBy([
-                'filiere'=>4,
-                'niveau'=>1,
-                'etudiant'=>2
-            ]),
-            'etudiant3' => $inscriptionRepository->findBy([
-                'filiere'=>4,
-                'niveau'=>1,
-                'etudiant'=>4
-            ]),
-            'matieres'=>$ueRepository->findBy(
-                ['filiere'=>4,
-                 'niveau'=>1
-            ]),
-            'notes1' => $notesEtudiantRepository->findBy([
-                'inscription'=>1
-            ]),
-            'notes2' => $notesEtudiantRepository->findBy([
-                'inscription'=>2
-            ]),
-            'notes3' => $notesEtudiantRepository->findBy([
-                'inscription'=>3
-            ]),
+            'inscriptions'=>$notesEtudiantRepository->notesEtudiant2($user)
         
         ]);
     }
@@ -97,9 +68,11 @@ class NotesController extends AbstractController
         $sessionSe = $session->get('semestre', []);
 
         return $this->render('notes_etudiant/passerelleNotes.html.twig',[
-            'filieres'=>$filiereRepository->filieresUser($user),
+            'filieres'=>$filiereRepository->findBy([
+                'user'=>$user]),
             'semestres'=>$semestreRepository->findAll(),
-            'niveaux'=>$niveauRepository->niveauxUser($user),
+            'niveaux'=>$niveauRepository->findBy([
+                'user'=>$user]),
             'cours' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
         ]);
     }
@@ -120,9 +93,11 @@ class NotesController extends AbstractController
         $sessionSe = $session->get('semestre', []);
 
         return $this->render('notes_etudiant/passerelleEtudiant.html.twig',[
-            'filieres'=>$filiereRepository->filieresUser($user),
+            'filieres'=>$filiereRepository->findBy([
+                'user'=>$user]),
             'semestres'=>$semestreRepository->findAll(),
-            'classes'=>$niveauRepository->niveauxUser($user),
+            'classes'=>$niveauRepository->findBy([
+                'user'=>$user]),
             
             'inscriptions2'=>$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$sessionF,$sessionN),
         ]);
@@ -262,14 +237,17 @@ class NotesController extends AbstractController
                     
                 }
             }
+            $this->addFlash('success', 'Enregistrement éffectué!');
         }
        
        //dd($sessionCours);
-        return $this->render('notes_etudiant/essaie.html.twig', [
+        return $this->render('notes_etudiant/notes.html.twig', [
             'cours' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
             'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$sessionSe,$sessionCours),
-            'filieres'=>$filiereRepository->filieresUser($user),
-            'classes' =>$niveauRepository->niveauxUser($user),
+            'filieres'=>$filiereRepository->findBy([
+                'user'=>$user]),
+            'classes' =>$niveauRepository->findBy([
+                'user'=>$user]),
             'semestres' =>$semestreRepository->findAll(),
         ]);
     }

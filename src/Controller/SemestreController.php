@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Semestre;
-use App\Form\SemestreType;
 use App\Repository\SemestreRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Enregistrement\EcritureSemestre;
@@ -40,14 +38,14 @@ class SemestreController extends AbstractController
     /**
      * @Route("index", name="index", methods={"GET","POST"})
      */
-    public function semestre(SessionInterface $session,SemestreRepository $semestreRepository,Request $request, ManagerRegistry $end): Response
+    public function semestre(SessionInterface $session,SemestreRepository $semestreRepository, ManagerRegistry $end): Response
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-        //on compte le nbre de classes presentes dans la base de donnees
+        //on compte le nbre de smestres presents dans la base de donnees
         $nbsemestre = $semestreRepository->count([
             
         ]);
@@ -65,7 +63,6 @@ class SemestreController extends AbstractController
                 $manager->flush();
             }
 
-            return $this->redirectToRoute('semestres_index');
         }
 
         if (!empty($session->get('nb_row', []))) {
@@ -95,6 +92,8 @@ class SemestreController extends AbstractController
                 $ecritureSemestre=new EcritureSemestre;
                 $ecritureSemestre->Enregistrer($data,$user,$end);
             }
+            
+            $this->addFlash('success', 'Enregistrement éffectué!');
 
         }
         return $this->render('semestre/index.html.twig', [

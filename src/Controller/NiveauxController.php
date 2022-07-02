@@ -106,12 +106,13 @@ class NiveauxController extends AbstractController
                 $ecritureClasse->Enregistrer($data,$user,$end);
             }
 
-           
+            $this->addFlash('success', 'Enregistrement éffectué!');
         }
 
         return $this->render('niveaux/niveaux.html.twig', [
             'nb_rows' => $nb_row,
-            'niveaux' => $niveauRepository->niveauxUser($user),
+            'niveaux' => $niveauRepository->findBy([
+                'user'=>$user]),
         ]);
     }
 

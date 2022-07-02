@@ -95,37 +95,37 @@
                                     <form action="" method="post">
                                         
                                         <hr>
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Etudiant</th>
-                                                <th>Moyenne</th>
-                                            </tr>
-                                                {% for ms in inscriptions %}
-                                            <tr>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Etudiant</th>
+                                            <th>Moyenne</th>
+                                        </tr>
+                                            {% for ms in inscriptions %}
+                                        <tr>
 
-                                                <td>
-                                                    <input type="checkbox" name="inscription[]" id="" value="{{ ms.idI }}"></td>
+                                            <td>
+                                                <input type="checkbox" name="inscription[]" id="" value="{{ ms.idI }}"></td>
 
-                                                    <td>{{ ms.nomE }}<input type="hidden" value="{{ ms.idI }}" class="form-control form-check" name="nom[]" id=""></td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="moyenne[]" required></td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <button class="btn btn-success col-5 offset-3" name='enregistrer' type="submit">Enregistrer</button>
-                                                </td>
-                                            </tr>
-                                            </form>
+                                                <td>{{ ms.nomE }}<input type="hidden" value="{{ ms.idI }}" class="form-control form-check" name="nom[]" id=""></td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="moyenne[]" required></td>
+                                                    </tr>
+                                                {% endfor %}
+                                                
+                                        </tr>
+                                        
+                                        
 
-                                            </div>
+                                        </div>
                                         
                                     </div>
                                 </table>
                                 <!-- /.content-wrapper -->
 
+                            </div>
+                            <div class='card-footer'>
+                                <button class="btn btn-success col-5 offset-3" name='enregistrer' type="submit">Enregistrer</button>
+                                </form>
                             </div>
                         </div>
                         <!-- /.card -->

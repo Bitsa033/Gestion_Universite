@@ -2,13 +2,15 @@
 {% block body %}
     <div class="content-wrapper">
         <section class="content">
+        {% for note in inscriptions %}
           <div class="card col-10 offset-1">
             <div class="card-header">
                 <div class="row">
                     <div class="col-5">
-                        
                         UNIVERSITE CATHOLIQUE SAINT BENOIT DE YAOUNDE <br>
-                        TEL: 654-567-876 <br> EMAIL: contactsaintbenoit@gmail.com
+                        TEL: 654-567-876 <br> EMAIL: contactsaintbenoit@gmail.com <br><br>
+
+                        Etudiant: <strong>{{note.etudiant}}</strong>
                     </div>
                     <!--/col-->
                     <div class="col">
@@ -30,10 +32,8 @@
                         <div class="col-12">
                             <thead>
                                 <tr>
-                                <td>Semestre</td>
                                 <td>Matiere</td>
                                 <td>Note</td>
-                                <td>Etudiant</td>
 
                                 </tr>
                             </thead>
@@ -41,16 +41,20 @@
                     </div>
                     <div class='row '>
                         <div class='col '>
-                            {% for note in notes %}
+                            
                             <tbody>
-                                <tr>
-                                    <td>{{note.semestre}}</td>
-                                    <td>{{note.matiere}}</td>
-                                    <td>{{note.moyenne}}</td>
-                                    <td>{{note.etudiant}}</td>
-                                </tr>
+                                 {% for row in notes %}
+                                    <tr>
+                                        <td>{{row.matiere}}</td>
+                                        <td>{{row.moyenne}}</td>
+                                    </tr>
+                                    
+                                 {% else %}
+                                    
+                                 {% endfor %}
+                                
                             </tbody>
-                            {% endfor %}
+                           
                         </div>
                         
                         </div>
@@ -60,6 +64,7 @@
             </div>
             <div class="card-footer"><p class="h5">Pied de Page ...</p></div>
           </div>
+           {% endfor %}
           <!--/card-->
         </section>
     </div>

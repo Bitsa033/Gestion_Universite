@@ -18,7 +18,7 @@
                 </div>
                 <!-- /.row -->
                 <div class="row">
-					<div class="col-md-7">
+					<div class="col-md-6">
 						<div class="card">
 						 <div class="card-header">Liste des filieres disponibles <a href="">Imprimer</a> </div>
 							<div class="card-body table-responsive p-0" style="height: 390px;">
@@ -39,14 +39,7 @@
 													<br>
 														<i>{{ filiere.nom }}</i>
 													</td>
-													{# <td>
-														<a class="btn btn-info" href="{{ path('filieres_index',{id:filiere.id}) }}">Mettre à jour
-															<i class="fa fa-edit"></i>
-														</a>
-														<a class="btn btn-warning" href="{{ path('filieres_suppression',{id:filiere.id}) }}">Supprimer
-															<i class="fa fa-times"></i>
-														</a>
-													</td> #}
+													
 												</tr>
 												{% else %}
 												<tr>
@@ -63,7 +56,7 @@
 						</div>
 					</div>
                     
-                    <div class="col-md-5">
+                    <div class="col-5">
 
                         <div class="card">
                             <div class="card-header">
@@ -76,8 +69,8 @@
                                 
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body table-responsive p-0" style="height: 350px;">
-                                <form action="{{ path('filieres_index') }}" method="post">
+                            <div class="card-body table-responsive p-0" style="height: 250px;">
+                                <form action="" method="post">
                                     <table class="table table-head-fixed text-nowrap">
 
                                         <tbody>
@@ -89,10 +82,10 @@
 											{% for nb_row in nb_rows %}
                                             <tr>
                                                 <th>
-                                                    <input type="text" name="filiere{{nb_row}}" class="form-control" placeholder="Nom de la filiere" id="">
+                                                    <input type="text" name="filiere{{nb_row}}" class="form-control" placeholder="Nom de la filiere" id="" required>
 												</th>
                                                 <th>
-                                                    <input type="text" name="abbr{{nb_row}}" class="form-control" placeholder="Abbreviation" id="">
+                                                    <input type="text" name="abbr{{nb_row}}" class="form-control" placeholder="Abbreviation" id="" required>
 												</th>
                                             </tr>
 												
@@ -102,13 +95,16 @@
                                         </tbody>
 										<!-- /.tbody -->
                                     </table>
-                                    <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
-									<br><br>
-                                </form>
+                                    
                                 <!-- /.form -->
 
 								</div>
 								<!-- /.card-body -->
+								<div class="card-footer">
+								<button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
+								<br><br>
+                                </form>
+								</div>
                                 </div>
 
                             </div>

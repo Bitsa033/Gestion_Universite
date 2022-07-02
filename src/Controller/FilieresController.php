@@ -74,12 +74,14 @@ class FilieresController extends AbstractController
                 $ecritureFiliere=new EcritureFiliere;
                 $ecritureFiliere->Enregistrer($data,$user,$end);
             }
+            $this->addFlash('success', 'Enregistrement éffectué!');
 
         }
 
         return $this->render('filieres/filieres.html.twig', [
             'nb_rows' => $nb_row,
-            'filieres' => $filiereRepository->filieresUser($user),
+            'filieres' => $filiereRepository->findBy([
+                'user'=>$user]),
         ]);
     }
 

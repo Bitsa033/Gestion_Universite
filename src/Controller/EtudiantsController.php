@@ -47,8 +47,9 @@ class EtudiantsController extends AbstractController
             $enregistrerEtudiant = new EcritureEtudiant;
             $enregistrerEtudiant->Enregistrer($data,$user,$end_e);
 
-            return $this->redirectToRoute('etudiants_ajout');
+            $this->addFlash('success', 'Enregistrement éffectué!');
         }
+       
         return $this->render('etudiants/ajout.html.twig', [
             
         ]);
@@ -66,10 +67,7 @@ class EtudiantsController extends AbstractController
         }
 
         return $this->render('etudiants/etudiants.html.twig', [
-            'etudiants' => $etudiantRepository->etudiantsUser($user),
-            'nbEtudiants' => $etudiantRepository->count([
-                'user' => $user
-            ])
+            'etudiants' => $etudiantRepository->etudiantsListe($user),
         ]);
     }
 
@@ -150,8 +148,10 @@ class EtudiantsController extends AbstractController
 
         return $this->render('etudiants/essaie.html.twig', [
             'mr' =>  $etudiantRepository->etudiantsUserPasInscris($user),
-            'filieres' =>$filiereRepository->filieresUser($user),
-            'classes'  =>$niveauRepository->niveauxUser($user)
+            'filieres' =>$filiereRepository->findBy([
+                'user'=>$user]),
+            'classes'  =>$niveauRepository->findBy([
+                'user'=>$user]),
         ]);
     }
 

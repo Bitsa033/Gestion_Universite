@@ -77,11 +77,14 @@ class MatieresController extends AbstractController
                 $enregistrerMatiere= new EcritureMatiere;
                 $enregistrerMatiere->Enregistrer($data,$user,$end);
             }
+
+            $this->addFlash('success', 'Enregistrement éffectué!');
         } 
 
         return $this->render('matieres/matieres.html.twig', [
             'nb_rows' => $nb_row,
-            'matieres'=>$matiereRepository->matieresUser($user),
+            'matieres'=>$matiereRepository->findBy([
+                'user'=>$user]),
         ]);
     }
 
@@ -133,9 +136,11 @@ class MatieresController extends AbstractController
             return $this->redirectToRoute('matieres_t');
         }
         return $this->render('matieres/passerelleCours.html.twig',[
-            'filieres'=>$filiereRepository->filieresUser($user),
+            'filieres'=>$filiereRepository->findBy([
+                'user'=>$user]),
             'semestres'=>$semestreRepository->findAll(),
-            'niveaux'=>$niveauRepository->niveauxUser($user),
+            'niveaux'=>$niveauRepository->findBy([
+                'user'=>$user]),
         ]);
     }
 
@@ -195,12 +200,16 @@ class MatieresController extends AbstractController
                     
                 }
             }
+
+            $this->addFlash('success', 'Enregistrement éffectué!');
         }
 
         return $this->render('matieres/cours.html.twig', [
             'mr' =>  $matiereRepository->matiereUserPasEncoreUe($user,$sessionF,$sessionN,$sessionSe),
-            'filieres'=>$filiereRepository->filieresUser($user),
-            'classes' =>$niveauRepository->niveauxUser($user),
+            'filieres'=>$filiereRepository->findBy([
+                'user'=>$user]),
+            'classes' =>$niveauRepository->findBy([
+                'user'=>$user]),
             'semestres' =>$semestreRepository->findAll()
         ]);
     }
@@ -208,7 +217,7 @@ class MatieresController extends AbstractController
     /**
      * @Route("liste_Ues", name="liste_Ues")
      */
-    public function liste_Ues (SessionInterface $session,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository,UeRepository $ueRepository)
+    public function liste_Ues (SessionInterface $session,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository,SemestreRepository $semestreRepository,UeRepository $ueRepository)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -229,10 +238,12 @@ class MatieresController extends AbstractController
                 'semestre'=>$sessionSe
 
             ]),
+            'filiere'=>$filiereRepository->find($sessionF),
+            'classe'=>$niveauRepository->find($sessionN),
+            'semestre'=>$semestreRepository->find($sessionSe),
             
         ]);
     }
-
 
     /**
      * @Route("ue_suppression/{id}", name="ue_suppression")

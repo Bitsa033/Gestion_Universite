@@ -2,6 +2,7 @@
 {% block body %}
     <div class="content-wrapper">
         <section class="content">
+        
           <div class="card col-10 offset-1">
             <div class="card-header">
                 <div class="row">
@@ -9,24 +10,15 @@
                         <table class="table-bordered">
                             <tr>
                                 <td>
-                                     <p> <strong> Nom: </strong> {{etudiant.etudiant.nom}} </p>
+                                     Republique du cameroun
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <p> <strong> Matricule: </strong> XXXXXXXXXX</p>
+                                    Paix-Travail-Patrie
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <p> <strong> Filiere: </strong> {{etudiant.filiere.nom}}</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                     <p> <strong> Classe: </strong> {{etudiant.niveau.nom}}</p>
-                                </td>
-                            </tr>
+                            
                         </table>
 
                     </div>
@@ -39,22 +31,17 @@
                         <table class="table-bordered">
                             <tr>
                                 <td>
-                                     <p> <strong> Nom: </strong> {{etudiant.etudiant.nom}} </p>
+                                     <p> <strong> Nom: </strong> {{note.etudiant}} </p>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <p> <strong> Matricule: </strong> XXXXXXXXXX</p>
+                                    {# <p> <strong> Filiere: </strong> {{note.inscription.filiere.nom}}</p> #}
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <p> <strong> Filiere: </strong> {{etudiant.filiere.nom}}</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                     <p> <strong> Classe: </strong> {{etudiant.niveau.nom}}</p>
+                                     {# <p> <strong> Classe: </strong> {{note.inscription.niveau.nom}}</p> #}
                                 </td>
                             </tr>
                         </table>
@@ -74,31 +61,18 @@
                                 <td>Credit</td>
                                 <td>Total</td>
                             </tr>
-                            {% for row in matieres %}
+                             {% for note in notes %}
                             <tr>
-                                <td>{{row.semestre.nom}}</td>
-                                <td>{{row.ue.matiere.nom}}</td>
-                                <td>{{row.moyenne}}</td>
+                                <td>{{note.semestre}}</td>
+                                <td>{{note.matiere}}</td>
+                                <td>{{note.moyenne}}</td>
                                 <td>3</td>
                                 <td>50/60</td>
                             </tr>
                             {% endfor %}
-                            
                         </table>
                     </div>
-                    <!--/col-->
-                    {# <div class="col">
-                        <table class="table table-head-fixed text-nowrap table-bordered">
-                            <tr>
-                                {% for row in notes %}
-                                    <td>{{row.inscription.etudiant.nom}}</td>
-                                {% endfor %}
-                                {% for row in notes %}
-                                    <td>{{row.moyenne}}</td>
-                                {% endfor %}
-                            </tr>
-                        </table>
-                    </div> #}
+                    
                 </div>
                 <!--/row-->
             
@@ -106,6 +80,7 @@
             <div class="card-footer"><p class="h5">Pied de Page ...</p></div>
           </div>
           <!--/card-->
+          
         </section>
     </div>
 {% endblock %}

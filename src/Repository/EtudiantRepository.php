@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\Etudiant;
-use App\Repository\InscriptionRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -21,7 +20,7 @@ class EtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, Etudiant::class);
     }
 
-    public function etudiantsUser(User $user)
+    public function etudiantsListe(User $user)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
