@@ -23,21 +23,6 @@ class NotesController extends AbstractController
 {
 
     /**
-     * @Route("notesIndividuelles", name="notesIndividuelles")
-     */
-    public function index(NotesEtudiantRepository $notesEtudiantRepository,UeRepository $matiereRepository,InscriptionRepository $etudiantRepository): Response
-    {
-        $user=$this->getUser();
-        return $this->render('notes/index.html.twig', [
-            // 'etudiant' => $etudiantRepository->find(1),
-            // 'matieres'=>$notesEtudiantRepository->findBy(
-            //     ['inscription'=>1,
-            // ]),
-            'notes' => $notesEtudiantRepository->notesEtudiant($user)
-        ]);
-    }
-
-    /**
      * @Route("notesC", name="notesCollectives")
      */
     public function notesC(InscriptionRepository $inscriptionRepository,UeRepository $ueRepository,NotesEtudiantRepository $notesEtudiantRepository): Response
