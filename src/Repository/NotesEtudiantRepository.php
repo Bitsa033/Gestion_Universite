@@ -28,13 +28,11 @@ class NotesEtudiantRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-        SELECT semestre.nom as semestre, etudiant.nom as etudiant,
-        matiere.nom as matiere, moyenne from notes_etudiant inner
-        join inscription on inscription.id=notes_etudiant.inscription_id
-        inner join etudiant on etudiant.id=inscription.etudiant_id inner join ue on ue.id = 
-        notes_etudiant.ue_id inner JOIN matiere on matiere.id = ue.matiere_id inner join semestre
-        on semestre.id= notes_etudiant.semestre_id WHERE inscription.filiere_id=1 AND etudiant.nom =
-        "Josiane Brenda"
+        SELECT semestre.nom as semestre, etudiant.nom as etudiant, matiere.nom as matiere, 
+        moyenne from notes_etudiant inner join inscription on inscription.id=notes_etudiant.inscription_id 
+        inner join etudiant on etudiant.id=inscription.etudiant_id inner join ue on ue.id = notes_etudiant.ue_id
+        inner JOIN matiere on matiere.id = ue.matiere_id inner join semestre on semestre.id=
+         notes_etudiant.semestre_id WHERE inscription.filiere_id=1 GROUP BY inscription.id
         ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([

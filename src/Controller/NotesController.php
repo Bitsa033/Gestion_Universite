@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class NotesController extends AbstractController
 {
-
     /**
      * @Route("notesC", name="notesCollectives")
      */
@@ -32,7 +31,7 @@ class NotesController extends AbstractController
 
         return $this->render('notes/notesC.html.twig', [
             'notes'=>$notesEtudiantRepository->notesEtudiant($user),
-            'inscriptions'=>$notesEtudiantRepository->notesEtudiant2($user)
+            'inscriptions'=>$notesEtudiantRepository->notesEtudiant($user)
         
         ]);
     }
