@@ -1,126 +1,47 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}UniversgController!
-{% endblock %}
-
+{% extends "base.html.twig" %}
 {% block body %}
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Apperçu de la apge</h1>
-          </div>
-          
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+    <div class="content-wrapper">
 
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="callout callout-info">
-              <h5><i class="fas fa-info"></i> Note:</h5>
-              Cette page a été conçue pour l'impression. Cliquez le boutton d'impression pour generer le fichier pdf de la page.
-            </div>
+        <div class="content col-8 offset-1">
 
+            <div class="card">
+                <div class="card-header">
 
-            <!-- Main content -->
-            <div class="invoice p-3 mb-3">
-              <!-- title row -->
-              <div class="row">
-                <div class="col-12">
-                  <h4>
-                    <i class="fas fa-globe"></i> Gestion des notes, Cloud App.
-                    <small class="float-right">Date: 2/10/2014</small>
-                  </h4>
+                    <div class="row">
+                        <div class="col-5">
+                            <strong> Nom: </strong>{{inscription.etudiant.nom}} <br>
+                            <strong> Prenom: </strong>{{inscription.etudiant.prenom}} <br>
+                            <strong> Classe: </strong>{{inscription.niveau.nom}} <br>
+                            <strong> Filiere: </strong>{{inscription.filiere.nom}} <br>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.col -->
-              </div>
-              <!-- info row -->
-              <div class="row invoice-info">
-                <div class="col-sm-4 invoice-col">
-                  <address>
-                    Nom: <strong>{{inscription.etudiant.nom}} {{inscription.etudiant.prenom}}</strong><br>
-                    Matricule: <strong>Phie_ei_1950098</strong><br>
-                    Telephone: <strong>655-10-24-53</strong><br>
-                    Filiere: <strong>{{inscription.filiere.nom}}</strong><br>
-					Classe: <strong>{{inscription.niveau.nom}}</strong><br>
-                  </address>
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-4 invoice-col">
-                  <address>
-                    Année: <strong>2022-2023</strong><br>
-                    Semestre: <strong>{{semestre.nom}}</strong><br>
-					<img class="profile-user-img img-fluid img-circle"
-					src="template\dist\img\megaplus.png" alt="Logo" size="20%" srcset="">
-                  </address>
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-4 invoice-col">
-                  	Ministere de l'enseignement supperieur<br>
-            		Paix-Travail=Patrie<br>
-                    Telephone: <strong>655-45-78-53</strong><br>
-                    Fax: <strong>245-678-098</strong><br>
-					Email: <strong>minesup@gmail.com</strong><br>
-                </div>
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-
-              <div class="card col-10 offset-1">
-            <div class="card-header form-inline">Liste des Notes
-                
-            </div>
-            <div class="card-body p-0" style="height: 1090px;" >
-                <div class="row">
-                    <div class="col-12">
-                        <table class="table table-head-fixed text-nowrap table-bordered">
+                <div class="card-body">
+                    <table class="table table-head-fixed text-nowrap table-bordered">
+                        <tr>
+                            <td>Semestre</td>
+                            <td>Matiere</td>
+                            <td>Note</td>
+                            <td>Credit</td>
+                            <td>Total</td>
+                        </tr>
+                        {% for row in matieres %}
                             <tr>
-                                <td>Semestre</td>
-                                <td>Matiere</td>
-                                <td>Note</td>
-                                <td>Credit</td>
-                                <td>Total</td>
-                            </tr>
-                            {% for row in matieres %}
-                            <tr>
-                                <td>{{row.semestre.nom}}</td>
-                                <td>{{row.ue.matiere.nom}}</td>
-                                <td>{{row.moyenne}}</td>
+                                <td>{{ row.semestre.nom }}</td>
+                                <td>{{ row.ue.matiere.nom }}</td>
+                                <td>{{ row.moyenne }}</td>
                                 <td>3</td>
                                 <td>50/60</td>
                             </tr>
-                            {% endfor %}
-                            
-                        </table>
-                    </div>
-            
-            </div>
-           
-          </div>
-          <!--/card-->
+                        {% endfor %}
 
-            <!-- this row will not appear when printing -->
-            <div class="row no-print">
-            <div class="col-12">
-                <a href="{{path('notes_etudiant_impression')}}" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Imprimer</a>
-                <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                <i class="fas fa-download"></i> Generer au format PDF
-                </button>
+                    </table>
+                </div>
+                <!--card-body-->
             </div>
-            </div>
+            <!--card-->
         </div>
-            <!-- /.invoice -->
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+        <!--section-->
+    </div>
+
 {% endblock %}
