@@ -7,7 +7,7 @@
 
         <!-- Main content -->
         <section class="content">
-			<br>
+		<br>
             <div
                 class="container-fluid">
                 <!-- Info boxes -->
@@ -18,33 +18,31 @@
                 </div>
                 <!-- /.row -->
                 <div class="row">
-					<div class="col-md-6">
+					<div class="col-6">
 						<div class="card">
-						 <div class="card-header">Liste des filieres disponibles <a href="">Imprimer</a> </div>
+						 <h5 class="card-header">Liste des semestres disponibles | <a href="{{path('semestres_imprimer')}}">Imprimer</a> </h5>
 							<div class="card-body table-responsive p-0" style="height: 390px;">
 								<table class="table table-head-fixed text-nowrap">
 
 									<tbody>
 										<tr>
 											<th style="width:3%;">ID</th>
-											<th>filieres</th>
+											<th>Semestre</th>
 											
 										</tr>
-										{% for filiere in filieres %}
+										{% for semestre in semestres %}
 											<tr>
 												<td>
-													{{ filiere.id }}</td>
+													{{ semestre.id }}</td>
 												<td>
-													<strong>{{ filiere.sigle }}</strong>
-													<br>
-														<i>{{ filiere.nom }}</i>
-													</td>
+													<strong>Semestre {{ semestre.nom }}</strong>
+												</td>
 													
-												</tr>
-												{% else %}
-												<tr>
-													<td colspan="2">Liste vide !</td>
-												</tr>
+											</tr>
+											{% else %}
+											<tr>
+												<td colspan="2">Liste vide !</td>
+											</tr>
 										{% endfor %}
 
 									</tbody>
@@ -52,17 +50,16 @@
 
 							</div>
 							<!-- /.card-body -->
-							<div class="card-footer">@Developpé par: BITSA NDZIE PASCAL</div>
 						</div>
 					</div>
                     
-                    <div class="col-5">
+                    <div class="col-4">
 
                         <div class="card">
                             <div class="card-header">
-								<form action="{{ path('filieres_nb') }}" method="post">
+								<form action="{{ path('semestres_nb') }}" method="post">
 								<div class="form-inline">
-									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de filieres à créer">
+									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de lignes">
 									<button type="submit" class="form-control">Ok</button>
 								</div>
 								</form>
@@ -75,17 +72,13 @@
 
                                         <tbody>
                                             <tr>
-                                                <th>filieres</th>
-                                                <th>Abbreviation</th>
+                                                <th>Semestre</th>
                                             </tr>
 
 											{% for nb_row in nb_rows %}
                                             <tr>
                                                 <th>
-                                                    <input type="text" name="filiere{{nb_row}}" class="form-control" placeholder="Nom de la filiere" id="" required>
-												</th>
-                                                <th>
-                                                    <input type="text" name="abbr{{nb_row}}" class="form-control" placeholder="Abbreviation" id="" required>
+                                                    <input type="number" name="semestre{{nb_row}}" class="form-control" placeholder="Numero du semestre Ex: 3" id="">
 												</th>
                                             </tr>
 												
@@ -100,12 +93,14 @@
 
 								</div>
 								<!-- /.card-body -->
-								<div class="card-footer">
-								<button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
-								<br><br>
-                                </form>
-								</div>
+                                <div class="card-footer">
+                                    <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
+									<br><br>
+                                    </form>
                                 </div>
+                                </div>
+
+                                
 
                             </div>
 

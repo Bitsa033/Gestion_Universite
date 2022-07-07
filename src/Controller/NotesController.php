@@ -13,6 +13,7 @@ use App\Repository\SemestreRepository;
 use App\Repository\UeRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Enregistrement\EcritureNote;
+use PDO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -28,6 +29,26 @@ class NotesController extends AbstractController
     {
         $user=$this->getUser();
         // $rep=$inscriptionRepository->find(1);
+        // $nbEtudiants=$inscriptionRepository->count([
+        //     'filiere'=>1,
+        //     'niveau'=>1
+        // ]);
+
+        // $sql='SELECT etudiant.nom as etudiant, matiere.nom as matiere, moyenne from notes_etudiant
+        // inner join inscription on inscription.id=notes_etudiant.inscription_id inner join etudiant
+        // on etudiant.id=inscription.etudiant_id inner join ue on ue.id=notes_etudiant.ue_id inner JOIN
+        // matiere on matiere.id=ue.matiere_id
+        // ';
+        // $pdo=new PDO('mysql:host=localhost;dbname=gnu','root','');
+        // $prepare=$pdo->prepare($sql);
+        // $prepare->execute();
+        // $resultat=$prepare->fetchAll(PDO::FETCH_ASSOC);
+        // $prepare->closeCursor();
+        //dd($resultat);
+        // foreach ($resultat as $key => $value) {
+        //     echo $value['etudiant']."  ". $value['matiere']."<br>";
+
+        // }
 
         return $this->render('notes/notesC.html.twig', [
             'notes'=>$notesEtudiantRepository->notesEtudiant($user),

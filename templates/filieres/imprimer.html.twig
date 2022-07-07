@@ -1,0 +1,16 @@
+
+<h1>{{titre}}</h1>
+
+<div>
+    <table border='2' width='100%'>
+
+        {% for filiere in filieres %}
+            <tr>
+                <td>{{filiere.nom}}</td>
+            </tr>
+        {% else %}
+            
+        {% endfor %}
+
+    </table>
+</div>

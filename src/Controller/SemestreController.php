@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 /**
  * @Route("semestres_", name="semestres_")
  */
@@ -32,11 +35,11 @@ class SemestreController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //   dd($session);
         }
-        return $this->redirectToRoute('semestres_index');
+        return $this->redirectToRoute('semestres_add');
     }
    
     /**
-     * @Route("index", name="index", methods={"GET","POST"})
+     * @Route("add", name="add", methods={"GET","POST"})
      */
     public function semestre(SessionInterface $session,SemestreRepository $semestreRepository, ManagerRegistry $end): Response
     {
@@ -96,30 +99,9 @@ class SemestreController extends AbstractController
             $this->addFlash('success', 'Enregistrement éffectué!');
 
         }
-        return $this->render('semestre/index.html.twig', [
+        return $this->render('semestre/add.html.twig', [
             'nb_rows' => $nb_row,
             'semestres' => $semestreRepository->findAll(),
-        ]);
-    }
-
-    /**
-     * @Route("show_{id}", name="show", methods={"GET"})
-     */
-    public function show(Semestre $semestre): Response
-    {
-        return $this->render('semestre/show.html.twig', [
-            'semestre' => $semestre,
-        ]);
-    }
-
-    /**
-     * @Route("edit_{id}_edit", name="edit", methods={"GET", "POST"})
-     */
-    public function edit(Request $request, Semestre $semestre, EntityManagerInterface $entityManager): Response
-    {
-        
-        return $this->render('semestre/edit.html.twig', [
-            'semestre' => $semestre,
         ]);
     }
 
@@ -134,5 +116,30 @@ class SemestreController extends AbstractController
         }
 
         return $this->redirectToRoute('semestre_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("imprimer", name="imprimer")
+     */
+    public function imprimer(SemestreRepository $semestreRepository)
+    {
+        $pdfOptions= new Options();
+        $pdfOptions->set('defaultFont','Arial');
+
+        $dompdf=new Dompdf($pdfOptions);
+
+        $html=$this->renderView('semestre/imprimer.html.twig',[
+            'titre'=>'Liste des semestres',
+            'semestres'=>$semestreRepository->findAll()
+        ]);
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4','portrait');
+        $dompdf->render();
+
+        $dompdf->stream('GNU_ListeDesSemestres.pdf',[
+            "Attachment"=>true
+        ]);
     }
 }

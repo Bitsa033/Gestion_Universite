@@ -18,6 +18,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 /**
  * @Route("matieres_",name="matieres_")
  */
@@ -37,11 +40,11 @@ class MatieresController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //   dd($session);
         }
-        return $this->redirectToRoute('matieres_index');
+        return $this->redirectToRoute('matieres_add');
     }
 
      /**
-     * @Route("index", name="index")
+     * @Route("add", name="add")
      */
     public function ajout (SessionInterface $session,MatiereRepository $matiereRepository, ManagerRegistry $end)
     {
@@ -81,7 +84,7 @@ class MatieresController extends AbstractController
             $this->addFlash('success', 'Enregistrement éffectué!');
         } 
 
-        return $this->render('matieres/matieres.html.twig', [
+        return $this->render('matieres/add.html.twig', [
             'nb_rows' => $nb_row,
             'matieres'=>$matiereRepository->findBy([
                 'user'=>$user]),
@@ -105,6 +108,31 @@ class MatieresController extends AbstractController
 
         return $this->redirectToRoute('matieres_ajoutEt_liste');
         
+    }
+
+    /**
+     * @Route("imprimer", name="imprimer")
+     */
+    public function imprimer(MatiereRepository $matiereRepository)
+    {
+        $pdfOptions= new Options();
+        $pdfOptions->set('defaultFont','Arial');
+
+        $dompdf=new Dompdf($pdfOptions);
+
+        $html=$this->renderView('matieres/imprimer.html.twig',[
+            'titre'=>'Liste des matières',
+            'matieres'=>$matiereRepository->findAll()
+        ]);
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4','portrait');
+        $dompdf->render();
+
+        $dompdf->stream('GNU_ListeDesMatieres.pdf',[
+            "Attachment"=>true
+        ]);
     }
 
     /**

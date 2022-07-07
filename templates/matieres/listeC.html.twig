@@ -15,18 +15,12 @@
 				<!-- Info boxes -->
 
 				<div class=" card">
-					<table class="table">
-						<tr>
-							<td>Filiere: {{filiere.nom}}</td>
-						</tr>
-						<tr>
-							<td>Classe: {{classe.nom}}</td>
-						</tr>
-						<tr>
-							<td>Semestre: {{semestre.nom}}</td>
-						</tr>
-					</table>
-					<h5 class='card-header'>Liste des cours |<a href="">Imprimer</a> </h5>
+					
+					<div class='card-header'>
+					<h5><strong>Filiere:</strong> {{filiere.nom}}  <strong>Classe:</strong> {{classe.nom}}
+							<strong>Semestre:</strong> {{semestre.nom}}</h5>
+					<h5>Liste des cours | <a href="">Imprimer</a> </h5>
+					</div>
 					<div class=" card-body table-responsive p-0" style="height: 350px;">
 						<table class="table table-bordered table-head-fixed">
 

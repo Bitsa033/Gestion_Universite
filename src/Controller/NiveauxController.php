@@ -11,6 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 /**
  * @Route("niveaux_", name="niveaux_")
  */
@@ -30,11 +33,11 @@ class NiveauxController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //   dd($session);
         }
-        return $this->redirectToRoute('niveaux_index');
+        return $this->redirectToRoute('niveaux_add');
     }
 
     /**
-     * @Route("index", name="index")
+     * @Route("add", name="add")
      */
     public function classe(SessionInterface $session, NiveauRepository $niveauRepository, Request $request, ManagerRegistry $end)
     {
@@ -75,7 +78,7 @@ class NiveauxController extends AbstractController
                 $manager->flush();
             }
 
-            return $this->redirectToRoute('niveaux_index');
+            return $this->redirectToRoute('niveaux_add');
         }
 
         if (!empty($session->get('nb_row', []))) {
@@ -109,7 +112,7 @@ class NiveauxController extends AbstractController
             $this->addFlash('success', 'Enregistrement éffectué!');
         }
 
-        return $this->render('niveaux/niveaux.html.twig', [
+        return $this->render('niveaux/add.html.twig', [
             'nb_rows' => $nb_row,
             'niveaux' => $niveauRepository->findBy([
                 'user'=>$user]),
@@ -132,7 +135,32 @@ class NiveauxController extends AbstractController
         $manager->remove($niveau);
         $manager->flush();
 
-        return $this->redirectToRoute('niveaux_ajoutEt_liste');
+        return $this->redirectToRoute('niveaux_add');
+    }
+
+    /**
+     * @Route("imprimer", name="imprimer")
+     */
+    public function imprimer(NiveauRepository $niveauRepository)
+    {
+        $pdfOptions= new Options();
+        $pdfOptions->set('defaultFont','Arial');
+
+        $dompdf=new Dompdf($pdfOptions);
+
+        $html=$this->renderView('niveaux/imprimer.html.twig',[
+            'titre'=>'Liste des classes',
+            'classes'=>$niveauRepository->findAll()
+        ]);
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4','portrait');
+        $dompdf->render();
+
+        $dompdf->stream('GNU_ListeDesClasses.pdf',[
+            "Attachment"=>true
+        ]);
     }
 
 }

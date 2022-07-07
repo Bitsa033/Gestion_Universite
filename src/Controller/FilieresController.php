@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Filiere;
 use App\Repository\FiliereRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Enregistrement\EcritureFiliere;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 /**
  * @Route("filieres_", name="filieres_")
@@ -32,13 +33,13 @@ class FilieresController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //dd($session);
         }
-        return $this->redirectToRoute('filieres_index');
+        return $this->redirectToRoute('filieres_add');
     }
 
     /**
-     * @Route("index", name="index")
+     * @Route("add", name="add")
      */
-    public function filiere(SessionInterface $session, FiliereRepository $filiereRepository, ManagerRegistry $end)
+    public function add(SessionInterface $session, FiliereRepository $filiereRepository, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -78,7 +79,7 @@ class FilieresController extends AbstractController
 
         }
 
-        return $this->render('filieres/filieres.html.twig', [
+        return $this->render('filieres/add.html.twig', [
             'nb_rows' => $nb_row,
             'filieres' => $filiereRepository->findBy([
                 'user'=>$user]),
@@ -86,21 +87,28 @@ class FilieresController extends AbstractController
     }
 
     /**
-     * @Route("suppression/{id}", name="suppression")
+     * @Route("imprimer", name="imprimer")
      */
-    public function suppression_filiere(Filiere $filiere, ManagerRegistry $end)
+    public function imprimer(FiliereRepository $filiereRepository)
     {
-        //on cherche l'utilisateur connecté
-        $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-        
-        //sinon on supprime les données
-        $manager = $end->getManager();
-        $manager->remove($filiere);
-        $manager->flush();
+        $pdfOptions= new Options();
+        $pdfOptions->set('defaultFont','Arial');
 
-        return $this->redirectToRoute('filieres_ajoutEt_liste');
+        $dompdf=new Dompdf($pdfOptions);
+
+        $html=$this->renderView('filieres/imprimer.html.twig',[
+            'titre'=>'Liste des filières',
+            'filieres'=>$filiereRepository->findAll()
+        ]);
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4','portrait');
+        $dompdf->render();
+
+        $dompdf->stream('GNU_ListeDesFilieres.pdf',[
+            "Attachment"=>true
+        ]);
+
     }
 }
