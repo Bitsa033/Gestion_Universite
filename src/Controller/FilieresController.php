@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("filieres_", name="filieres_")
@@ -91,6 +92,7 @@ class FilieresController extends AbstractController
      */
     public function imprimer(FiliereRepository $filiereRepository)
     {
+        
         $pdfOptions= new Options();
         $pdfOptions->set('defaultFont','Arial');
 
@@ -106,9 +108,20 @@ class FilieresController extends AbstractController
         $dompdf->setPaper('A4','portrait');
         $dompdf->render();
 
-        $dompdf->stream('GNU_ListeDesFilieres.pdf',[
-            "Attachment"=>true
-        ]);
+        $output=$dompdf->output();
+        $publicDirectory=$this->getParameter('images_directory') ;
+        $pdfFilePath=$publicDirectory.'/filieres.pdf';
+
+        file_put_contents($pdfFilePath,$output);
+
+        $this->addFlash('success',"Le fichier pdf a été téléchargé");
+        return $this->redirectToRoute('filieres_add');
+        //return new Response('Ce pdf a été téléchargé ');
+
+        // return $this->render('filieres/imprimer.html.twig',[
+        //     'titre'=>'Liste des filières',
+        //     'filieres'=>$filiereRepository->findAll()
+        // ]);
 
     }
 }

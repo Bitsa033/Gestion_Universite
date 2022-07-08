@@ -158,9 +158,14 @@ class NiveauxController extends AbstractController
         $dompdf->setPaper('A4','portrait');
         $dompdf->render();
 
-        $dompdf->stream('GNU_ListeDesClasses.pdf',[
-            "Attachment"=>true
-        ]);
+        $output=$dompdf->output();
+        $publicDirectory=$this->getParameter('images_directory') ;
+        $pdfFilePath=$publicDirectory.'/classes.pdf';
+
+        file_put_contents($pdfFilePath,$output);
+
+        $this->addFlash('success',"Le fichier pdf a été téléchargé");
+        return $this->redirectToRoute('niveaux_add');
     }
 
 }

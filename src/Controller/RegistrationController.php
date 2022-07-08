@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
 use App\Security\SecurityAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,26 +11,35 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\Validator\Constraints\Length;
 
 class RegistrationController extends AbstractController
 {
     /**
+     * constraints(min=6,'minMessage'='Votre mot de passe doit contenir au moins 8 caractères')
      * @Route("/register", name="app_register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $userPasswordEncoder, GuardAuthenticatorHandler $guardHandler, SecurityAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
+        $lenght=new Length([
+            'min' => 6,
+            'minMessage' => 'Votre mot de passe doit contenir au moins 8 caractères',
+            // max length allowed by Symfony for security reasons
+            'max' => 4096,
+        ]);
+        
+        if (!empty($request->request->get('email2')) && !empty($request->request->get('password'))) {
+            $email=$request->request->get('email2');
+            $password=$request->request->get('password');
+            $user->setEmail($email);
             $user->setPassword(
-            $userPasswordEncoder->encodePassword(
+                // encode the plain password
+                $userPasswordEncoder->encodePassword(
                     $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+                    $password
+                    )
+                );
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -45,8 +53,8 @@ class RegistrationController extends AbstractController
             );
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
+        return $this->render('registration/register2.html.twig', [
+            'error'=>'error'
         ]);
     }
 }

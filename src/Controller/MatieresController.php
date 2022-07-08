@@ -130,9 +130,14 @@ class MatieresController extends AbstractController
         $dompdf->setPaper('A4','portrait');
         $dompdf->render();
 
-        $dompdf->stream('GNU_ListeDesMatieres.pdf',[
-            "Attachment"=>true
-        ]);
+        $output=$dompdf->output();
+        $publicDirectory=$this->getParameter('images_directory') ;
+        $pdfFilePath=$publicDirectory.'/matieres.pdf';
+
+        file_put_contents($pdfFilePath,$output);
+
+        $this->addFlash('success',"Le fichier pdf a été téléchargé");
+        return $this->redirectToRoute('matieres_add');
     }
 
     /**

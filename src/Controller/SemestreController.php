@@ -138,8 +138,13 @@ class SemestreController extends AbstractController
         $dompdf->setPaper('A4','portrait');
         $dompdf->render();
 
-        $dompdf->stream('GNU_ListeDesSemestres.pdf',[
-            "Attachment"=>true
-        ]);
+        $output=$dompdf->output();
+        $publicDirectory=$this->getParameter('images_directory') ;
+        $pdfFilePath=$publicDirectory.'/semestres.pdf';
+
+        file_put_contents($pdfFilePath,$output);
+
+        $this->addFlash('success',"Le fichier pdf a été téléchargé");
+        return $this->redirectToRoute('semestres_add');
     }
 }
