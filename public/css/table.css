@@ -1,0 +1,16 @@
+table {
+    border-collapse: collapse;
+    width: 70%;
+    box-shadow: 0 0 10px gray;
+    margin-left: 10px;
+}
+
+th,
+td {
+    border: 2px black solid;
+    background: rgb(200, 200, 200);
+}
+
+.h1 {
+    margin-left: 20%;
+}

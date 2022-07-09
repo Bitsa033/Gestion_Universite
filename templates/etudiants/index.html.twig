@@ -1,20 +1,60 @@
-{% extends 'base.html.twig' %}
+<link rel="stylesheet" href="{{asset('template/dist/css/bootstrap.min.css')}}">
 
-{% block title %}Hello EtudiantsController!{% endblock %}
+<div class="row">
+    <div class="col-7 offset-2">
+        
+        <div class="card">
+            {% for message in app.flashes('success') %}
+            <div class="alert alert-success container col-4">
+                {{ message}}
+            </div>
+            {% endfor %}
+            <div class="card-header">
+                <h5 class='text-uppercase'>Selectioner la filiere et la classe avant de continuer...</h5>
+            </div>
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+            <div class="card-body">
+            
+                <form action=""  method="post">
+                   <div class="form-group">
+                        Filiere
+                        <select class='form-control' type="text" name="filiere" id="">
+                        {% for element in filieres %}
+                            <option value="{{element.id}}">{{element.nom}}</option>
+                        {% else %}
+                             <option value="">Tableau vide...</option>
+                        {% endfor %}
+                        </select>
+                   </div>
+                   <div class="form-group">
+                       Classe
+                        <select class='form-control' type="text" name="classe" id="">
+                        {% for element in classes %}
+                            <option value="{{element.id}}">{{element.nom}}</option>
+                        {% else %}
+                             <option value="">Tableau vide...</option>
+                        {% endfor %}
+                        </select>
+                   </div>
+                    <div class="form-group">
+                        <a class='btn btn-warning col-4' href="{{path('etudiants_liste')}}">Retour</a>
+                        <button type="submit" class='col-4 btn btn-success'>Suivant</button>
+                    </div>
+                
+                </form>
+            
+            </div>
+        
+        </div>
+    
+    
+    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/pascalbitsa/Desktop/Symfony4/exampleT/src/Controller/EtudiantsController.php'|file_link(0) }}">src/Controller/EtudiantsController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/pascalbitsa/Desktop/Symfony4/exampleT/templates/etudiants/index.html.twig'|file_link(0) }}">templates/etudiants/index.html.twig</a></code></li>
-    </ul>
 </div>
-{% endblock %}
+
+<style>
+.card{
+    position: relative;
+    top:30%;
+}
+</style>

@@ -6,6 +6,7 @@ use App\Entity\Etudiant;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\EtudiantRepository;
+use App\Repository\InscriptionRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Enregistrement\EcritureEtudiant;
 use Enregistrement\EcritureInscription;
@@ -14,6 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 /**
  * @Route("etudiants_", name="etudiants_")
@@ -146,13 +150,96 @@ class EtudiantsController extends AbstractController
             }
         }
 
-        return $this->render('etudiants/essaie.html.twig', [
+        return $this->render('etudiants/inscription.html.twig', [
             'mr' =>  $etudiantRepository->etudiantsUserPasInscris($user),
             'filieres' =>$filiereRepository->findBy([
                 'user'=>$user]),
             'classes'  =>$niveauRepository->findBy([
                 'user'=>$user]),
         ]);
+    }
+
+    /**
+     * @Route("menuImprimer", name="menuImprimer")
+     */
+    public function menuImprimer(Request $request,SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository): Response
+    {
+        if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe'))) {
+            $filiere=$request->request->get('filiere');
+            $classe=$request->request->get('classe');
+            $repoFiliere=$filiereRepository->find($filiere);
+            $repoClasse=$niveauRepository->find($classe);
+            // $nomFiliere=$repoFiliere->getNom();
+            // $nomClasse=$repoClasse->getNom();
+
+            $session->set('filiere',$repoFiliere);
+            $session->set('niveau',$repoClasse);
+            //dd($session->get('filiere',[]),$session->get('niveau',[]));
+
+            return $this->redirectToRoute('etudiants_imprimer');
+          
+        }
+        
+        return $this->render('etudiants/index.html.twig', [
+            'filieres'=>$filiereRepository->findAll(),
+            'classes'=>$niveauRepository->findAll(),
+
+        ]);
+    }
+
+    /**
+     * @Route("imprimer", name="imprimer")
+     */
+    public function imprimer(SessionInterface $session,InscriptionRepository $inscriptionRepository): Response
+    {
+        $filiere=$session->get('filiere',[]);
+        $classe=$session->get('niveau',[]);
+
+        $nomFiliere=$filiere->getSigle();
+        $nomClasse=$classe->getNom();
+        $idClasse=$classe->getId();
+
+        //dd($nomFiliere);
+
+        $pdfOptions= new Options();
+        $pdfOptions->set('defaultFont','Arial');
+
+        $dompdf=new Dompdf($pdfOptions);
+
+        $html=$this->renderView('etudiants/imprimer.html.twig',[
+            'etudiants'=>$inscriptionRepository->findBy([
+                'filiere'=>$filiere,
+                'niveau'=>$classe, 
+            ]),
+            'titre'=>"Liste des etudiants",
+            'filiere'=>$nomFiliere,
+            'classe'=>$nomClasse
+        ]);
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4','portrait');
+        $dompdf->render();
+
+        $output=$dompdf->output();
+        $publicDirectory=$this->getParameter('images_directory') ;
+        $pdfFilePath=$publicDirectory.'/'.$nomFiliere.'-'.$idClasse.'-Etudiants.pdf';
+
+        file_put_contents($pdfFilePath,$output);
+
+        $this->addFlash('success',"Le fichier pdf a été téléchargé");
+        return $this->redirectToRoute('etudiants_menuImprimer');
+
+        // return $this->render('etudiants/imprimer.html.twig', [
+        //     'etudiants'=>$inscriptionRepository->findBy([
+        //         'filiere'=>$filiere,
+        //         'niveau'=>$classe, 
+        //     ]),
+        //     'titre'=>"Liste des etudiants",
+        //     'filiere'=>$nomFiliere,
+        //     'classe'=>$nomClasse
+
+        // ]);
     }
 
     
