@@ -3,27 +3,82 @@
     <div class="content-wrapper">
         <section class="content">
         {% for note in inscriptions %}
-          <div class="card col-10 offset-1">
+          <div class="card col-10 offset-1" style='background:rgb(144,163,156);'>
             <div class="card-header">
                 <div class="row">
-                    <div class="col-5">
-                        UNIVERSITE CATHOLIQUE SAINT BENOIT DE YAOUNDE <br>
-                        TEL: 654-567-876 <br> EMAIL: contactsaintbenoit@gmail.com <br><br>
-
-                        Etudiant: <strong>{{note.etudiant}}</strong>
+                    <div class="col-4">
+                        <table style='background:pink;' border='2'>
+                            <tr>
+                                <td>ECOLE PUBLIQUE DE ZOE</td>
+                            </tr>
+                            <tr>
+                                <td>ANNEE ACADEMIQUE <strong>2021</strong> - <strong>2022</strong></td>
+                            </tr>
+                            <tr>
+                                <td>SEMESTRE 1</td>
+                            </tr>
+                        </table>
+                        <table style='background:pink; margin-top:1%; width: 260px;' border='2'>
+                            <tr>
+                                <td>CLASSE: NIVEAU-1</td>
+                            </tr>
+                            <tr>
+                                <td>FILIERE: PYHON</td>
+                            </tr>
+                            <tr>
+                                <td>EFFECTIF: 567</td>
+                            </tr>
+                        </table>
                     </div>
                     <!--/col-->
-                    <div class="col">
-                        <img src="{{asset('images/logo1.jfif')}}" alt="Logo" srcset="" height='150'>
+                    <div class="col-2">
+                        <table style='background:pink;' border='2'>
+                            <tr>
+                               <td>
+                                    <img src="{{asset('images/logo4.jfif')}}" alt="" height='100'>
+                               </td> 
+                            </tr>
+                            
+                        </table>
                     </div>
                     <!--/col-->
-                    <div class="col-5">
-                        
-                        MINISTRE DE L'ENSEIGNEMENT SUPERIEUR PAIX-TRAVAIL-PATRIE
-                        CHANCELIER DES ORDRES ACADEMIQUES
+                    <div class="col-6">
+                       <table style='background:pink; width: 400px;' border='2'>
+                            <tr>
+                                <td>REPUBLIQUE DU <strong>CAMEROUN</strong></td>
+                            </tr>
+                            <tr>
+                                <td>PAIX-TRAVAIL-PATRIE</td>
+                            </tr>
+                            
+                        </table>
+                        <table style='background:pink;width: 400px; margin-top:1%;' border='2'>
+                            <tr>
+                                <td colspan='2'>AKONO JEAN DE DIEU</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="{{asset('images/logo4.jfif')}}" alt="" height='50'>
+                                    <p class="h6" style='
+                                    position:relative; left:15%; bottom:50px; border:2px black solid;
+                                    background:yellow;
+                                    width: 270px;
+                                    '>Matricule: 0089765-RESTYUG</p>
+                               </td> 
+                               
+                            </tr>
+                            
+                        </table>
                     </div>
                     <!--/col-->
-                </div>
+                    
+            </div>
+            <div class="col-md-12">
+                <table class='offset-3' style='background:pink; margin-top:1%;margin-bottom:1%; margin-top:1%; width: 260px;' border='2'>
+                            <tr>
+                                <td>RELEVE DE NOTES</td>
+                            </tr>
+                        </table>
             </div>
             <div class="card-body table-responsive p-0" style="height: 390px;" >
             
@@ -59,10 +114,10 @@
                 </table>
             
             </div>
-            <div class="card-footer"><p class="h5">Pied de Page ...</p></div>
+            
           </div>
-           {% endfor %}
           <!--/card-->
         </section>
+        {% endfor %}
     </div>
 {% endblock %}
