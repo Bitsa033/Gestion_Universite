@@ -28,32 +28,24 @@ class NotesController extends AbstractController
     public function notesC(InscriptionRepository $inscriptionRepository,UeRepository $ueRepository,NotesEtudiantRepository $notesEtudiantRepository): Response
     {
         $user=$this->getUser();
-        // $rep=$inscriptionRepository->find(1);
-        // $nbEtudiants=$inscriptionRepository->count([
-        //     'filiere'=>1,
-        //     'niveau'=>1
-        // ]);
 
-        // $sql='SELECT etudiant.nom as etudiant, matiere.nom as matiere, moyenne from notes_etudiant
-        // inner join inscription on inscription.id=notes_etudiant.inscription_id inner join etudiant
-        // on etudiant.id=inscription.etudiant_id inner join ue on ue.id=notes_etudiant.ue_id inner JOIN
-        // matiere on matiere.id=ue.matiere_id
-        // ';
-        // $pdo=new PDO('mysql:host=localhost;dbname=gnu','root','');
-        // $prepare=$pdo->prepare($sql);
-        // $prepare->execute();
-        // $resultat=$prepare->fetchAll(PDO::FETCH_ASSOC);
-        // $prepare->closeCursor();
-        //dd($resultat);
-        // foreach ($resultat as $key => $value) {
-        //     echo $value['etudiant']."  ". $value['matiere']."<br>";
+        $pdo= $this->getDoctrine()->getConnection();
+        $sql="select e.nom as etudiant,moyenne,m.nom as matiere
+        from notes_etudiant n inner join inscription i on 
+        i.id=n.inscription_id inner join ue on
+        ue.id=n.ue_id inner join matiere m on m.id=ue.matiere_id
+        inner join etudiant e on e.id=i.etudiant_id
+        limit 0,8
 
-        // }
-
-        return $this->render('notes/notesC.html.twig', [
-            'notes'=>$notesEtudiantRepository->notesEtudiant($user),
-            'inscriptions'=>$notesEtudiantRepository->notesEtudiant($user)
+        ";
+        $prepare=$pdo->prepare($sql);
+        $prepare->execute();
+        $result=$prepare->fetchAll();
+        //dd($result);
         
+        return $this->render('notes/notesC.html.twig', [
+            'notes'=>$result,
+            
         ]);
     }
 

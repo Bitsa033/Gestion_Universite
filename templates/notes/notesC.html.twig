@@ -1,123 +1,52 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <div class="content-wrapper">
-        <section class="content">
-        {% for note in inscriptions %}
-          <div class="card col-10 offset-1" >
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-4">
-                        <table style='background:pink;' border='2'>
-                            <tr>
-                                <td>ECOLE PUBLIQUE DE ZOE</td>
-                            </tr>
-                            <tr>
-                                <td>ANNEE ACADEMIQUE <strong>2021</strong> - <strong>2022</strong></td>
-                            </tr>
-                            <tr>
-                                <td>SEMESTRE 1</td>
-                            </tr>
-                        </table>
-                        <table style='background:pink; margin-top:1%; width: 260px;' border='2'>
-                            <tr>
-                                <td>CLASSE: NIVEAU-1</td>
-                            </tr>
-                            <tr>
-                                <td>FILIERE: PYHON</td>
-                            </tr>
-                            <tr>
-                                <td>EFFECTIF: 567</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--/col-->
-                    <div class="col-2">
-                        <table style='background:pink;' border='2'>
-                            <tr>
-                               <td>
-                                    <img src="{{asset('images/logo4.jfif')}}" alt="" height='100'>
-                               </td> 
-                            </tr>
-                            
-                        </table>
-                    </div>
-                    <!--/col-->
-                    <div class="col-6">
-                       <table style='background:pink; width: 400px;' border='2'>
-                            <tr>
-                                <td>REPUBLIQUE DU <strong>CAMEROUN</strong></td>
-                            </tr>
-                            <tr>
-                                <td>PAIX-TRAVAIL-PATRIE</td>
-                            </tr>
-                            
-                        </table>
-                        <table style='background:pink;width: 400px; margin-top:1%;' border='2'>
-                            <tr>
-                                <td colspan='2'>AKONO JEAN DE DIEU</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="{{asset('images/logo4.jfif')}}" alt="" height='50'>
-                                    <p class="h6" style='
-                                    position:relative; left:15%; bottom:50px; border:2px black solid;
-                                    background:yellow;
-                                    width: 270px;
-                                    '>Matricule: 0089765-RESTYUG</p>
-                               </td> 
-                               
-                            </tr>
-                            
-                        </table>
-                    </div>
-                    <!--/col-->
-                    
-            </div>
-            <div class="col-md-12">
-                <table class='offset-3' style='background:pink; margin-top:1%;margin-bottom:1%; margin-top:1%; width: 260px;' border='2'>
-                            <tr>
-                                <td>RELEVE DE NOTES</td>
-                            </tr>
-                        </table>
-            </div>
-            <div class="card-body table-responsive p-0" style="height: 390px;" >
-            
-                <table class='table table-bordered'> 
-                    <div class='row '>
-                        <div class="col-12">
-                            <thead>
-                                <tr>
-                                <td>Matiere</td>
-                                <td>Note</td>
 
-                                </tr>
-                            </thead>
-                        </div>
-                    </div>
-                    <div class='row '>
-                        <div class='col '>
-                            
-                            <tbody>
-                                 
-                                    <tr>
-                                        <td>{{note.matiere}}</td>
-                                        <td>{{note.moyenne}}</td>
-                                    </tr>
-                                   
-                                
-                            </tbody>
-                           
-                        </div>
-                        
-                        </div>
-                    </div>
-                </table>
-            
+        <div class="card col-11">
+            <div class="card-header">
+                <div class="col-md-12">
+                    <table class='offset-3' style='background:pink; margin-top:1%;margin-bottom:1%; margin-top:1%; width: 260px;' border='2'>
+                        <tr>
+                            <td>RELEVE DE NOTES</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            
-          </div>
-          <!--/card-->
-        </section>
-        {% endfor %}
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Etudiant</th>
+                        <th>Matiere</th>
+                        <th>Note</th>
+                        <th>Coeff</th>
+                        <th>Note * coeff</th>
+                        <th>Appr</th>
+                    </tr>
+                    {% for note in notes %}
+                        <tr>
+                            <td>{{note.etudiant}}</td>
+                            <td>{{ note.matiere }}</td>
+                            <td>{{ note.moyenne }}</td>
+                            <td>2</td>
+                            <td>29/40</td>
+                            <td>ECA</td>
+                        </tr>
+
+                    {% endfor %}
+                </table>
+                {% set c = [1,2,3,4,5,6,7,8,9,10] %}
+                <!-- /table--> <br>
+                <a style='color:blue;' class='btn btn-default' href="">Precedent</a>
+                {% for c1 in c %} 
+                    <a style='color:blue;' class='btn btn-default' href="">{{c1}}</a>
+                {% endfor %}
+                <a style='color:blue;' class='btn btn-default' href="">Suivant</a>
+            </div>
+            <!-- /card-body-->
+            <div class="card-footer"></div>
+        </div>
+
     </div>
-{% endblock %}
+    <!-- /card-->
+
+</div></div>{% endblock %}

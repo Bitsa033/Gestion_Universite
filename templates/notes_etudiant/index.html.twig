@@ -2,18 +2,85 @@
 {% block body %}
     <div class="content-wrapper">
 
-        <div class="content col-8 offset-1">
+        <div class="content col-10 offset-1">
 
             <div class="card">
                 <div class="card-header">
 
                     <div class="row">
-                        <div class="col-5">
-                            <strong> Nom: </strong>{{inscription.etudiant.nom}} <br>
-                            <strong> Prenom: </strong>{{inscription.etudiant.prenom}} <br>
-                            <strong> Classe: </strong>{{inscription.niveau.nom}} <br>
-                            <strong> Filiere: </strong>{{inscription.filiere.nom}} <br>
+                        <div class="col-4">
+                            <table style='background:pink;' border='2'>
+                                <tr>
+                                    <td>ECOLE PUBLIQUE DE ZOE</td>
+                                </tr>
+                                <tr>
+                                    <td>ANNEE ACADEMIQUE <strong>2021</strong> - <strong>2022</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>SEMESTRE 1</td>
+                                </tr>
+                            </table>
+                            <table style='background:pink; margin-top:1%; width: 255px;' border='2'>
+                                <tr>
+                                    <td>CLASSE: {{classe.nom}}</td>
+                                </tr>
+                                <tr>
+                                    <td>FILIERE:{{filiere.nom}}</td>
+                                </tr>
+                                <tr>
+                                    <td>EFFECTIF: 567</td>
+                                </tr>
+                            </table>
                         </div>
+                        <!--/col-->
+                        <div class="col-2">
+                            <table style='background:pink;' border='2'>
+                                <tr>
+                                <td>
+                                        <img src="{{asset('images/logo4.jfif')}}" alt="" height='150' width='100'>
+                                </td> 
+                                </tr>
+                                
+                            </table>
+                        </div>
+                        <!--/col-->
+                        <div class="col-6">
+                        <table style='background:pink; width: 400px;' border='2'>
+                                <tr>
+                                    <td>REPUBLIQUE DU <strong>CAMEROUN</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>PAIX-TRAVAIL-PATRIE</td>
+                                </tr>
+                                
+                            </table>
+                            <table style='background:pink;width: 400px; margin-top:1%;' border='2'>
+                                <tr>
+                                    <td colspan='2'>{{inscription.etudiant.nom}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="{{asset('images/logo4.jfif')}}" alt="" height='50'>
+                                        <p class="h6" style='
+                                        position:relative; left:15%; bottom:50px; border:2px black solid;
+                                        background:yellow;
+                                        width: 270px;
+                                        '>Matricule: 0089765-RESTYUG</p>
+                                </td> 
+                                
+                                </tr>
+                                
+                            </table>
+                        </div>
+                        <!--/col-->
+                            
+                    </div>
+                    <div class="col-md-12">
+                        <table class='offset-3' style='background:pink; margin-top:1%;margin-bottom:1%; margin-top:1%; width: 260px;' border='2'>
+                            <tr>
+                                <td>RELEVE DE NOTES</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div class="card-body">
