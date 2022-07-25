@@ -7,7 +7,7 @@
             {% endblock %}
         </title>
         {# Run `composer require symfony/webpack-encore-bundle`
-        and uncomment the following Encore helpers to start using Symfony UX #}
+                and uncomment the following Encore helpers to start using Symfony UX #}
         {% block stylesheets %}
 
             <link
@@ -33,29 +33,38 @@
             <!-- summernote -->
             <link rel="stylesheet" href="template/plugins/summernote/summernote-bs4.min.css">
             <style>
-                
+
                 .position {
                     .position: relative;
                     top: 150px;
                 }
-
             </style>
         {% endblock %}
 
 
     </head>
-    <body>
-        
-        <div
-            class="wrapper">
+    <body class="hold-transition sidebar-mini layout-fixed">
+
+        <div class="wrapper">
 
             <!-- Navbar -->
-            
+
             <!-- message d'alerte-->
             {% for message in app.flashes('success') %}
-            <div class="alert alert-success container col-4">
-                {{ message}}
-            </div>
+                <div class="alert alert-success alert-dismissible container col-12" style="padding-left:20%;" >
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5><i class="icon fas fa-check"></i> {{message}}</h5>
+                    Consulter votre enregistrement à l'endroit prévue à cet effet. <br>
+                    <strong>Nb:</strong> Vous devez toujours verifier que votre enregistrement parvienne à l'endroit prévue à cet effet
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-warning alert-dismissible container col-12" style="padding-left:20%;" >
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5><i class="icon fas fa-exclamation-triangle"></i> {{message}}</h5>
+                    Vous avez des erreurs dans vos formulaires, corrigez-les et reessayez <br>
+                    <strong>Nb:</strong> Vous devez toujours verifier que votre enregistrement parvienne à l'endroit prévue à cet effet
+                </div>
             {% endfor %}
 
             <!-- /.navbar -->
@@ -64,9 +73,9 @@
             <aside
                 class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
-                <a href="{{ path('filieres_add') }}" class="brand-link">
-                    <img src="template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                    <span class="brand-text font-weight-light">GNU App</span>
+                <a href="index3.html" class="brand-link">
+                    <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">G-Université</span>
                 </a>
 
                 <!-- Sidebar -->
@@ -75,9 +84,22 @@
                     <!-- Sidebar user panel (optional) -->
                     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                         <div class="image">
-                            <img src="template/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image"></div>
+                            <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        </div>
                         <div class="info">
-                            <a href="{{ path('app_logout') }}" class="d-block">{{ app.user.email }}</a>
+                            <a href="#" class="d-block">Alexander Pierce</a>
+                        </div>
+                    </div>
+
+                    <!-- SidebarSearch Form -->
+                    <div class="form-inline">
+                        <div class="input-group" data-widget="sidebar-search">
+                            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-sidebar">
+                                    <i class="fas fa-search fa-fw"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -86,141 +108,89 @@
                         <ul
                             class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                            with font-awesome or any other icon font library -->
+                                           with font-awesome or any other icon font library -->
                             <li class="nav-item">
-                                <a href="{{ path('filieres_add') }}" class="nav-link">
-                                    <i class="fa fa-th"></i>
-                                    <p>
-                                        Filieres
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ path('niveaux_add') }}" class="nav-link">
-                                    <i class="fa fa-th"></i>
-                                    <p>
-                                        Classes
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ path('semestres_add') }}" class="nav-link">
-                                    <i class="fa fa-th"></i>
-                                    <p>
-                                        Semestres
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ path('matieres_add') }}" class="nav-link">
-                                    <i class="fa fa-th"></i>
-                                    <p>
-                                        Matieres
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ path('matieres_passerelleCours') }}" class="nav-link">
-                                    <i class="fa fa-th"></i>
-                                    <p>
-                                        Cours
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ path('etudiants_liste') }}" class="nav-link">
-                                    <i class="fa fa-users"></i>
-                                    <p>
-                                        Etudiants
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ path('notes_passerelleNotes') }}" class="nav-link">
-
-                                    <i class="fa fa-th"></i>
-                                    <p>
-                                        Notes
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{path('notes_notesCollectives')}}" class="nav-link">
-
-                                    <i class="fa fa-th"></i>
-                                    <p>
-                                        Notes Collectives
-                                    </p>
-                                </a>
-                            </li>
-
-                        {# <li class="nav-item menu-open">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
+                                    <i class="fa fa-desktop"></i>
                                     <p>
-                                        Uploads
+                                        Config
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="{{asset('pdf/filieres.pdf')}}" class="nav-link">
-                                            <i class="fa fa-file"></i>
-                                            <p>Filieres</p>
+                                        <a href="{{path("filieres_add")}}" class="nav-link">
+                                            <i class="fa fa-book"></i>
+                                            <p>Filières</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="./index2.html" class="nav-link">
-                                            <i class="fa fa-file"></i>
+                                        <a href="{{path("niveaux_add")}}" class="nav-link">
+                                            <i class="fa fa-home"></i>
                                             <p>Classes</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="./index3.html" class="nav-link">
-                                            <i class="fa fa-file"></i>
+                                        <a href="{{path("matieres_add")}}" class="nav-link">
+                                            <i class="fa fa-book-open"></i>
+                                            <p>Matieres</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{path("semestres_add")}}" class="nav-link">
+                                            <i class="fa fa-clock"></i>
                                             <p>Semestres</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="./index3.html" class="nav-link">
-                                            <i class="fa fa-pen"></i>
-                                            <p>Matieres</p>
+                                        <a href="{{path("matieres_passerelleCours")}}" class="nav-link">
+                                            <i class="fa fa-book-open"></i>
+                                            <p>Cours</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{path("etudiants_liste")}}" class="nav-link">
+                                            <i class="fa fa-user-friends"></i>
+                                            <p>Etudiants</p>
+                                        </a>
+                                    </li>
+                            
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{path('notes_passerelleNotes')}}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Notes
+                                        <span class="right badge badge-success">Nouvelle</span>
+                                    </p>
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-search"></i>
+                                    <p>
+                                        Rechercher
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="pages/search/simple.html" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Simple Search</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="pages/search/enhanced.html" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Enhanced</p>
                                         </a>
                                     </li>
                                 </ul>
-                            </li> #}
-
-                            {# <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-search"></i>
-                                <p>
-                                    Search
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="pages/search/simple.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Simple Search</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/search/enhanced.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Enhanced</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li> #}
-
+                            </li>
+                            
                         </ul>
                     </nav>
                     <!-- /.sidebar-menu -->

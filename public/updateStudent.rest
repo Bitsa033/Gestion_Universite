@@ -1,7 +1,0 @@
-PUT http://127.0.0.1:8000/api_update/8
-
-{
-    "nom": "sahada",
-    "prenom": "uchiwa",
-    "sexe": "f"
-}

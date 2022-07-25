@@ -124,4 +124,12 @@ class FilieresController extends AbstractController
         // ]);
 
     }
+    
+    /**
+     * @Route("layout", name="layout")
+     */
+    public function FunctionName(): Response
+    {
+        return $this->render('filieres/layout.html.twig', []);
+    }
 }

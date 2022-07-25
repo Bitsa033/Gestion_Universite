@@ -23,17 +23,6 @@ class UeRepository extends ServiceEntityRepository
         parent::__construct($registry, Ue::class);
     }
 
-    public function uesUser(User $user)
-    {
-        $a= $this->createQueryBuilder('u') ->andWhere('u.user = :val1')
-            ->setParameter('val1', $user)
-            ->orderBy('u.id', 'ASC');
-        $query=$a->getQuery();
-
-        return $query->execute();
-        
-    }
-
     public function uesFiliereNiveau($filiere,$niveau,$semestre)
     {
         $a= $this->createQueryBuilder('u') ->andWhere('u.filiere = :val1')->andWhere('u.niveau = :val2')->andWhere('u.semestre = :val3')

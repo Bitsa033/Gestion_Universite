@@ -59,17 +59,17 @@ class NiveauxController extends AbstractController
                 $niveau = new Niveau();
                 $niveau->setUser($user);
                 if ($i == 1) {
-                    $niveau->setNom(ucfirst("Niveau 1 | Bts"));
+                    $niveau->setNom(ucfirst("Niveau 1 - Bts"));
                 } elseif ($i == 2) {
-                    $niveau->setNom(ucfirst("Niveau 2 | Bts"));
+                    $niveau->setNom(ucfirst("Niveau 2 - Bts"));
                 } elseif ($i == 3) {
-                    $niveau->setNom(ucfirst("Niveau 3 | Licence"));
+                    $niveau->setNom(ucfirst("Niveau 3 - Licence"));
                 } elseif ($i == 4) {
-                    $niveau->setNom(ucfirst("Niveau 4 | Master"));
+                    $niveau->setNom(ucfirst("Niveau 4 - Master 1"));
                 } elseif ($i == 5) {
-                    $niveau->setNom(ucfirst("Niveau 5 | Master"));
+                    $niveau->setNom(ucfirst("Niveau 5 - Master 2"));
                 } elseif ($i == 6) {
-                    $niveau->setNom(ucfirst("Niveau 6 | Master"));
+                    $niveau->setNom(ucfirst("Niveau 6 - Master 3"));
                 }
 
                 $niveau->setCreatedAt(new \DateTime());
