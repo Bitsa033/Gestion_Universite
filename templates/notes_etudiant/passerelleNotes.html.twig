@@ -13,11 +13,11 @@
                 <br>
 
                     <div class="row">
-                        <div class="col-md-8 offset-1">
-                            <div class="card ">
+                        <div class="col-md-9 offset-1">
+                            <div class="card " style='position:relative; top:15%;'>
                                 <h5 class="">Selectionnez la filiere, la classe, le semestre, et le cours ... <a href="{{path('notes_passerelleEtudiants')}}">Liste des notes</a> </h5>
 
-                                <div class="card-body table-responsive p-0" style="height: 400px;">
+                                <div class="card-body table-responsive p-0" style="height: 200px;">
 
                                     <table class="table table-head-fixed text-nowrap">
                                         <form action="{{ path('notes_choixFiliereNiveauxSemestreN') }}" method="post">
@@ -63,28 +63,10 @@
                                             <!--/row -->
                                         </form>
                                         <br>
-                                        <form action="{{ path('notes_sessionCours') }}" method="post">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <select name="cours" id="" class="form-control">
-                                                        <option value="">Choisir Cours...</option>
-                                                        {% for cour in cours %}
-                                                            <option value="{{ cour.id }}">{{ cour.matiere.nom }}</option>
-                                                        {% else %}
-                                                            <option value="">Tableau vide...</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <!--/col -->
-                                                
-                                                <div class="col-md-2">
-                                                    <button class="btn btn-default" type="submit">Choisir</button>
-                                                </div>
-                                                <!--/col -->
-                                            </div>
-                                            <!--/row -->
-                                        </form>
+                                        
                                     </table>
+
+                                    
 
                                 </div>
                             </div>

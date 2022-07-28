@@ -20,17 +20,6 @@ class FiliereRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Filiere::class);
     }
-
-    public function filieresUser(User $user)
-    {
-        $a= $this->createQueryBuilder('f') ->andWhere('f.user = :val1')
-            ->setParameter('val1', $user)
-            ->orderBy('f.id', 'ASC');
-        $query=$a->getQuery();
-
-        return $query->execute();
-        
-    }
     
     // /**
     //  * @return Filiere[] Returns an array of Filiere objects

@@ -53,7 +53,7 @@ class NotesController extends AbstractController
      * on se dirige vers le template [passerelleNotes]
      * @Route("passerelleNotes", name="passerelleNotes")
      */
-    function passerelleNotes(SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository,UeRepository $ueRepository){
+    function passerelleNotes(SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository,UeRepository $ueRepository,InscriptionRepository $inscriptionRepository){
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         if (!$user) {
@@ -63,15 +63,63 @@ class NotesController extends AbstractController
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
+        
 
         return $this->render('notes_etudiant/passerelleNotes.html.twig',[
             'filieres'=>$filiereRepository->findBy([
-                'user'=>$user]),
+                'user'=>$user
+            ]),
             'semestres'=>$semestreRepository->findAll(),
             'niveaux'=>$niveauRepository->findBy([
-                'user'=>$user]),
-            'cours' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
+                'user'=>$user
+            ]),
+            'cours' =>  $ueRepository->findBy([
+                'filiere'=>$sessionF, 
+                'niveau'=>$sessionN,
+                'semestre'=>$sessionSe
+            ]),
+            
         ]);
+    }
+
+    /**
+     * @Route("actionpasserelleNotes", name="actionpasserelleNotes")
+     */
+    public function actionpasserelleNotes(SessionInterface $session, InscriptionRepository $inscriptionRepository,
+    SemestreRepository $semestreRepository,UeRepository $ueRepository, ManagerRegistry $managerRegistry)
+    {
+        $user=$this->getUser();
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+        $sessionCours = $session->get('cours', []);
+        if (!empty($sessionF) && !empty($sessionN) && !empty($sessionSe)
+         && isset($_POST['enregistrer'])) {
+
+            $check_array = $_POST['inscription'];
+            foreach ($_POST['etudiant'] as $key => $value) {
+                if (in_array($_POST['inscription'][$key], $check_array)) {
+                    echo $_POST["inscription"][$key];
+                    echo $_POST["moyenne"][$key];
+                    echo '<br>';
+                    //echo $request->request->get("moyenne")[$key];
+                    //echo '<br>';
+                    $etudiant = $inscriptionRepository->find($_POST['etudiant'][$key]);
+                    $cours = $ueRepository->find($_POST["cours"][$key]);
+                    $moyenne = $_POST['moyenne'][$key];
+                    $data=array(
+                        'moyenne'=>$moyenne
+                    );
+                    $semestre = $semestreRepository->find($sessionSe);
+                    //dd($session);
+                    $notesEtudiant = new EcritureNote();
+                    $notesEtudiant->Enregistrer($data,$etudiant,$cours,$semestre,$user,$managerRegistry);
+                    
+                }
+            }
+            // $this->addFlash('success', 'Enregistrement éffectué!');
+        }
+        return $this->redirectToRoute('notes_s');
     }
 
     /**
@@ -96,7 +144,10 @@ class NotesController extends AbstractController
             'classes'=>$niveauRepository->findBy([
                 'user'=>$user]),
             
-            'inscriptions2'=>$inscriptionRepository->inscriptionsUserFiliereNiveau($user,$sessionF,$sessionN),
+            'inscriptions2'=>$inscriptionRepository->findBy([
+                'user'=>$user,
+                'filiere'=>$sessionF,
+                'niveau'=>$sessionN]),
         ]);
     }
 
@@ -151,7 +202,7 @@ class NotesController extends AbstractController
             //return $this->redirectToRoute('etudiants_i');
         }
 
-        return $this->redirectToRoute('notes_passerelleNotes');
+        return $this->redirectToRoute('notes_s');
     }
 
     /**
@@ -206,46 +257,30 @@ class NotesController extends AbstractController
      */
     public function Note(ManagerRegistry $managerRegistry, SessionInterface $session, InscriptionRepository $inscriptionRepository, UeRepository $ueRepository,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
     {
+        $user=$this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
         $sessionCours = $session->get('cours', []);
+
+        $repfiliere=$filiereRepository->find($sessionF);
+        $repclasse=$niveauRepository->find($sessionN);
+        $repsemestre=$semestreRepository->find($sessionSe);
         $user = $this->getUser();
-
-        if (!empty($sessionCours) && isset($_POST['enregistrer'])) {
-
-            $check_array = $_POST['inscription'];
-            foreach ($_POST['nom'] as $key => $value) {
-                if (in_array($_POST['nom'][$key], $check_array)) {
-                    //dd($request->request->get("inscription")[$key]);
-                    //echo $request->request->get("moyenne")[$key];
-                    //echo '<br>';
-                    $etudiant = $inscriptionRepository->find($_POST['nom'][$key]);
-                    $cours = $ueRepository->find($sessionCours);
-                    $moyenne = $_POST['moyenne'][$key];
-                    $data=array(
-                        'moyenne'=>$moyenne
-                    );
-                    $semestre = $semestreRepository->find($sessionSe);
-                    //dd($session);
-                    $notesEtudiant = new EcritureNote();
-                    $notesEtudiant->Enregistrer($data,$etudiant,$cours,$semestre,$user,$managerRegistry);
-                    
-                }
-            }
-            $this->addFlash('success', 'Enregistrement éffectué!');
-        }
        
        //dd($sessionCours);
         return $this->render('notes_etudiant/notes.html.twig', [
-            'cours' =>  $ueRepository->uesFiliereNiveau($sessionF, $sessionN,$sessionSe),
-            'inscriptions' =>$inscriptionRepository->EtudiantPasDeNote($user,$sessionF,$sessionN,$sessionSe,$sessionCours),
+            
             'filieres'=>$filiereRepository->findBy([
                 'user'=>$user]),
             'classes' =>$niveauRepository->findBy([
                 'user'=>$user]),
             'semestres' =>$semestreRepository->findAll(),
+            'etudiantsMatieres'=>$inscriptionRepository->etudiantsMatieres($repfiliere,$repclasse,$repsemestre)
         ]);
     }
 }

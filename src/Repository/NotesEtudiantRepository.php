@@ -24,25 +24,25 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, NotesEtudiant::class);
     }
 
-    public function notesEtudiant(User $user)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = '
-        SELECT semestre.nom as semestre, etudiant.nom as etudiant, matiere.nom as matiere, moyenne 
-        from notes_etudiant inner join inscription on inscription.id=notes_etudiant.inscription_id inner 
-        join etudiant on etudiant.id=inscription.etudiant_id inner join ue on ue.id = notes_etudiant.ue_id inner
-        JOIN matiere on matiere.id = ue.matiere_id inner join semestre on semestre.id= 
-        notes_etudiant.semestre_id WHERE inscription.filiere_id=1  AND matiere.id IN(1,2) group by etudiant.id
-        ';
-        $stmt = $conn->prepare($sql);
-        $stmt->executeQuery([
-            'user'=>$user->getId(),
-        ]);
+    // public function notesEtudiant(User $user)
+    // {
+    //     $conn = $this->getEntityManager()->getConnection();
+    //     $sql = '
+    //     SELECT semestre.nom as semestre, etudiant.nom as etudiant, matiere.nom as matiere, moyenne 
+    //     from notes_etudiant inner join inscription on inscription.id=notes_etudiant.inscription_id inner 
+    //     join etudiant on etudiant.id=inscription.etudiant_id inner join ue on ue.id = notes_etudiant.ue_id inner
+    //     JOIN matiere on matiere.id = ue.matiere_id inner join semestre on semestre.id= 
+    //     notes_etudiant.semestre_id WHERE inscription.filiere_id=1  AND matiere.id IN(1,2) group by etudiant.id
+    //     ';
+    //     $stmt = $conn->prepare($sql);
+    //     $stmt->executeQuery([
+    //         'user'=>$user->getId(),
+    //     ]);
 
-        // returns an array of arrays (i.e. a raw data set)
-        return $stmt;
+    //     // returns an array of arrays (i.e. a raw data set)
+    //     return $stmt;
         
-    }
+    // }
 
     // /**
     //  * @return NotesEtudiant[] Returns an array of NotesEtudiant objects

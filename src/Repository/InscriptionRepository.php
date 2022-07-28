@@ -48,45 +48,37 @@ class InscriptionRepository extends ServiceEntityRepository
         
     }
 
-    public function inscriptionssUser(User $user)
-    {
-        $a= $this->createQueryBuilder('i') ->andWhere('i.user = :val1')
-            ->setParameter('val1', $user)
-            ->orderBy('i.id', 'ASC');
-        $query=$a->getQuery();
+    // public function inscriptionsUserFiliereNiveau(User $user,$filiere,$niveau)
+    // {
+    //     $a= $this->createQueryBuilder('i')->andWhere('i.user = :val1')
+    //     ->andWhere('i.filiere = :val2')->andWhere('i.niveau = :val3')
+    //     ->setParameter('val1', $user)->setParameter('val2', $filiere)
+    //     ->setParameter('val3', $niveau)
+    //         ->orderBy('i.id', 'ASC');
+    //     $query=$a->getQuery();
 
-        return $query->execute();
+    //     return $query->execute();
         
-    }
+    // }
 
-    public function inscriptionsUserFiliereNiveau(User $user,$filiere,$niveau)
-    {
-        $a= $this->createQueryBuilder('i')->andWhere('i.user = :val1')
-        ->andWhere('i.filiere = :val2')->andWhere('i.niveau = :val3')
-        ->setParameter('val1', $user)->setParameter('val2', $filiere)
-        ->setParameter('val3', $niveau)
-            ->orderBy('i.id', 'ASC');
-        $query=$a->getQuery();
-
-        return $query->execute();
-        
-    }
-
-    public function etudiantsFiliereClasse(Filiere $filiere, Niveau $niveau)
+    public function etudiantsMatieres(Filiere $filiere, Niveau $niveau, Semestre $semestre)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
         
-        select distinct etudiant.nom as nomE, filiere.nom as nomF from inscription inner join etudiant 
-        on etudiant.id=inscription.etudiant_id inner join filiere on filiere.id=inscription.filiere_id
-        inner join
-        notes_etudiant on inscription_id=inscription.id where filiere_id= :filiere and niveau_id=:niveau
-
+        SELECT inscription.id as idI,etudiant.nom as nomE,ue.id as idC, 
+        matiere.nom as nomM from inscription,ue,matiere,etudiant WHERE 
+        etudiant.id=inscription.etudiant_id and matiere.id=
+        ue.matiere_id and ue.filiere_id= :filiere and ue.niveau_id= 
+        :niveau and ue.semestre_id= :semestre and inscription.filiere_id= :filiere 
+        and inscription.niveau_id= :niveau and inscription.id not in (select inscription_id
+        from notes_etudiant where semestre_id= :semestre ) order by inscription.id
         ';
         $stmt = $conn->prepare($sql);
         $stmt->executeQuery([
             'filiere'=>$filiere->getId(),
             'niveau'=>$niveau->getId(),
+            'semestre'=>$semestre->getId()
         ]);
 
         // returns an array of arrays (i.e. a raw data set)

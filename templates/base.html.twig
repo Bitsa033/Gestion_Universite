@@ -54,16 +54,12 @@
                 <div class="alert alert-success alert-dismissible container col-12" style="padding-left:20%;" >
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <h5><i class="icon fas fa-check"></i> {{message}}</h5>
-                    Consulter votre enregistrement à l'endroit prévue à cet effet. <br>
-                    <strong>Nb:</strong> Vous devez toujours verifier que votre enregistrement parvienne à l'endroit prévue à cet effet
                 </div>
             {% endfor %}
             {% for message in app.flashes('error') %}
                 <div class="alert alert-warning alert-dismissible container col-12" style="padding-left:20%;" >
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <h5><i class="icon fas fa-exclamation-triangle"></i> {{message}}</h5>
-                    Vous avez des erreurs dans vos formulaires, corrigez-les et reessayez <br>
-                    <strong>Nb:</strong> Vous devez toujours verifier que votre enregistrement parvienne à l'endroit prévue à cet effet
                 </div>
             {% endfor %}
 

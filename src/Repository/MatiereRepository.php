@@ -23,17 +23,6 @@ class MatiereRepository extends ServiceEntityRepository
         parent::__construct($registry, Matiere::class);
     }
 
-    public function matieresUser(User $user)
-    {
-        $a= $this->createQueryBuilder('m') ->andWhere('m.user = :val1')
-            ->setParameter('val1', $user)
-            ->orderBy('m.id', 'ASC');
-        $query=$a->getQuery();
-
-        return $query->execute();
-        
-    }
-
     // public function uesFiliereNiveau($filiere,$niveau)
     // {
     //     $a= $this->createQueryBuilder('u') ->andWhere('u.filiere = :val1')->andWhere('u.niveau = :val2')

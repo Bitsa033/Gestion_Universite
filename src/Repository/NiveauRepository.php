@@ -21,34 +21,23 @@ class NiveauRepository extends ServiceEntityRepository
         parent::__construct($registry, Niveau::class);
     }
 
-    public function niveauxUser(User $user)
-    {
-        $a= $this->createQueryBuilder('n') ->andWhere('n.user = :val1')
-            ->setParameter('val1', $user)
-            ->orderBy('n.id', 'ASC');
-        $query=$a->getQuery();
+    // public function none(User $user, Etudiant $etudiant)
+    // {
+    //     $conn = $this->getEntityManager()->getConnection();
+    //     $sql = '
+    //     SELECT * FROM niveau,etudiant,inscription where
+    //     niveau.user_id= :user and inscription.etudiant_id != :etudiant
+    //         ';
+    //     $stmt = $conn->prepare($sql);
+    //     $stmt->executeQuery([
+    //         'user'=>$user->getId(),
+    //         'etudiant'=>$etudiant->getId()
+    //     ]);
 
-        return $query->execute();
+    //     // returns an array of arrays (i.e. a raw data set)
+    //     return $stmt;
         
-    }
-
-    public function niveauxUserPourEtudiantsInscris(User $user, Etudiant $etudiant)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = '
-        SELECT * FROM niveau,etudiant,inscription where
-        niveau.user_id= :user and inscription.etudiant_id != :etudiant
-            ';
-        $stmt = $conn->prepare($sql);
-        $stmt->executeQuery([
-            'user'=>$user->getId(),
-            'etudiant'=>$etudiant->getId()
-        ]);
-
-        // returns an array of arrays (i.e. a raw data set)
-        return $stmt;
-        
-    }
+    // }
 
     // /**
     //  * @return Niveau[] Returns an array of Niveau objects
