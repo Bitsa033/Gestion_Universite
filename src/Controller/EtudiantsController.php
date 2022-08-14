@@ -127,6 +127,10 @@ class EtudiantsController extends AbstractController
      */
     public function i(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository): Response
     {
+        $user=$this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);

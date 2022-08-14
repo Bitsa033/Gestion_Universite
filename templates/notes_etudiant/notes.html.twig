@@ -63,72 +63,57 @@
                                             <!--/row -->
                                         </form>
                                         <br>
-                                        {# <form action="{{ path('notes_sessionCours') }}" method="post">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <select name="cours" id="" class="form-control">
-                                                        <option value="">Choisir Cours...</option>
-                                                        {% for cour in cours %}
-                                                            <option value="{{ cour.id }}">{{ cour.matiere.nom }}</option>
-                                                        {% else %}
-                                                            <option value="">Tableau vide...</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <!--/col -->
-                                                
-                                                <div class="col-md-2">
-                                                    <button class="btn btn-default" type="submit">Choisir</button>
-                                                </div>
-                                                <!--/col -->
-                                            </div>
-                                            <!--/row -->
-                                        </form> #}
+                                        
                                     </table>
 
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <td>T</td>
-                                            <td>Etudiant</td>
-                                            <td>T</td>
-                                            <td>Matiere</td>
-                                            <td>Note</td>
-                                        
-                                        </tr>
-                                        <form method="post" action="{{path('notes_actionpasserelleNotes')}}">
-                                            {% for item in etudiantsMatieres %}
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox" name="inscription[]" value="{{item.idI}}" required checked>
-                                                    </td>
-                                                    <td>
-                                                    {{item.nomE}} <input type="hidden" name="etudiant[]" value="{{item.idI}}">
-                                                    </td>
-                                                    <td>
-                                                        <input type="checkbox" name="cours[]" value="{{item.idC}}" required checked>
-                                                    </td>
-                                                    <td>
-                                                        {{item.nomM}}
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" name="moyenne[]" id="" class='form-control' placeholder='Moyenne' required>
-                                                    </td>
-                                                </tr>
-                                            {% else %}
+                                    {% if app.session.get('filiere') and app.session.get('niveau') %}
+                                        <table class="table table-bordered">
                                             <tr>
-                                                <td colspan='5'>Liste vide ...</td>
+                                                <td>T</td>
+                                                <td>Etudiant</td>
+                                                <td>T</td>
+                                                <td>Matiere</td>
+                                                <td>Note</td>
+                                            
                                             </tr>
-                                            {% endfor %}
-                                            <tr>
-                                                <td colspan='5'>
-                                                    <div class="form-group">
-                                                        <button type="submit" name='enregistrer' class='btn btn-success col-4 offset-4'>Enregistrer</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </form>
+                                                
+                                                <form method="post" action="{{path('notes_actionpasserelleNotes')}}">
+                                                    {% for item in etudiantsMatieres %}
+                                                        <tr>
+                                                            <td>
+                                                                <input type="checkbox" name="inscription[]" value="{{item.idI}}" required checked>
+                                                            </td>
+                                                            <td>
+                                                            {{item.nomE}} <input type="hidden" name="etudiant[]" value="{{item.idI}}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="checkbox" name="cours[]" value="{{item.idC}}" required checked>
+                                                            </td>
+                                                            <td>
+                                                                {{item.nomM}}
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="moyenne[]" id="" class='form-control' placeholder='Moyenne' required>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                    <tr>
+                                                        <td colspan='5'>Liste vide ...</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    <tr>
+                                                        <td colspan='5'>
+                                                            <div class="form-group">
+                                                                <button type="submit" name='enregistrer' class='btn btn-success col-4 offset-4'>Enregistrer</button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </form>
+                                            
+                                        </table>
+                                    {% else %}
                                         
-                                    </table>
+                                    {% endif %}
 
                                 </div>
                             </div>

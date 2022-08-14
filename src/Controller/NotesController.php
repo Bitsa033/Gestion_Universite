@@ -266,10 +266,29 @@ class NotesController extends AbstractController
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
         $sessionCours = $session->get('cours', []);
-
-        $repfiliere=$filiereRepository->find($sessionF);
-        $repclasse=$niveauRepository->find($sessionN);
-        $repsemestre=$semestreRepository->find($sessionSe);
+        if (!empty($sessionF)) {
+            $repfiliere=$filiereRepository->find($sessionF);
+            
+        }
+        else {
+            $repfiliere=null;
+        }
+        //classe
+        if (!empty($sessionN)) {
+            $repclasse=$niveauRepository->find($sessionN);
+            
+        }
+        else {
+            $repclasse=null;
+        }
+        //semestre
+        if (!empty($sessionSe)) {
+            $repsemestre=$semestreRepository->find($sessionSe);
+            
+        }
+        else {
+            $repsemestre=null;
+        }
         $user = $this->getUser();
        
        //dd($sessionCours);

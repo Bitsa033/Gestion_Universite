@@ -61,28 +61,35 @@ class InscriptionRepository extends ServiceEntityRepository
         
     // }
 
-    public function etudiantsMatieres(Filiere $filiere, Niveau $niveau, Semestre $semestre)
+    public function etudiantsMatieres(Filiere $filiere=null, Niveau $niveau=null, Semestre $semestre=null)
     {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = '
-        
-        SELECT inscription.id as idI,etudiant.nom as nomE,ue.id as idC, 
-        matiere.nom as nomM from inscription,ue,matiere,etudiant WHERE 
-        etudiant.id=inscription.etudiant_id and matiere.id=
-        ue.matiere_id and ue.filiere_id= :filiere and ue.niveau_id= 
-        :niveau and ue.semestre_id= :semestre and inscription.filiere_id= :filiere 
-        and inscription.niveau_id= :niveau and inscription.id not in (select inscription_id
-        from notes_etudiant where semestre_id= :semestre ) order by inscription.id
-        ';
-        $stmt = $conn->prepare($sql);
-        $stmt->executeQuery([
-            'filiere'=>$filiere->getId(),
-            'niveau'=>$niveau->getId(),
-            'semestre'=>$semestre->getId()
-        ]);
+        if ($filiere!=null and $niveau!=null and $semestre!=null) {
+            
+            $conn = $this->getEntityManager()->getConnection();
+            $sql = '
+            
+            SELECT inscription.id as idI,etudiant.nom as nomE,ue.id as idC, 
+            matiere.nom as nomM from inscription,ue,matiere,etudiant WHERE 
+            etudiant.id=inscription.etudiant_id and matiere.id=
+            ue.matiere_id and ue.filiere_id= :filiere and ue.niveau_id= 
+            :niveau and ue.semestre_id= :semestre and inscription.filiere_id= :filiere 
+            and inscription.niveau_id= :niveau and inscription.id not in (select inscription_id
+            from notes_etudiant where semestre_id= :semestre ) order by inscription.id
+            ';
+            $stmt = $conn->prepare($sql);
+            $stmt->executeQuery([
+                'filiere'=> $filiere->getId(),
+                'niveau'=>$niveau->getId(),
+                'semestre'=>$semestre->getId()
+            ]);
+            
+            // returns an array of arrays (i.e. a raw data set)
+            return $stmt;
+        }
+        else {
+            
+        }
 
-        // returns an array of arrays (i.e. a raw data set)
-        return $stmt;
         
     }
 
