@@ -247,7 +247,7 @@ class EcritureEtudiant{
 
 class EcritureInscription{
 
-    function Enregistrer(Etudiant $etudiant,Niveau $classe,Filiere $filiere, $utilisateur, ManagerRegistry $enregistreur)
+    function Enregistrer(Etudiant $etudiant,Niveau $classe,Filiere $filiere, User $utilisateur, ManagerRegistry $enregistreur)
     {
         // foreach ($tableauValaleurs as $key => $value) {
         //     $k[] = $key;
