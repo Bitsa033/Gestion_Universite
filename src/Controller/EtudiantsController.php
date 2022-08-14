@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Etudiant;
+use App\Entity\User;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\EtudiantRepository;
@@ -18,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use PDO;
 
 /**
  * @Route("etudiants_", name="etudiants_")
@@ -65,7 +67,8 @@ class EtudiantsController extends AbstractController
     public function liste(EtudiantRepository $etudiantRepository)
     {
         //on cherche l'utilisateur connecté
-        $user = $this->getUser();
+        $user = 1;
+        
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -127,14 +130,13 @@ class EtudiantsController extends AbstractController
      */
     public function i(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository): Response
     {
-        $user=$this->getUser();
+        $user=1;
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
-        $user = $this->getUser();
 
         if (isset($_POST['enregistrer'])) {
 
@@ -155,7 +157,7 @@ class EtudiantsController extends AbstractController
         }
 
         return $this->render('etudiants/inscription.html.twig', [
-            'mr' =>  $etudiantRepository->etudiantsUserPasInscris($user),
+            'mr' =>  $etudiantRepository->etudiantsPasInscris($user),
             'filieres' =>$filiereRepository->findBy([
                 'user'=>$user]),
             'classes'  =>$niveauRepository->findBy([

@@ -41,8 +41,8 @@
                             
                             {% else %}
                             <td>
-                            <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-warning"><i class="fa fa-times"></i></a>
-                            <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"  class="btn btn-info"><i class="fa fa-edit"></i></a>
+                            <a href="{{path('etudiants_suppression',{id:etudiant.id})}}" ><i class="fa fa-times"></i></a>
+                            <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"><i class="fa fa-pen"></i></a>
                             </td>
                             <td>
                                 <a  href="">{{etudiant.nom}} {{etudiant.prenom}}</a>

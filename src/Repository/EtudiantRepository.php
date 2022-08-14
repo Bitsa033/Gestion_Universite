@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Etudiant;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use PDO;
 
 /**
  * @method Etudiant|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,9 +21,9 @@ class EtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, Etudiant::class);
     }
 
-    public function etudiantsListe(User $user)
+    public function etudiantsListe($user)
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $conn =new \PDO('mysql:host=localhost;dbname=gnu','root','');
         $sql = '
         SELECT etudiant.id as id , etudiant.nom as nom ,
         etudiant.prenom as prenom , etudiant.sexe as sexe , 
@@ -34,29 +35,27 @@ class EtudiantRepository extends ServiceEntityRepository
         where etudiant.user_id= :user order by etudiant.id desc
             ';
         $stmt = $conn->prepare($sql);
-        $stmt->executeQuery([
-            'user'=>$user->getId()
-        ]);
-
+        $stmt->bindParam(':user',$user);
+        $stmt->execute();
+        $tab=$stmt->fetchAll();
         // returns an array of arrays (i.e. a raw data set)
-        return $stmt;
+        return $tab;
         
     }
 
-    public function etudiantsUserPasInscris(User $user)
+    public function etudiantsPasInscris($user)
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $conn = new \PDO('mysql:host=localhost;dbname=gnu','root','');
         $sql = '
         SELECT * FROM etudiant where etudiant.user_id= :user and 
         etudiant.id not in (SELECT etudiant_id from inscription)
             ';
         $stmt = $conn->prepare($sql);
-        $stmt->executeQuery([
-            'user'=>$user->getId()
-        ]);
-
+        $stmt->bindParam(':user',$user);
+        $stmt->execute();
+        $tab=$stmt->fetchAll();
         // returns an array of arrays (i.e. a raw data set)
-        return $stmt;
+        return $tab;
         
     }
 
