@@ -34,26 +34,33 @@ class MatiereRepository extends ServiceEntityRepository
         
     // }
 
-    public function matiereUserPasEncoreUe(User $user,Filiere $filiere, Niveau $niveau, Semestre $semestre)
+    public function matierePasEncoreUe(User $user,Filiere $filiere=null, Niveau $niveau=null, Semestre $semestre=null)
     {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = '
-        select * from matiere where id not in(
-            SELECT matiere_id from ue where filiere_id= :filiere AND
-            niveau_id= :niveau AND semestre_id= :semestre
-            )
-        AND matiere.user_id= :user
-            ';
-        $stmt = $conn->prepare($sql);
-        $stmt->executeQuery([
-            'user'=>$user->getId(),
-            'filiere'=>$filiere->getId(),
-            'niveau'=>$niveau->getId(),
-            'semestre'=>$semestre->getId()
-        ]);
-
-        // returns an array of arrays (i.e. a raw data set)
-        return $stmt;
+        if ($filiere!=null and $niveau!=null and $semestre!=null) {
+           
+            $conn = new \PDO('mysql:host=localhost;dbname=gnu','root','');
+            $sql = '
+            select * from matiere where id not in(
+                SELECT matiere_id from ue where filiere_id= :filiere AND
+                niveau_id= :niveau AND semestre_id= :semestre
+                )
+            AND matiere.user_id= :user
+                ';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                'user'=>$user->getId(),
+                'filiere'=>$filiere->getId(),
+                'niveau'=>$niveau->getId(),
+                'semestre'=>$semestre->getId()
+            ]);
+            $tab=$stmt->fetchAll();
+    
+            // returns an array of arrays (i.e. a raw data set)
+            return $tab;
+        } else {
+            # code...
+        }
+        
         
     }
 

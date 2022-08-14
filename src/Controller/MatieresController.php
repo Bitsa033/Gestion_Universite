@@ -216,7 +216,29 @@ class MatieresController extends AbstractController
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
         $user = $this->getUser();
-
+        if (!empty($sessionF)) {
+            $filiere = $filiereRepository->find($sessionF);
+            
+        }
+        else {
+            $filiere=null;
+        }
+        //classe
+        if (!empty($sessionN)) {
+            $classe = $niveauRepository->find($sessionN);
+            
+        }
+        else {
+            $classe=null;
+        }
+        //semestre
+        if (!empty($sessionSe)) {
+            $semestre = $semestreRepository->find($sessionSe);
+            
+        }
+        else {
+            $semestre=null;
+        }
         if (isset($_POST['enregistrer']) && !empty($sessionF) && !empty($sessionSe) && !empty($sessionN)) {
             
             $check_array = $request->request->get("matiereId");
@@ -238,7 +260,7 @@ class MatieresController extends AbstractController
         }
 
         return $this->render('matieres/cours.html.twig', [
-            'mr' =>  $matiereRepository->matiereUserPasEncoreUe($user,$sessionF,$sessionN,$sessionSe),
+            'mr' =>  $matiereRepository->matierePasEncoreUe($user,$filiere,$classe,$semestre),
             'filieres'=>$filiereRepository->findBy([
                 'user'=>$user]),
             'classes' =>$niveauRepository->findBy([

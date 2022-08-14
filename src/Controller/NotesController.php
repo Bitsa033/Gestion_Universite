@@ -22,32 +22,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class NotesController extends AbstractController
 {
-    /**
-     * @Route("notesC", name="notesCollectives")
-     */
-    public function notesC(InscriptionRepository $inscriptionRepository,UeRepository $ueRepository,NotesEtudiantRepository $notesEtudiantRepository): Response
-    {
-        $user=$this->getUser();
-
-        $pdo= $this->getDoctrine()->getConnection();
-        $sql="select e.nom as etudiant,moyenne,m.nom as matiere
-        from notes_etudiant n inner join inscription i on 
-        i.id=n.inscription_id inner join ue on
-        ue.id=n.ue_id inner join matiere m on m.id=ue.matiere_id
-        inner join etudiant e on e.id=i.etudiant_id
-        limit 0,8
-
-        ";
-        $prepare=$pdo->prepare($sql);
-        $prepare->execute();
-        $result=$prepare->fetchAll();
-        //dd($result);
-        
-        return $this->render('notes/notesC.html.twig', [
-            'notes'=>$result,
-            
-        ]);
-    }
 
     /**
      * on se dirige vers le template [passerelleNotes]
@@ -255,7 +229,7 @@ class NotesController extends AbstractController
     /**
      * @Route("s", name="s")
      */
-    public function Note(ManagerRegistry $managerRegistry, SessionInterface $session, InscriptionRepository $inscriptionRepository, UeRepository $ueRepository,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
+    public function Note( SessionInterface $session, InscriptionRepository $inscriptionRepository,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
     {
         $user=$this->getUser();
         if (!$user) {
@@ -265,7 +239,6 @@ class NotesController extends AbstractController
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
-        $sessionCours = $session->get('cours', []);
         if (!empty($sessionF)) {
             $repfiliere=$filiereRepository->find($sessionF);
             

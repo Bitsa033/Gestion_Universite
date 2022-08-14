@@ -14,7 +14,7 @@
                 <div class="row">
                     <div class="col-md-8 offset-1">
                         <div class="card ">
-                            <h5 class="card-header">Selectionnez une ou plusieurs Matieres... <a href="{{path('matieres_liste_Ues')}}"> liste des cours</a> 
+                            <h5 class="card-header">Selection<a href="{{path('matieres_liste_Ues')}}"> liste des cours</a> 
                                 <form action="{{path('matieres_choixFiliereNiveauxSemestreC')}}" method="post">
                                     <div class="row">
                                         <div class="col-md-4">
@@ -60,38 +60,37 @@
                             </h5>
                            
                             <div class="card-body table-responsive p-0" style="height: 400px;">
-
-                                <table class="table table-head-fixed text-nowrap">
+                                {% if app.session.get('filiere') and app.session.get('niveau') and app.session.get('semestre') %}
                                     
-                                    <form action="" method="post">
-                                        <hr>
-                                            {# <tr>
-                                                <th>Id</th>
-                                                <th>Matiere</th>
-                                            </tr> #}
-                                                {% for ms in mr %}
+                                    <table class="table table-head-fixed text-nowrap">
+                                        
+                                        <form action="" method="post">
+                                            
+                                            {% for ms in mr %}
                                             <tr>
-
                                                 <td><input type="checkbox" name="matiereId[]" id="" value="{{ ms.id }}"></td>
 
                                                 <td>{{ ms.nom }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="matiereName[]" id=""></td>
-                                                
-                                                {% endfor %}
-                                                    
                                             </tr>
+                                            {% endfor %}
                                             
 
-                                            </div>
-                                        
-                                    </div>
-                                </table>
-                                <!-- /.content-wrapper -->
+                                        </div>
+                                    </table>
+                                    <!-- /.content-wrapper -->
+                                {% else %}
+                                    
+                                {% endif %}
 
                             </div>
                             <div class="card-footer">
-                                
-                                <button name="enregistrer" class="btn btn-success form-control" type="submit">Enregistrer</button>
-                                </form>
+                                {% if app.session.get('filiere') and app.session.get('niveau') and app.session.get('semestre') %}
+                                    <button name="enregistrer" class="btn btn-success form-control" type="submit">Enregistrer</button>
+                                    </form>
+                                    
+                                {% else %}
+                                    
+                                {% endif %}
                             </div>
                         </div>
                         

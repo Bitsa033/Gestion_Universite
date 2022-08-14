@@ -65,7 +65,7 @@ class InscriptionRepository extends ServiceEntityRepository
     {
         if ($filiere!=null and $niveau!=null and $semestre!=null) {
             
-            $conn = $this->getEntityManager()->getConnection();
+            $conn = new \PDO('mysql:host=localhost;dbname=gnu','root','');
             $sql = '
             
             SELECT inscription.id as idI,etudiant.nom as nomE,ue.id as idC, 
@@ -74,17 +74,18 @@ class InscriptionRepository extends ServiceEntityRepository
             ue.matiere_id and ue.filiere_id= :filiere and ue.niveau_id= 
             :niveau and ue.semestre_id= :semestre and inscription.filiere_id= :filiere 
             and inscription.niveau_id= :niveau and inscription.id not in (select inscription_id
-            from notes_etudiant where semestre_id= :semestre ) order by inscription.id
+            from notes_etudiant where semestre_id= :semestre) order by inscription.id
             ';
             $stmt = $conn->prepare($sql);
-            $stmt->executeQuery([
+            $stmt->execute([
                 'filiere'=> $filiere->getId(),
                 'niveau'=>$niveau->getId(),
                 'semestre'=>$semestre->getId()
             ]);
+            $tab=$stmt->fetchAll();
             
             // returns an array of arrays (i.e. a raw data set)
-            return $stmt;
+            return $tab;
         }
         else {
             

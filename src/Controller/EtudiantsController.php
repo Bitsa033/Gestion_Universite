@@ -67,7 +67,7 @@ class EtudiantsController extends AbstractController
     public function liste(EtudiantRepository $etudiantRepository)
     {
         //on cherche l'utilisateur connecté
-        $user = 1;
+        $user = $this->getUser();
         
         if (!$user) {
             return $this->redirectToRoute('app_login');
@@ -130,8 +130,7 @@ class EtudiantsController extends AbstractController
      */
     public function i(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository): Response
     {
-        $user=1;
-        $user2=$this->getUser();
+        $user=$this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -152,7 +151,7 @@ class EtudiantsController extends AbstractController
                     $classe = $niveauRepository->find($sessionN);
                     
                     $inscrireEtudiant= new EcritureInscription;
-                    $inscrireEtudiant->Enregistrer($etudiant,$classe,$filiere,$user2,$managerRegistry);
+                    $inscrireEtudiant->Enregistrer($etudiant,$classe,$filiere,$user,$managerRegistry);
                 }
             }
         }

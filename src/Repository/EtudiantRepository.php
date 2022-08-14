@@ -21,7 +21,7 @@ class EtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, Etudiant::class);
     }
 
-    public function etudiantsListe($user)
+    public function etudiantsListe(User $user)
     {
         $conn =new \PDO('mysql:host=localhost;dbname=gnu','root','');
         $sql = '
@@ -35,15 +35,16 @@ class EtudiantRepository extends ServiceEntityRepository
         where etudiant.user_id= :user order by etudiant.id desc
             ';
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':user',$user);
-        $stmt->execute();
+        $stmt->execute([
+            'user'=>$user->getId()
+        ]);
         $tab=$stmt->fetchAll();
         // returns an array of arrays (i.e. a raw data set)
         return $tab;
         
     }
 
-    public function etudiantsPasInscris($user)
+    public function etudiantsPasInscris(User $user)
     {
         $conn = new \PDO('mysql:host=localhost;dbname=gnu','root','');
         $sql = '
@@ -51,8 +52,9 @@ class EtudiantRepository extends ServiceEntityRepository
         etudiant.id not in (SELECT etudiant_id from inscription)
             ';
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':user',$user);
-        $stmt->execute();
+        $stmt->execute([
+            'user'=>$user->getId()
+        ]);
         $tab=$stmt->fetchAll();
         // returns an array of arrays (i.e. a raw data set)
         return $tab;
