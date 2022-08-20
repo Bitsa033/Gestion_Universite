@@ -20,7 +20,7 @@ class Inscription
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Etudiant::class, inversedBy="inscriptions")
+     * @ORM\ManyToOne(targetEntity=Etudiant::class, inversedBy="inscriptions",cascade={"persist"})
      */
     private $etudiant;
 

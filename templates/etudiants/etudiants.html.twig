@@ -13,7 +13,6 @@
     
             <div class="card ">
                 <div class="card-header">
-                    <a href="{{path('etudiants_ajout')}}"  class="btn btn-primary">Ajouter <i class="fa fa-plus"></i></a> 
                     <a href="{{path('etudiants_i')}}"  class="btn btn-primary">Inscrire <i class="fa fa-pen"></i></a> 
                     <a href="{{path('etudiants_menuImprimer')}}" class="btn btn-primary">Telecharger <i class="fa fa-upload"></i></a>
                     
@@ -21,10 +20,12 @@
                 <div class="card-body table-responsive p-0" style="height: 400px;">
                     <table class="table table-bordered table-head-fixed text-nowrap">
                         <tr>
-                            <th style="width:1%;">ID</th>
-                            <th style="width:1%;">Action</th>
-                            <th >Etudiant</th>
-                            <th>Inscrit</th>
+                            <td style="width:1%;">ID</td>
+                            <td style="width:1%;">Action</td>
+                            <td >Etudiant</td>
+                            <td>Filiere</td>
+                            <td>Classe</td>
+                            <td>Inscrit</td>
                         </tr>
                         {% for etudiant in etudiants %}
                         <tr>
@@ -34,9 +35,12 @@
                             
                             </td>
                             <td>
-                                <a  href="">{{etudiant.nom}} {{etudiant.prenom}} </a> | 
-                                {{etudiant.filiere}} {{etudiant.niveau}}
+                                <a  href="">{{etudiant.nom}} {{etudiant.prenom}} </a> 
                             </td>
+                            <td>
+                                {{etudiant.filiere}} 
+                            </td>
+                            <td>{{etudiant.niveau}}</td>
                             <td><span class="btn btn-success">oui !</span></td>
                             
                             {% else %}

@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Etudiant;
+use App\Entity\Filiere;
 use App\Entity\User;
 use App\Repository\NiveauRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\EtudiantRepository;
 use App\Repository\InscriptionRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Enregistrement\EcritureEtudiant;
 use Enregistrement\EcritureInscription;
@@ -26,39 +28,57 @@ use PDO;
  */
 class EtudiantsController extends AbstractController
 {
+    /**
+     * @Route("form_ajout", name="form_ajout")
+     */
+    public function form_ajout(FiliereRepository $filiereRepository,NiveauRepository $niveauRepository): Response
+    {
+        return $this->render('etudiants/ajout.html.twig', [
+            'filieres'=>$filiereRepository->findAll(),
+            'classes'=>$niveauRepository->findAll()
+        ]);
+    }
 
     /**
      * @Route("ajout", name="ajout")
      */
-    public function ajout(Request $request, ManagerRegistry $end_e)
+    public function ajout(Request $request, ManagerRegistry $end_e,FiliereRepository $filiereRepository,
+        NiveauRepository $niveauRepository,EtudiantRepository $etudiantRepository
+    )
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
+        if (!$user) { return $this->redirectToRoute('app_login');}
         //sinon on insert les données
-        if( !empty($request->request->get('nom')) && !empty($request->request->get('prenom')) && !empty($request->request->get('sexe'))) {
-
-            $nom=$request->request->get('nom');
-            $prenom=$request->request->get('prenom');
-            $sexe=$request->request->get('sexe');
+        $nom=$request->request->get('nom');
+        $prenom=$request->request->get('prenom');
+        $sexe=$request->request->get('sexe');
+        $filiere=$filiereRepository->find($request->request->get('filiere'));
+        $niveau=$niveauRepository->find($request->request->get('niveau'));
+        if( !empty($nom) && !empty($prenom) && !empty($sexe) && !empty($filiere) && !empty($niveau)) {
+            
             $data=array(
                 'nom'=>$nom,
                 'prenom'=>$prenom,
-                'sexe'=>$sexe
+                'sexe'=>$sexe,
+                'filiere'=>$filiere,
+                'niveau'=>$niveau
             );
             //on enregistre l'etudiant
             $enregistrerEtudiant = new EcritureEtudiant;
-            $enregistrerEtudiant->Enregistrer($data,$user,$end_e);
+            $stockable=$enregistrerEtudiant->Enregistrer($data,$user);
+            try {
+                $enregistrerEtudiant->persistance($end_e,$stockable);
+                $this->addFlash('success', 'Enregistrement éffectué!');
+                
+            } catch (\Throwable $th) {
+                //die('une erreur est survenue '.$th->getMessage());
+                $this->addFlash('error', 'une erreur est survenue: '.$th->getMessage());
+            }
 
-            $this->addFlash('success', 'Enregistrement éffectué!');
         }
        
-        return $this->render('etudiants/ajout.html.twig', [
-            
-        ]);
+        return $this->redirectToRoute('etudiants_form_ajout');
     }
 
     /**

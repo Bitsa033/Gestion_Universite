@@ -206,24 +206,32 @@ class EcritureCours{
 
 class EcritureEtudiant{
 
-    function Enregistrer($tableauValaleurs, User $utilisateur, ManagerRegistry $enregistreur)
+    function persistance(ManagerRegistry $managerRegistry ,$Entity){
+       
+        $manager=$managerRegistry->getManager();
+        $manager->persist($Entity);
+        $manager->flush();
+    }
+
+    function Enregistrer($tableauValaleurs, User $utilisateur)
     {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
-        
+
+        //on enregistre
         $object = new Etudiant;
         $object->setUser($utilisateur);
         $object->setNom(ucfirst($tableauValaleurs['nom']));
         $object->setPrenom(ucfirst($tableauValaleurs['prenom']));
         $object->setSexe(ucfirst($tableauValaleurs['sexe']));
         $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->persist($object);
-        $manager->flush();
+        //on inscrit
+        $inscription=new Inscription();
+        $inscription->setEtudiant($object);
+        $inscription->setFiliere($tableauValaleurs['filiere']);
+        $inscription->setNiveau($tableauValaleurs['niveau']);
+        $inscription->setCreatedAt(new \datetime);
+        //on retourne les resultats
+        return $inscription;
+
     }
 
     function MettreAJour($tableauValaleurs,Etudiant $object, ManagerRegistry $enregistreur)

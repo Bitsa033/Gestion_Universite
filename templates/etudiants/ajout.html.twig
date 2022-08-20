@@ -13,33 +13,52 @@
         <div class="row">
           <div class="col-md-5 offset-2">
            
-            <div class="">
-              <div class="card insert-filiere">
-                <div class="card-body">
-                <form action="" method="post">
-                     <p>Nom  </p>
-                    <div class="form-group">
-                        <input type="text" name="nom" class="form-control" id="" required>
-                    </div>
-                     <p>Prenom</p>
-                    <div class="form-group">
-                        <input type="text" name="prenom" class="form-control" id="" required>
-                    </div>
-                     <p>Sexe</p>
-                    <div class="form-group">
-                        <select type="text" name="sexe" class="form-control"  style="width:100%;">
-                            <option value="M">Masculin</option>
-                             <option value="F">Feminin</option>
-                        </select>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <button type="submit" style="width:100%;" class="btn btn-success">Valider</button>
-                    </div>
-                </form>
+            <div class="card insert-filiere">
+            <div class="card-header"><a href="{{path('etudiants_liste')}}">Consulter la liste des etudiants</a></div>
+            <div class="card-body">
+            <form action="{{path('etudiants_ajout')}}" method="post">
+                Nom
+                <div class="form-group">
+                    <input type="text" name="nom" class="form-control" id="" required>
                 </div>
-                
-              </div>
+                    Prenom
+                <div class="form-group">
+                    <input type="text" name="prenom" class="form-control" id="" required>
+                </div>
+                    <p>Sexe</p>
+                <div class="form-group">
+                    <select type="text" name="sexe" class="form-control"  style="width:100%;">
+                        <option value="M">Masculin</option>
+                            <option value="F">Feminin</option>
+                    </select>
+                </div>
+                Filiere
+                <div class="form-group">
+                    <select type="text" name="filiere" class="form-control"  style="width:100%;" required>
+                        {% for filiere in filieres %}
+                            <option value="{{filiere.id}}">{{filiere.nom}}</option> 
+                        {% else %}
+                                    <option value="">Liste vide</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                Classe
+                <div class="form-group">
+                    <select type="text" name="niveau" class="form-control"  style="width:100%;" required>
+                        {% for classe in classes %}
+                            <option value="{{classe.id}}">{{classe.nom}}</option> 
+                        {% else %}
+                                    <option value="">Liste vide</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br>
+                <div class="form-group">
+                    <button type="submit" style="width:100%;" class="btn btn-success">Valider</button>
+                    
+                </div>
+            </form>
+            </div>
             
             </div>
             

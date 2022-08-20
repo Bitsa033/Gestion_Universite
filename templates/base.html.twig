@@ -62,6 +62,12 @@
                     <h5><i class="icon fas fa-exclamation-triangle"></i> {{message}}</h5>
                 </div>
             {% endfor %}
+            {% for message in app.flashes('existe') %}
+                <div class="alert alert-warning alert-dismissible container col-12" style="padding-left:20%;" >
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5><i class="icon fas fa-exclamation-triangle"></i> {{message}}</h5>
+                </div>
+            {% endfor %}
 
             <!-- /.navbar -->
 
@@ -145,7 +151,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{path("etudiants_liste")}}" class="nav-link">
+                                        <a href="{{path("etudiants_form_ajout")}}" class="nav-link">
                                             <i class="fa fa-user-friends"></i>
                                             <p>Etudiants</p>
                                         </a>
