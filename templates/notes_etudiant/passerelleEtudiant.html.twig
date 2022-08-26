@@ -7,105 +7,90 @@
 
         <!-- Main content -->
         <section class="content">
-            <div
-                class="container-fluid">
-                <!-- Info boxes -->
-                <br>
+            <br>
+                <div class="row">
+                    <div class="col-md-8 offset-2">
+                        <div class="card ">
+                            <h5 class="offset-2">Selectionnez un ou plusieurs Etudiants...</h5>
 
-                    <div class="row">
-                        <div class="col-md-8 offset-2">
-                            <div class="card ">
-                                <h5 class="offset-2">Selectionnez un ou plusieurs Etudiants...</h5>
+                            <div class="card-body table-responsive p-0" style="height: 400px;">
 
-                                <div class="card-body table-responsive p-0" style="height: 400px;">
-
-                                    <table class="table table-head-fixed text-nowrap">
-                                        <form action="{{ path('etudiants_choixFiliereNiveauxI') }}" method="post">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <select name="filiere" id="" class="form-control">
-                                                        <option value="">Choisir Filiere...</option>
-                                                        {% for filiere in filieres %}
-                                                            <option value="{{ filiere.id }}">{{ filiere.nom }}</option>
-                                                        {% else %}
-                                                            <option value="">Tableau vide...</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <!--/col -->
-                                                <div class="col-md-3">
-                                                    <select name="classe" id="" class="form-control">
-                                                        <option value="">Choisir Classe...</option>
-                                                        {% for classe in classes %}
-                                                            <option value="{{ classe.id }}">{{ classe.nom }}</option>
-                                                        {% else %}
-                                                            <option value="">Tableau vide...</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <!--/col -->
-
-                                                <div class="col-md-3">
-                                                    <select name="classe" id="" class="form-control">
-                                                        <option value="">Choisir Semestre...</option>
-                                                        {% for semestre in semestres %}
-                                                            <option value="{{ semestre.id }}">{{ semestre.nom }}</option>
-                                                        {% else %}
-                                                            <option value="">Tableau vide...</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <!--/col -->
-                                                <div class="col-md-2">
-                                                    <button class="btn btn-default" type="submit">Choisir</button>
-                                                </div>
-                                                <!--/col -->
+                                <table class="table table-head-fixed text-nowrap">
+                                    <form action="{{ path('etudiants_choixFiliereNiveauxI') }}" method="post">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <select name="filiere" id="" class="form-control">
+                                                    <option value="">Choisir Filiere...</option>
+                                                    {% for filiere in filieres %}
+                                                        <option value="{{ filiere.id }}">{{ filiere.nom }}</option>
+                                                    {% else %}
+                                                        <option value="">Tableau vide...</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
-                                            <!--/row -->
-                                        </form>
-                                        <form action="{{ path('notes_choixEtudiant') }}" method="post">
-                                            <hr>
-
-
-                                                {# {% for ms in inscriptions2 %} #}
-                                                    <tr>
-                                                        <td>
-                                                        <select name="etudiantId" id="" class="form-control">
-                                                            {% for ms in inscriptions2 %}
-                                                                <option value="{{ ms.id }}">{{ ms.etudiant.nom }}</option>
-                                                            {% else %}
-                                                                <option value="">Tableau vide...</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                        </td>
-                                                        {# <td>
-                                                            <input type="checkbox" name="etudiantId" id="" value="{{ ms.id }}"></td>
-
-                                                            <td>{{ ms.etudiant.nom }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="etudiantName[]" id="">
-                                                        </td> #}
-
-                                                        {# {% endfor %} #}
-
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="3">
-                                                                <button name="enregistrer" class="btn btn-success form-control" type="submit">Suivant</button>
-                                                            </td>
-                                                        </tr>
-                                                    </form>
-
-                                                </div>
-
+                                            <!--/col -->
+                                            <div class="col-md-3">
+                                                <select name="classe" id="" class="form-control">
+                                                    <option value="">Choisir Classe...</option>
+                                                    {% for classe in classes %}
+                                                        <option value="{{ classe.id }}">{{ classe.nom }}</option>
+                                                    {% else %}
+                                                        <option value="">Tableau vide...</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
-                                        </table>
-                                        <!-- /.content-wrapper -->
+                                            <!--/col -->
 
-                                    </div>
+                                            <div class="col-md-3">
+                                                <select name="classe" id="" class="form-control">
+                                                    <option value="">Choisir Semestre...</option>
+                                                    {% for semestre in semestres %}
+                                                        <option value="{{ semestre.id }}">{{ semestre.nom }}</option>
+                                                    {% else %}
+                                                        <option value="">Tableau vide...</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <!--/col -->
+                                            <div class="col-md-2">
+                                                <button class="btn btn-default" type="submit">Choisir</button>
+                                            </div>
+                                            <!--/col -->
+                                        </div>
+                                        <!--/row -->
+                                    </form>
+                                    <form action="{{ path('notes_choixEtudiant') }}" method="post">
+
+                                        <tr>
+                                            <td>
+                                                <select name="etudiantId" id="" class="form-control">
+                                                    {% for ms in inscriptions %}
+                                                        <option value="{{ ms.id }}">{{ ms.etudiant.nom }}</option>
+                                                    {% else %}
+                                                        <option value="">Tableau vide...</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <button name="enregistrer" class="btn btn-success form-control" type="submit">Suivant</button>
+                                            </td>
+                                        </tr>
+                                    </form>
+
                                 </div>
-                                <!-- /.card -->
+
                             </div>
-                        </div>
+                        </table>
+                        <!-- /.content-wrapper -->
+
                     </div>
-                </section>
+                </div>
+                <!-- /.card -->
             </div>
-        {% endblock %}
+        </div>
+
+    </section>
+{% endblock %}

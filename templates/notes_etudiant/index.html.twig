@@ -92,10 +92,10 @@
                             <td>Credit</td>
                             <td>Total</td>
                         </tr>
-                        {% for row in matieres %}
+                        {% for row in notes %}
                             <tr>
-                                <td>{{ row.semestre.nom }}</td>
-                                <td>{{ row.ue.matiere.nom }}</td>
+                                <td>{{ row.idi }}</td>
+                                <td>{{ row.matiere }}</td>
                                 <td>{{ row.moyenne }}</td>
                                 <td>3</td>
                                 <td>50/60</td>

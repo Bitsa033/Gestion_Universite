@@ -8,55 +8,11 @@
         <!-- Main content -->
         <section class="content">
             <br>
-            <div
-                class="container-fluid">
-                <!-- Info boxes -->
                 <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3"></div>
-                    <!-- /.col -->
 
-                </div>
-                <!-- /.row -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <h5 class="card-header">Liste des matieres disponibles | <a href="{{path('matieres_imprimer')}}">Imprimer</a> </h5>
-                            <div class="card-body table-responsive p-0" style="height: 390px;">
-                                <table class="table table-head-fixed">
+                    <div class="col-8 offset-1">
 
-                                    <tbody>
-                                        <tr>
-                                            <th style="width:3%;">ID</th>
-                                            <th>Mattieres</th>
-
-                                        </tr>
-                                        {% for matiere in matieres %}
-                                            <tr>
-                                                <td>
-                                                    {{ matiere.id }}</td>
-                                                <td>
-                                                    {{ matiere.nom }}
-                                                </td>
-                                                
-                                            </tr>
-                                        {% else %}
-                                            <tr>
-                                                <td colspan="2">Liste vide !</td>
-                                            </tr>
-                                        {% endfor %}
-
-                                    </tbody>
-                                </table>
-
-                            </div>
-                            <!-- /.card-body -->
-                            <h5 class="card-footer">@Developpé par: BITSA NDZIE PASCAL</h5>
-                        </div>
-                    </div>
-
-                    <div class="col-4">
-
-                        <div class="card">
+                        <div class="card card-yellow">
                             <div class="card-header">
                                 <form action="{{ path('matieres_nb') }}" method="post">
                                     <div class="form-inline">
@@ -67,7 +23,11 @@
 
                                 </div>
                                 <!-- /.card-header -->
-                                <div class="card-body table-responsive p-0" style="height: 250px;">
+                                <div class="card-header">
+                                    <a href="{{ path('matieres_index') }}">Consulter la liste des matieres</a>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body table-warning table-responsive p-0" style="height: 250px;">
                                     <form action="" method="post">
                                         <table class="table table-head-fixed text-nowrap">
 
@@ -89,14 +49,14 @@
                                                 <!-- /.tbody -->
                                             </table>
 
-                                            </div>
-                                            <!-- /.card-body -->
-                                            <div class="card-footer">
-                                                <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
-                                                <br>
+                                        </div>
+                                        <!-- /.card-body -->
+                                        <div class="card-footer" style="background:orange">
+                                            <button type="submit" name="enregistrer" class="btn btn-warning form-control offset-1 col-10">Enregistrer</button>
+                                            <br>
                                                 <br></form>
                                                 <!-- /.form -->
-                                            
+
                                             </div>
                                         </div>
 
@@ -112,11 +72,11 @@
                         </div>
 
                         <!-- /.row -->
-            
+
                     </div>
 
                 </div>
-            </div>
-        </section>
-    </div>
-{% endblock %}
+
+            </section>
+        </div>
+    {% endblock %}

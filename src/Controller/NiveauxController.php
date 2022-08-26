@@ -37,6 +37,28 @@ class NiveauxController extends AbstractController
     }
 
     /**
+     * @Route("index", name="index")
+     */
+    public function index( NiveauRepository $niveauRepository)
+    {
+        //on cherche l'utilisateur connecté
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        
+        //on compte le nbre de classes presentes dans la base de donnees
+        $nbniveaux = $niveauRepository->count([
+            'user' => $user
+        ]);
+
+        return $this->render('niveaux/index.html.twig', [
+            'niveaux' => $niveauRepository->findBy([
+                'user'=>$user]),
+        ]);
+    }
+
+    /**
      * @Route("add", name="add")
      */
     public function classe(SessionInterface $session, NiveauRepository $niveauRepository, Request $request, ManagerRegistry $end)
@@ -114,8 +136,6 @@ class NiveauxController extends AbstractController
 
         return $this->render('niveaux/add.html.twig', [
             'nb_rows' => $nb_row,
-            'niveaux' => $niveauRepository->findBy([
-                'user'=>$user]),
         ]);
     }
 

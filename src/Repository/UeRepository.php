@@ -3,10 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Ue;
-use App\Entity\User;
-use App\Entity\Niveau;
-use App\Entity\Filiere;
-use App\Entity\Inscription;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 

@@ -10,6 +10,8 @@ use App\Entity\NotesEtudiant;
 use App\Entity\Semestre;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Exception;
+use PDO;
 
 /**
  * @method NotesEtudiant|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,25 +26,43 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         parent::__construct($registry, NotesEtudiant::class);
     }
 
-    // public function notesEtudiant(User $user)
-    // {
-    //     $conn = $this->getEntityManager()->getConnection();
-    //     $sql = '
-    //     SELECT semestre.nom as semestre, etudiant.nom as etudiant, matiere.nom as matiere, moyenne 
-    //     from notes_etudiant inner join inscription on inscription.id=notes_etudiant.inscription_id inner 
-    //     join etudiant on etudiant.id=inscription.etudiant_id inner join ue on ue.id = notes_etudiant.ue_id inner
-    //     JOIN matiere on matiere.id = ue.matiere_id inner join semestre on semestre.id= 
-    //     notes_etudiant.semestre_id WHERE inscription.filiere_id=1  AND matiere.id IN(1,2) group by etudiant.id
-    //     ';
-    //     $stmt = $conn->prepare($sql);
-    //     $stmt->executeQuery([
-    //         'user'=>$user->getId(),
-    //     ]);
+    public $server='localhost';
+    public $username='root';
+    public $database='gnu';
 
-    //     // returns an array of arrays (i.e. a raw data set)
-    //     return $stmt;
+    public function connection_to_databse(){
+
+        try {
+            $pdo=new \PDO('mysql:host=localhost;dbname=gnu','root','');
+        } catch (Exception $th) {
+            die( $th->getMessage());
+        }
+
+        return $pdo;
+    }
+
+    public function notesEtudiant(User $user)
+    {
+        $conn = $this->connection_to_databse();
+        $sql = '
+        SELECT inscription_id as idi, etudiant.nom as etudiant, moyenne,
+        ue.id as idu, matiere.nom as matiere from notes_etudiant n
+        INNER join inscription i on i.id= n.inscription_id
+        inner join etudiant on etudiant.id=i.etudiant_id
+        inner join ue on ue.id=n.ue_id inner join matiere on 
+        matiere.id=ue.matiere_id WHERE i.id in(1) and n.user_id= :user
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'user'=>$user->getId(),
+        ]);
+
+        $resultat=$stmt->fetchAll();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $resultat;
         
-    // }
+    }
 
     // /**
     //  * @return NotesEtudiant[] Returns an array of NotesEtudiant objects

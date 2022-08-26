@@ -33,7 +33,8 @@ class NotesEtudiantController extends AbstractController
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
         $sessionInsc=$session->get('inscription');
-        //dd($session);
+        $noteE=$notesEtudiantRepository->notesEtudiant($user);
+
         
         return $this->render('notes_etudiant/index.html.twig', [
             'coursSemestre'=>$cours->findBy([
@@ -46,13 +47,10 @@ class NotesEtudiantController extends AbstractController
             'semestre'=>$semestreRepository->find($sessionSe),
             'inscription'=>$inscriptionRepository->find($sessionInsc),
             'etudiant' => $etudiantRepository->findBy(['id'=>$sessionInsc]),
-            'etudiant' => $etudiantRepository->findBy(['id'=>$sessionInsc]),
             'matieres'=>$notesEtudiantRepository->findBy(
                 ['inscription'=>$sessionInsc,
             ]),
-            'notes' => $notesEtudiantRepository->findBy(
-                ['inscription'=>$sessionInsc,
-            ]),
+            'notes' => $noteE,
         ]);
     }
 

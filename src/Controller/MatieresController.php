@@ -44,9 +44,26 @@ class MatieresController extends AbstractController
     }
 
      /**
+     * @Route("index", name="index")
+     */
+    public function index (MatiereRepository $matiereRepository)
+    {
+        //on cherche l'utilisateur connecté
+        $user= $this->getUser();
+        if (!$user) {
+          return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('matieres/index.html.twig', [
+            'matieres'=>$matiereRepository->findBy([
+                'user'=>$user]),
+        ]);
+    }
+
+    /**
      * @Route("add", name="add")
      */
-    public function ajout (SessionInterface $session,MatiereRepository $matiereRepository, ManagerRegistry $end)
+    public function ajout (SessionInterface $session, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -86,8 +103,6 @@ class MatieresController extends AbstractController
 
         return $this->render('matieres/add.html.twig', [
             'nb_rows' => $nb_row,
-            'matieres'=>$matiereRepository->findBy([
-                'user'=>$user]),
         ]);
     }
 

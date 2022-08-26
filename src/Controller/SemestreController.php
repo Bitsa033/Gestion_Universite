@@ -39,6 +39,26 @@ class SemestreController extends AbstractController
     }
    
     /**
+     * @Route("index", name="index", methods={"GET","POST"})
+     */
+    public function index(SemestreRepository $semestreRepository): Response
+    {
+        //on cherche l'utilisateur connecté
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        //on compte le nbre de smestres presents dans la base de donnees
+        $nbsemestre = $semestreRepository->count([
+            
+        ]);
+        
+        return $this->render('semestre/index.html.twig', [
+            'semestres' => $semestreRepository->findAll(),
+        ]);
+    }
+
+    /**
      * @Route("add", name="add", methods={"GET","POST"})
      */
     public function semestre(SessionInterface $session,SemestreRepository $semestreRepository, ManagerRegistry $end): Response
@@ -101,7 +121,6 @@ class SemestreController extends AbstractController
         }
         return $this->render('semestre/add.html.twig', [
             'nb_rows' => $nb_row,
-            'semestres' => $semestreRepository->findAll(),
         ]);
     }
 
@@ -117,6 +136,8 @@ class SemestreController extends AbstractController
 
         return $this->redirectToRoute('semestre_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    
 
     /**
      * @Route("imprimer", name="imprimer")

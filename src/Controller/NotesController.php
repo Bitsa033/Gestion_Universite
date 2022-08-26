@@ -13,7 +13,6 @@ use App\Repository\SemestreRepository;
 use App\Repository\UeRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Enregistrement\EcritureNote;
-use PDO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -118,10 +117,7 @@ class NotesController extends AbstractController
             'classes'=>$niveauRepository->findBy([
                 'user'=>$user]),
             
-            'inscriptions2'=>$inscriptionRepository->findBy([
-                'user'=>$user,
-                'filiere'=>$sessionF,
-                'niveau'=>$sessionN]),
+            'inscriptions'=>$inscriptionRepository->findAll(),
         ]);
     }
 

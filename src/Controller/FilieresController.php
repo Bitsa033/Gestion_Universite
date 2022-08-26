@@ -38,9 +38,26 @@ class FilieresController extends AbstractController
     }
 
     /**
+     * @Route("index", name="index")
+     */
+    public function index(FiliereRepository $filiereRepository)
+    {
+        //on cherche l'utilisateur connecté
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('filieres/index.html.twig', [
+            'filieres' => $filiereRepository->findBy([
+                'user'=>$user]),
+        ]);
+    }
+
+    /**
      * @Route("add", name="add")
      */
-    public function add(SessionInterface $session, FiliereRepository $filiereRepository, ManagerRegistry $end)
+    public function add(SessionInterface $session, ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -82,8 +99,6 @@ class FilieresController extends AbstractController
 
         return $this->render('filieres/add.html.twig', [
             'nb_rows' => $nb_row,
-            'filieres' => $filiereRepository->findBy([
-                'user'=>$user]),
         ]);
     }
 
@@ -125,11 +140,5 @@ class FilieresController extends AbstractController
 
     }
     
-    /**
-     * @Route("layout", name="layout")
-     */
-    public function FunctionName(): Response
-    {
-        return $this->render('filieres/layout.html.twig', []);
-    }
+
 }

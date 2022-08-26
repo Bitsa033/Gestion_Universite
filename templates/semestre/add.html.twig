@@ -7,100 +7,56 @@
 
         <!-- Main content -->
         <section class="content">
-		<br>
-            <div
-                class="container-fluid">
-                <!-- Info boxes -->
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3"></div>
-                    <!-- /.col -->
+            <br>
+            <div class="col-8 offset-1">
 
-                </div>
-                <!-- /.row -->
-                <div class="row">
-					<div class="col-6">
-						<div class="card">
-						 <h5 class="card-header">Liste des semestres disponibles | <a href="{{path('semestres_imprimer')}}">Imprimer</a> </h5>
-							<div class="card-body table-responsive p-0" style="height: 390px;">
-								<table class="table table-head-fixed text-nowrap">
+                <div class="card card-warning">
+                    <div class="card-header">
+                        <form action="{{ path('semestres_nb') }}" method="post">
+                            <div class="form-inline">
+                                <input type="number" name="nb_row" class="form-control" placeholder="Nbre de lignes">
+                                    <button type="submit" class="form-control">Ok</button>
+                                </div>
+                            </form>
 
-									<tbody>
-										<tr>
-											<th style="width:3%;">ID</th>
-											<th>Semestre</th>
-											
-										</tr>
-										{% for semestre in semestres %}
-											<tr>
-												<td>
-													{{ semestre.id }}</td>
-												<td>
-													Semestre {{ semestre.nom }}
-												</td>
-													
-											</tr>
-											{% else %}
-											<tr>
-												<td colspan="2">Liste vide !</td>
-											</tr>
-										{% endfor %}
+                        </div>
+                        <div class="card-header">
+                            <a href="{{ path('semestres_index') }}">Consulter la liste des semestres</a>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-warning table-responsive p-0" style="height: 250px;">
+                            <form action="" method="post">
+                                <table class="table table-head-fixed text-nowrap">
 
-									</tbody>
-								</table>
+                                    <tbody>
+                                        <tr>
+                                            <th>Semestre</th>
+                                        </tr>
 
-							</div>
-							<!-- /.card-body -->
-						</div>
-					</div>
-                    
-                    <div class="col-4">
-
-                        <div class="card">
-                            <div class="card-header">
-								<form action="{{ path('semestres_nb') }}" method="post">
-								<div class="form-inline">
-									<input type="number" name="nb_row" class="form-control" placeholder="Nbre de lignes">
-									<button type="submit" class="form-control">Ok</button>
-								</div>
-								</form>
-                                
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body table-responsive p-0" style="height: 250px;">
-                                <form action="" method="post">
-                                    <table class="table table-head-fixed text-nowrap">
-
-                                        <tbody>
-                                            <tr>
-                                                <th>Semestre</th>
-                                            </tr>
-
-											{% for nb_row in nb_rows %}
+                                        {% for nb_row in nb_rows %}
                                             <tr>
                                                 <th>
-                                                    <input type="number" name="semestre{{nb_row}}" class="form-control" placeholder="Numero du semestre Ex: 3" id="">
-												</th>
-                                            </tr>
-												
-											{% endfor %}
-												
-											
+                                                    <input type="number" name="semestre{{ nb_row }}" class="form-control" placeholder="Numero du semestre Ex: 3" id=""></th>
+                                                </tr>
+
+                                            {% endfor %}
+
+
                                         </tbody>
-										<!-- /.tbody -->
+                                        <!-- /.tbody -->
                                     </table>
-                                    
-                                <!-- /.form -->
 
-								</div>
-								<!-- /.card-body -->
-                                <div class="card-footer">
-                                    <button type="submit" name="enregistrer" class="btn btn-success form-control offset-1 col-10">Enregistrer</button>
-									<br><br>
-                                    </form>
+                                    <!-- /.form -->
+
                                 </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer" style="background:yellow">
+                                    <button type="submit" name="enregistrer" class="btn btn-warning form-control offset-1 col-10">Enregistrer</button>
+                                    <br>
+                                        <br></form>
+                                    </div>
                                 </div>
 
-                                
 
                             </div>
 
@@ -113,7 +69,7 @@
 
 
                 </div>
-					
+
                 <!-- /.row -->
             </div>
 
