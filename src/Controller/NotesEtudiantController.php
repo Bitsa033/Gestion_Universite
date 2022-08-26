@@ -33,7 +33,7 @@ class NotesEtudiantController extends AbstractController
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
         $sessionInsc=$session->get('inscription');
-        $noteE=$notesEtudiantRepository->notesEtudiant($user);
+        $noteE=$notesEtudiantRepository->notesEtudiant($user,$sessionInsc);
 
         
         return $this->render('notes_etudiant/index.html.twig', [

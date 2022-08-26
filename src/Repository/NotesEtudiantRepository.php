@@ -41,20 +41,22 @@ class NotesEtudiantRepository extends ServiceEntityRepository
         return $pdo;
     }
 
-    public function notesEtudiant(User $user)
+    public function notesEtudiant(User $user, Inscription $inscription)
     {
         $conn = $this->connection_to_databse();
         $sql = '
-        SELECT inscription_id as idi, etudiant.nom as etudiant, moyenne,
+        SELECT inscription_id as idi, etudiant.nom as etudiant, moyenne, semestre.nom as semestre,
         ue.id as idu, matiere.nom as matiere from notes_etudiant n
         INNER join inscription i on i.id= n.inscription_id
         inner join etudiant on etudiant.id=i.etudiant_id
+        inner join semestre on semestre.id = n.semestre_id
         inner join ue on ue.id=n.ue_id inner join matiere on 
-        matiere.id=ue.matiere_id WHERE i.id in(1) and n.user_id= :user
+        matiere.id=ue.matiere_id WHERE i.id = :inscription and n.user_id= :user
         ';
         $stmt = $conn->prepare($sql);
         $stmt->execute([
             'user'=>$user->getId(),
+            'inscription'=>$inscription->getId()
         ]);
 
         $resultat=$stmt->fetchAll();
