@@ -15,12 +15,12 @@
                     <div class="row">
                         <div class="col-md-9 offset-1">
                             <div class="card ">
-                                <h5 class="">Selectionnez la filiere, la classe, le semestre, et le cours ... <a href="{{path('notes_passerelleEtudiants')}}">Liste des notes</a> </h5>
+                                <h5 class="">Selectionnez la filiere, la classe, le semestre, et le cours ... <a href="{{path('notes_listeEtudiants')}}">Liste des notes</a> </h5>
 
                                 <div class="card-body table-responsive p-0" style="height: 500px;">
 
                                     <table class="table table-head-fixed text-nowrap">
-                                        <form action="{{ path('notes_choixFiliereNiveauxSemestreNc') }}" method="post">
+                                        <form action="{{ path('notes_filiere_et_classe') }}" method="post">
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <select name="filiere" id="" class="form-control">
@@ -77,7 +77,7 @@
                                             
                                             </tr>
                                                 
-                                                <form method="post" action="{{path('notes_actionpasserelleNotes')}}">
+                                                <form method="post" action="{{path('notes_actionNotes')}}">
                                                     {% for item in etudiantsMatieres %}
                                                         <tr>
                                                             <td>
