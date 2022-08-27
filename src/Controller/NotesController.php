@@ -56,46 +56,6 @@ class NotesController extends AbstractController
     }
 
     /**
-     * @Route("actionpasserelleNotes", name="actionpasserelleNotes")
-     */
-    public function actionpasserelleNotes(SessionInterface $session, InscriptionRepository $inscriptionRepository,
-    SemestreRepository $semestreRepository,UeRepository $ueRepository, ManagerRegistry $managerRegistry)
-    {
-        $user=$this->getUser();
-        $sessionF = $session->get('filiere', []);
-        $sessionN = $session->get('niveau', []);
-        $sessionSe = $session->get('semestre', []);
-        $sessionCours = $session->get('cours', []);
-        if (!empty($sessionF) && !empty($sessionN) && !empty($sessionSe)
-         && isset($_POST['enregistrer'])) {
-
-            $check_array = $_POST['inscription'];
-            foreach ($_POST['etudiant'] as $key => $value) {
-                if (in_array($_POST['inscription'][$key], $check_array)) {
-                    echo $_POST["inscription"][$key];
-                    echo $_POST["moyenne"][$key];
-                    echo '<br>';
-                    //echo $request->request->get("moyenne")[$key];
-                    //echo '<br>';
-                    $etudiant = $inscriptionRepository->find($_POST['etudiant'][$key]);
-                    $cours = $ueRepository->find($_POST["cours"][$key]);
-                    $moyenne = $_POST['moyenne'][$key];
-                    $data=array(
-                        'moyenne'=>$moyenne
-                    );
-                    $semestre = $semestreRepository->find($sessionSe);
-                    //dd($session);
-                    $notesEtudiant = new EcritureNote();
-                    $notesEtudiant->Enregistrer($data,$etudiant,$cours,$semestre,$user,$managerRegistry);
-                    
-                }
-            }
-            // $this->addFlash('success', 'Enregistrement éffectué!');
-        }
-        return $this->redirectToRoute('notes_s');
-    }
-
-    /**
      * on se dirige vers le template [passerelleEtudiants]
      * @Route("passerelleEtudiants", name="passerelleEtudiants")
      */
@@ -223,6 +183,7 @@ class NotesController extends AbstractController
     }
 
     /**
+     * formulaire pour enregistrer les notes
      * @Route("s", name="s")
      */
     public function Note( SessionInterface $session, InscriptionRepository $inscriptionRepository,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
@@ -259,6 +220,9 @@ class NotesController extends AbstractController
             $repsemestre=null;
         }
         $user = $this->getUser();
+
+        $em=$inscriptionRepository->etudiantsMatieres($repfiliere,$repclasse,$repsemestre);
+        //dd($em);
        
        //dd($sessionCours);
         return $this->render('notes_etudiant/notes.html.twig', [
@@ -268,7 +232,48 @@ class NotesController extends AbstractController
             'classes' =>$niveauRepository->findBy([
                 'user'=>$user]),
             'semestres' =>$semestreRepository->findAll(),
-            'etudiantsMatieres'=>$inscriptionRepository->etudiantsMatieres($repfiliere,$repclasse,$repsemestre)
+            'etudiantsMatieres'=>$em
         ]);
+    }
+
+    /**
+     * enregistrement des notes
+     * @Route("actionpasserelleNotes", name="actionpasserelleNotes")
+     */
+    public function actionpasserelleNotes(SessionInterface $session, InscriptionRepository $inscriptionRepository,
+    SemestreRepository $semestreRepository,UeRepository $ueRepository, ManagerRegistry $managerRegistry)
+    {
+        $user=$this->getUser();
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+        $sessionCours = $session->get('cours', []);
+        if (!empty($sessionF) && !empty($sessionN) && !empty($sessionSe)
+         && isset($_POST['enregistrer'])) {
+
+            $check_array = $_POST['inscription'];
+            foreach ($_POST['etudiant'] as $key => $value) {
+                if (in_array($_POST['inscription'][$key], $check_array)) {
+                    echo $_POST["inscription"][$key];
+                    echo $_POST["moyenne"][$key];
+                    echo '<br>';
+                    //echo $request->request->get("moyenne")[$key];
+                    //echo '<br>';
+                    $etudiant = $inscriptionRepository->find($_POST['etudiant'][$key]);
+                    $cours = $ueRepository->find($_POST["cours"][$key]);
+                    $moyenne = $_POST['moyenne'][$key];
+                    $data=array(
+                        'moyenne'=>$moyenne
+                    );
+                    $semestre = $semestreRepository->find($sessionSe);
+                    //dd($session);
+                    $notesEtudiant = new EcritureNote();
+                    $notesEtudiant->Enregistrer($data,$etudiant,$cours,$semestre,$user,$managerRegistry);
+                    
+                }
+            }
+            // $this->addFlash('success', 'Enregistrement éffectué!');
+        }
+        return $this->redirectToRoute('notes_s');
     }
 }
