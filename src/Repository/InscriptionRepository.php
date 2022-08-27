@@ -61,6 +61,16 @@ class InscriptionRepository extends ServiceEntityRepository
         
     // }
 
+    // SELECT inscription.id as idI,etudiant.nom as nomE,
+    // ue.id as idI,matiere.nom as nomM
+    // from inscription inner join etudiant 
+    // on etudiant.id=inscription.etudiant_id 
+    // inner join ue on ue.filiere_id = inscription.filiere_id
+    // inner JOIN matiere on matiere.id=ue.matiere_id
+    // inner join semestre on semestre.id=ue.semestre_id
+    // WHERE ue.semestre_id=1 and ue.id not in (SELECT n.ue_id
+    // FROM notes_etudiant n )
+
     public function etudiantsMatieres(Filiere $filiere,Niveau $niveau,Semestre $semestre)
     {
         $conn = new \PDO('mysql:host=localhost;dbname=gnu','root','');
