@@ -71,29 +71,35 @@ class InscriptionRepository extends ServiceEntityRepository
     // WHERE ue.semestre_id=1 and ue.id not in (SELECT n.ue_id
     // FROM notes_etudiant n )
 
-    public function etudiantsMatieres(Filiere $filiere,Niveau $niveau,Semestre $semestre)
+    public function etudiantsMatieres(Filiere $filiere=null,Niveau $niveau=null,Semestre $semestre=null)
     {
-        $conn = new \PDO('mysql:host=localhost;dbname=gnu','root','');
-        $sql = '
-        
-        SELECT inscription.id as idI,etudiant.nom as nomE, ue.id as idC,
-        matiere.nom as nomM from inscription inner join etudiant on etudiant.id
-        =inscription.etudiant_id inner join ue on ue.filiere_id = inscription.filiere_id
-        inner JOIN matiere on matiere.id=ue.matiere_id inner join semestre on semestre.id
-        =ue.semestre_id WHERE ue.semestre_id=:semestre and ue.filiere_id=:filiere and 
-        ue.niveau_id=:niveau and ue.id not in (SELECT n.ue_id
-        FROM notes_etudiant n )
-        ';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-            'filiere'=>$filiere->getId(),
-            'niveau'=>$niveau->getId(),
-            'semestre'=>$semestre->getId()
-        ]);
-        $tab=$stmt->fetchAll();
-        
-        // returns an array of arrays (i.e. a raw data set)
-        return $tab;
+        if ($filiere!=null && $niveau!=null && $semestre!=null) {
+            # code...
+            $conn = new \PDO('mysql:host=localhost;dbname=gnu','root','');
+            $sql = '
+            
+            SELECT inscription.id as idI,etudiant.nom as nomE, ue.id as idC,
+            matiere.nom as nomM from inscription inner join etudiant on etudiant.id
+            =inscription.etudiant_id inner join ue on ue.filiere_id = inscription.filiere_id
+            inner JOIN matiere on matiere.id=ue.matiere_id inner join semestre on semestre.id
+            =ue.semestre_id WHERE ue.semestre_id=:semestre and ue.filiere_id=:filiere and 
+            ue.niveau_id=:niveau and ue.id not in (SELECT n.ue_id
+            FROM notes_etudiant n )
+            ';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                'filiere'=>$filiere->getId(),
+                'niveau'=>$niveau->getId(),
+                'semestre'=>$semestre->getId()
+            ]);
+            $tab=$stmt->fetchAll();
+            
+            // returns an array of arrays (i.e. a raw data set)
+            return $tab;
+        }
+        else {
+            
+        }
 
         
     }
