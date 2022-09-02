@@ -57,10 +57,10 @@ class NotesController extends AbstractController
 
 
     // /**
-    //  * on traite le template [passerelleNotes]
-    //  * @Route("choixFiliereNiveauxSemestreN", name="choixFiliereNiveauxSemestreN")
+    //  * filiere_et_classe_ln pour la liste des notes individuelles
+    //  * @Route("filiere_et_classe_ln", name="filiere_et_classe_ln")
     //  */
-    // public function choixFiliereNiveauxSemestreN(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
+    // public function filiere_et_classe_ln(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
     // {
 
     //     if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe')) && !empty($request->request->get('semestre'))) {
@@ -83,7 +83,7 @@ class NotesController extends AbstractController
     //         //return $this->redirectToRoute('etudiants_i');
     //     }
 
-    //     return $this->redirectToRoute('notes_s');
+    //     return $this->redirectToRoute('notes_etudiant_index');
     // }
 
     // /**
