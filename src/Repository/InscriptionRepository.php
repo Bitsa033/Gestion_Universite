@@ -84,7 +84,7 @@ class InscriptionRepository extends ServiceEntityRepository
             inner JOIN matiere on matiere.id=ue.matiere_id inner join semestre on semestre.id
             =ue.semestre_id WHERE ue.semestre_id=:semestre and ue.filiere_id=:filiere and 
             ue.niveau_id=:niveau and ue.id not in (SELECT n.ue_id
-            FROM notes_etudiant n )
+            FROM notes_etudiant n WHERE n.semestre_id=:semestre ) and inscription.niveau_id=:niveau
             ';
             $stmt = $conn->prepare($sql);
             $stmt->execute([
