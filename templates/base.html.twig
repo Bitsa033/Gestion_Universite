@@ -58,7 +58,7 @@
                 </div>
             {% endfor %}
             {% for message in app.flashes('error') %}
-                <div class="alert alert-warning alert-dismissible container col-12" style="padding-left:20%;" >
+                <div class="alert alert-danger alert-dismissible container col-12" style="padding-left:20%;" >
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <h5><i class="icon fas fa-exclamation-triangle"></i> {{message}}</h5>
                 </div>

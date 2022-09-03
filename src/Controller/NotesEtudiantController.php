@@ -22,38 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class NotesEtudiantController extends AbstractController
 {
-    /**
-     * @Route("index", name="notes_etudiant_index", methods={"GET"})
-     */
-    public function index(EtudiantRepository $etudiantRepository,SessionInterface $session,InscriptionRepository $inscriptionRepository, NotesEtudiantRepository $notesEtudiantRepository,UeRepository $cours, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository ): Response
-    {
-        $user = $this->getUser();
-
-        $sessionF = $session->get('filiere', []);
-        $sessionN = $session->get('niveau', []);
-        $sessionSe = $session->get('semestre', []);
-        $sessionInsc=$session->get('inscription');
-        $noteE=$notesEtudiantRepository->notesEtudiant($user,$sessionInsc);
-
-        
-        return $this->render('notes_etudiant/index.html.twig', [
-            'coursSemestre'=>$cours->findBy([
-                'filiere'=>$sessionF,
-                'niveau'=>$sessionN,
-                'semestre'=>$sessionSe
-            ]),
-            'filiere'=>$filiereRepository->find($sessionF),
-            'classe'=>$niveauRepository->find($sessionN),
-            'semestre'=>$semestreRepository->find($sessionSe),
-            'inscription'=>$inscriptionRepository->find($sessionInsc),
-            'etudiant' => $etudiantRepository->findBy(['id'=>$sessionInsc]),
-            'matieres'=>$notesEtudiantRepository->findBy(
-                ['inscription'=>$sessionInsc,
-            ]),
-            'notes' => $noteE,
-        ]);
-    }
-
+    
     /**
      * @Route("show_{id}", name="notes_etudiant_show")
      */
