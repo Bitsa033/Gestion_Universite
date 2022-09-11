@@ -221,22 +221,13 @@ class NotesController extends AbstractController
         $sessionSe = $session->get('semestre', []);
         $sessionInsc=$session->get('inscription');
         $noteE=$notesEtudiantRepository->notesEtudiant($user,$sessionInsc);
-
         
         return $this->render('notes/index.html.twig', [
-            'coursSemestre'=>$cours->findBy([
-                'filiere'=>$sessionF,
-                'niveau'=>$sessionN,
-                'semestre'=>$sessionSe
-            ]),
             'filiere'=>$filiereRepository->find($sessionF),
             'classe'=>$niveauRepository->find($sessionN),
             'semestre'=>$semestreRepository->find($sessionSe),
             'inscription'=>$inscriptionRepository->find($sessionInsc),
             'etudiant' => $etudiantRepository->findBy(['id'=>$sessionInsc]),
-            'matieres'=>$notesEtudiantRepository->findBy(
-                ['inscription'=>$sessionInsc,
-            ]),
             'notes' => $noteE,
         ]);
     }
