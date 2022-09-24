@@ -129,19 +129,25 @@ class EcritureMatiere{
 
     function Enregistrer($tableauValaleurs, User $utilisateur, ManagerRegistry $enregistreur)
     {
-        foreach ($tableauValaleurs as $key => $value) {
-            $k[] = $key;
-            $v[] = $value;
-        }
-        $k = implode(",", $k);
-        $v = implode(",", $v);
+        // foreach ($tableauValaleurs as $key => $value) {
+        //     $k[] = $key;
+        //     $v[] = $value;
+        // }
+        // $k = implode(",", $k);
+        // $v = implode(",", $v);
         
         $object = new Matiere;
         $object->setUser($utilisateur);
         $object->setNom(ucfirst($tableauValaleurs['nom']));
         $object->setCreatedAt(new \datetime);
+
+        $ue=new Ue;
+        $ue->setFiliere($tableauValaleurs['filiere']);
+        $ue->setNiveau($tableauValaleurs['niveau']);
+        $ue->setMatiere($object);
+        $ue->setCreatedAt(new \DateTime);
         $manager = $enregistreur->getManager();
-        $manager->persist($object);
+        $manager->persist($ue);
         $manager->flush();
     }
 

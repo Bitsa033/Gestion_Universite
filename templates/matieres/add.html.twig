@@ -27,11 +27,31 @@
                                     <a href="{{ path('matieres_index') }}">Consulter la liste des matieres</a>
                                 </div>
                                 <!-- /.card-header -->
-                                <div class="card-body table-warning table-responsive p-0" style="height: 250px;">
+                                <div class="card-body table-warning table-responsive p-0" style="height: 350px;">
                                     <form action="" method="post">
                                         <table class="table table-head-fixed text-nowrap">
 
                                             <tbody>
+                                                <tr>
+                                                    <th> 
+                                                        Filiere
+                                                        <select type="text" name="filiere" class="form-control" id="">
+                                                            {% for row in filieres %}
+                                                                <option value="{{row.id}}">{{row.nom}}</option>
+                                                            {% else %}
+                                                                <option value=""></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        Classe
+                                                        <select type="text" name="niveau" class="form-control" id="">
+                                                            {% for row in niveaux %}
+                                                                <option value="{{row.id}}">{{row.nom}}</option>
+                                                            {% else %}
+                                                                <option value=""></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </th>
+                                                </tr>
                                                 <tr>
                                                     <th>Matiere</th>
                                                 </tr>
@@ -39,7 +59,7 @@
                                                 {% for nb_row in nb_rows %}
                                                     <tr>
                                                         <th>
-                                                            <input type="text" name="matiere{{ nb_row }}" class="form-control" placeholder="Nom de la matiere" id=""></th>
+                                                            <input type="text" name="matiere{{ nb_row }}" class="form-control" placeholder="matiere n°{{nb_row+1}}" id=""></th>
                                                         </tr>
 
                                                     {% endfor %}

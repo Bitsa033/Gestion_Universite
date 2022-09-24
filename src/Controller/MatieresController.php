@@ -63,7 +63,8 @@ class MatieresController extends AbstractController
     /**
      * @Route("add", name="add")
      */
-    public function ajout (SessionInterface $session, ManagerRegistry $end)
+    public function ajoutMatiere (SessionInterface $session,FiliereRepository $filiereRepository
+    ,NiveauRepository $niveauRepository ,ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -91,7 +92,9 @@ class MatieresController extends AbstractController
             
             for ($i = 0; $i < $sessionNb; $i++) {
                 $data = array(
-                    'nom' => $_POST['matiere' . $i]
+                    'nom' => $_POST['matiere' . $i],
+                    'filiere' => $filiereRepository->find($_POST['filiere']),
+                    'niveau' =>$niveauRepository->find($_POST['niveau'])
                 );
 
                 $enregistrerMatiere= new EcritureMatiere;
@@ -103,6 +106,8 @@ class MatieresController extends AbstractController
 
         return $this->render('matieres/add.html.twig', [
             'nb_rows' => $nb_row,
+            'filieres'=>$filiereRepository->findAll(),
+            'niveaux'=>$niveauRepository->findAll()
         ]);
     }
 

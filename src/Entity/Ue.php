@@ -35,7 +35,7 @@ class Ue
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Matiere::class, inversedBy="ues")
+     * @ORM\ManyToOne(targetEntity=Matiere::class, inversedBy="ues",cascade={"persist"})
      */
     private $matiere;
 
