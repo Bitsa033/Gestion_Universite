@@ -64,13 +64,14 @@ class MatieresController extends AbstractController
      * @Route("add", name="add")
      */
     public function ajoutMatiere (SessionInterface $session,FiliereRepository $filiereRepository
-    ,NiveauRepository $niveauRepository ,ManagerRegistry $end)
+    ,NiveauRepository $niveauRepository,SemestreRepository $semestreRepository ,ManagerRegistry $end)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         if (!$user) {
           return $this->redirectToRoute('app_login');
         }
+
         if (!empty($session->get('nb_row', []))) {
             $sessionLigne = $session->get('nb_row', []);
         }
@@ -94,7 +95,10 @@ class MatieresController extends AbstractController
                 $data = array(
                     'nom' => $_POST['matiere' . $i],
                     'filiere' => $filiereRepository->find($_POST['filiere']),
-                    'niveau' =>$niveauRepository->find($_POST['niveau'])
+                    'niveau' =>$niveauRepository->find($_POST['niveau']),
+                    'semestre'=>$semestreRepository->find($_POST['semestre']),
+                    'note'=>$_POST['note'  . $i],
+                    'code'=>$filiereRepository->find($_POST['filiere'])->getNom()." " .random_int(120,300)
                 );
 
                 $enregistrerMatiere= new EcritureMatiere;
@@ -107,7 +111,8 @@ class MatieresController extends AbstractController
         return $this->render('matieres/add.html.twig', [
             'nb_rows' => $nb_row,
             'filieres'=>$filiereRepository->findAll(),
-            'niveaux'=>$niveauRepository->findAll()
+            'niveaux'=>$niveauRepository->findAll(),
+            'semestres'=>$semestreRepository->findAll()
         ]);
     }
 

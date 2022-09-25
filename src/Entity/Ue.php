@@ -30,14 +30,24 @@ class Ue
     private $niveau;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Matiere::class, inversedBy="ues",cascade={"persist"})
      */
     private $matiere;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true,unique=true)
+     */
+    private $code;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $note;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=NotesEtudiant::class, mappedBy="Ue")
@@ -53,6 +63,7 @@ class Ue
      * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="ues")
      */
     private $semestre;
+    
 
     public function __construct()
     {
@@ -162,6 +173,30 @@ class Ue
     public function setSemestre(?Semestre $semestre): self
     {
         $this->semestre = $semestre;
+
+        return $this;
+    }
+
+    public function getNote(): ?float
+    {
+        return $this->note;
+    }
+
+    public function setNote(?float $note): self
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

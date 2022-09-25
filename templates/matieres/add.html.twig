@@ -16,7 +16,7 @@
                             <div class="card-header">
                                 <form action="{{ path('matieres_nb') }}" method="post">
                                     <div class="form-inline">
-                                        <input type="number" name="nb_row" class="form-control" placeholder="Nbre de matieres à créer">
+                                        <input type="number" name="nb_row" class="form-control" value="2" min='1'>
                                             <button type="submit" class="form-control">Ok</button>
                                         </div>
                                     </form>
@@ -32,8 +32,8 @@
                                         <table class="table table-head-fixed text-nowrap">
 
                                             <tbody>
-                                                <tr>
-                                                    <th> 
+                                                <tr class='row'>
+                                                    <th class='col'> 
                                                         Filiere
                                                         <select type="text" name="filiere" class="form-control" id="">
                                                             {% for row in filieres %}
@@ -42,9 +42,21 @@
                                                                 <option value=""></option>
                                                             {% endfor %}
                                                         </select>
+                                                    </th>
+                                                    <th class='col'>
                                                         Classe
                                                         <select type="text" name="niveau" class="form-control" id="">
                                                             {% for row in niveaux %}
+                                                                <option value="{{row.id}}">{{row.nom}}</option>
+                                                            {% else %}
+                                                                <option value=""></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </th>
+                                                    <th class='col'>
+                                                        Semestre
+                                                        <select type="text" name="semestre" class="form-control" id="">
+                                                            {% for row in semestres %}
                                                                 <option value="{{row.id}}">{{row.nom}}</option>
                                                             {% else %}
                                                                 <option value=""></option>
@@ -57,9 +69,13 @@
                                                 </tr>
 
                                                 {% for nb_row in nb_rows %}
-                                                    <tr>
-                                                        <th>
-                                                            <input type="text" name="matiere{{ nb_row }}" class="form-control" placeholder="matiere n°{{nb_row+1}}" id=""></th>
+                                                    <tr class='row'>
+                                                        <th class='col'>
+                                                            <input type="text" name="matiere{{ nb_row }}" class="form-control" placeholder="matiere n°{{nb_row+1}}" id="">
+                                                        </th>
+                                                        <th class='col'>
+                                                            <input type="text" name="note{{ nb_row }}" class="form-control" placeholder="note n°{{nb_row+1}} Ex: 20" id="">
+                                                        </th>
                                                         </tr>
 
                                                     {% endfor %}

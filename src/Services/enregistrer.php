@@ -144,7 +144,11 @@ class EcritureMatiere{
         $ue=new Ue;
         $ue->setFiliere($tableauValaleurs['filiere']);
         $ue->setNiveau($tableauValaleurs['niveau']);
+        $ue->setSemestre($tableauValaleurs['semestre']);
+        $ue->setUser($utilisateur);
         $ue->setMatiere($object);
+        $ue->setNote($tableauValaleurs['note']);
+        $ue->setCode($tableauValaleurs['code']);
         $ue->setCreatedAt(new \DateTime);
         $manager = $enregistreur->getManager();
         $manager->persist($ue);

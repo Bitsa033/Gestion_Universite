@@ -15,7 +15,11 @@
                     <div class="row">
                         <div class="col-md-9 offset-1">
                             <div class="card ">
-                                <h5 class="">Selectionnez la filiere, la classe, le semestre, et le cours ... <a href="{{path('notes_listeEtudiants')}}">Liste des notes</a> </h5>
+                                <h5 class="">Selectionnez la filiere, la classe, le semestre, et le cours ... 
+                                    {% if app.session.get('filiere') and app.session.get('niveau') %}
+                                        <a href="{{path('notes_listeEtudiants')}}">Liste des notes</a>  
+                                    {% endif %}
+                                </h5>
 
                                 <div class="card-body table-responsive p-0" style="height: 500px;">
 

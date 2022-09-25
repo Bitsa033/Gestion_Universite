@@ -90,7 +90,7 @@
                             <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                         </div>
                         <div class="info">
-                            <a href="#" class="d-block">Alexander Pierce</a>
+                            <a href="#" class="d-block">{{app.user.email}}</a>
                         </div>
                     </div>
 
@@ -134,15 +134,15 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{path("matieres_add")}}" class="nav-link">
-                                            <i class="fa fa-book-open"></i>
-                                            <p>Matieres</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a href="{{path("semestres_add")}}" class="nav-link">
                                             <i class="fa fa-clock"></i>
                                             <p>Semestres</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{path("matieres_add")}}" class="nav-link">
+                                            <i class="fa fa-book-open"></i>
+                                            <p>Matieres</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">

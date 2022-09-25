@@ -58,7 +58,11 @@
                                     <!--/row -->
                                 </form>
                             </div>
-                            <div class="card-header"><a href="{{path('matieres_liste_Ues')}}"> liste des cours</a></div>
+                            <div class="card-header">
+                                {% if app.session.get('filiere') and app.session.get('niveau') and app.session.get('semestre') %}
+                                    <a href="{{path('matieres_liste_Ues')}}"> liste des cours</a>
+                                {% endif %}
+                            </div>
                            
                             <div class="card-body table-warning table-responsive p-0" style="height: 400px;">
                                 {% if app.session.get('filiere') and app.session.get('niveau') and app.session.get('semestre') %}
