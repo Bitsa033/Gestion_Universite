@@ -63,6 +63,11 @@ class Ue
      * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="ues")
      */
     private $semestre;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $credit;
     
 
     public function __construct()
@@ -197,6 +202,18 @@ class Ue
     public function setCode(?string $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getCredit(): ?float
+    {
+        return $this->credit;
+    }
+
+    public function setCredit(float $credit): self
+    {
+        $this->credit = $credit;
 
         return $this;
     }
