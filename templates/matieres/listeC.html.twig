@@ -26,11 +26,15 @@
 
 							<tr>
 								<th>Matiere</th>
+								<th>Note</th>
+								<th>Credit</th>
 							</tr>
 							{% for cours in listeCours %}
 								<tr>
 									
 									<td>{{cours.matiere.nom}}</td>
+									<td>{{cours.note}}</td>
+									<td>{{cours.note/20}}</td>
 								</tr>
 							{% else %}
 								<tr>
