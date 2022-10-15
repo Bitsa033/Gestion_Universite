@@ -148,6 +148,7 @@ class EcritureMatiere{
         $ue->setUser($utilisateur);
         $ue->setMatiere($object);
         $ue->setNote($tableauValaleurs['note']);
+        $ue->setCredit($tableauValaleurs['note']/20);
         $ue->setCode($tableauValaleurs['code']);
         $ue->setCreatedAt(new \DateTime);
         $manager = $enregistreur->getManager();
