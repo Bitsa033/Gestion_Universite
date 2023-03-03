@@ -190,6 +190,7 @@ class EcritureCours{
         $object->setNiveau($classe);
         $object->setFiliere($filiere);
         $object->setSemestre($semestre);
+        $object->setCredit(4);
         $object->setCreatedAt(new \datetime);
         $manager = $enregistreur->getManager();
         $manager->persist($object);
