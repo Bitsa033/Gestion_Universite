@@ -2,10 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Niveau;
-use App\Repository\NiveauRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Enregistrement\EcritureClasse;
+use App\Application\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +36,7 @@ class NiveauxController extends AbstractController
     /**
      * @Route("index", name="index")
      */
-    public function index( NiveauRepository $niveauRepository)
+    public function index( Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -48,12 +45,12 @@ class NiveauxController extends AbstractController
         }
         
         //on compte le nbre de classes presentes dans la base de donnees
-        $nbniveaux = $niveauRepository->count([
+        $nbniveaux = $application->repo_niveau->count([
             'user' => $user
         ]);
 
         return $this->render('niveaux/index.html.twig', [
-            'niveaux' => $niveauRepository->findBy([
+            'niveaux' => $application->repo_niveau->findBy([
                 'user'=>$user]),
         ]);
     }
@@ -61,7 +58,7 @@ class NiveauxController extends AbstractController
     /**
      * @Route("add", name="add")
      */
-    public function classe(SessionInterface $session, NiveauRepository $niveauRepository, Request $request, ManagerRegistry $end)
+    public function classe(SessionInterface $session, Application $application, Request $request)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -70,7 +67,7 @@ class NiveauxController extends AbstractController
         }
         
         //on compte le nbre de classes presentes dans la base de donnees
-        $nbniveaux = $niveauRepository->count([
+        $nbniveaux = $application->repo_niveau->count([
             'user' => $user
         ]);
 
@@ -78,7 +75,7 @@ class NiveauxController extends AbstractController
         if (empty($nbniveaux)) {
 
             for ($i = 1; $i < 7; $i++) {
-                $niveau = new Niveau();
+                $niveau = new $application->table_niveau;
                 $niveau->setUser($user);
                 if ($i == 1) {
                     $niveau->setNom(ucfirst("Niveau 1 - Bts"));
@@ -95,9 +92,8 @@ class NiveauxController extends AbstractController
                 }
 
                 $niveau->setCreatedAt(new \DateTime());
-                $manager = $end->getManager();
-                $manager->persist($niveau);
-                $manager->flush();
+                $application->db->persist($niveau);
+                $application->db->flush();
             }
 
             return $this->redirectToRoute('niveaux_add');
@@ -127,8 +123,7 @@ class NiveauxController extends AbstractController
                     'nom' => $_POST['classe' . $i]
                 );
 
-                $ecritureClasse=new EcritureClasse;
-                $ecritureClasse->Enregistrer($data,$user,$end);
+                $application->new_classe($data,$user);
             }
 
             $this->addFlash('success', 'Enregistrement éffectué!');
@@ -142,7 +137,7 @@ class NiveauxController extends AbstractController
     /**
      * @Route("suppression/{id}", name="suppression")
      */
-    public function suppression(Niveau $niveau, ManagerRegistry $end)
+    public function suppression(Application $application,$id)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -151,9 +146,8 @@ class NiveauxController extends AbstractController
         }
 
         //sinon on supprime les données
-        $manager = $end->getManager();
-        $manager->remove($niveau);
-        $manager->flush();
+        $application->db->remove($id);
+        $application->db->flush();
 
         return $this->redirectToRoute('niveaux_add');
     }
@@ -161,7 +155,7 @@ class NiveauxController extends AbstractController
     /**
      * @Route("imprimer", name="imprimer")
      */
-    public function imprimer(NiveauRepository $niveauRepository)
+    public function imprimer(Application $application)
     {
         $pdfOptions= new Options();
         $pdfOptions->set('defaultFont','Arial');
@@ -170,7 +164,7 @@ class NiveauxController extends AbstractController
 
         $html=$this->renderView('niveaux/imprimer.html.twig',[
             'titre'=>'Liste des classes',
-            'classes'=>$niveauRepository->findAll()
+            'classes'=>$application->repo_niveau->findAll()
         ]);
 
         $dompdf->loadHtml($html);

@@ -2,17 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Semestre;
-use App\Repository\SemestreRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
-use Enregistrement\EcritureSemestre;
+use App\Application\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -41,7 +36,7 @@ class SemestreController extends AbstractController
     /**
      * @Route("index", name="index", methods={"GET","POST"})
      */
-    public function index(SemestreRepository $semestreRepository): Response
+    public function index(Application $application): Response
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -49,19 +44,19 @@ class SemestreController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         //on compte le nbre de smestres presents dans la base de donnees
-        $nbsemestre = $semestreRepository->count([
+        $nbsemestre = $application->repo_semestre->count([
             
         ]);
         
         return $this->render('semestre/index.html.twig', [
-            'semestres' => $semestreRepository->findAll(),
+            'semestres' => $application->repo_semestre->findAll(),
         ]);
     }
 
     /**
      * @Route("add", name="add", methods={"GET","POST"})
      */
-    public function semestre(SessionInterface $session,SemestreRepository $semestreRepository, ManagerRegistry $end): Response
+    public function semestre(SessionInterface $session,Application $application): Response
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -69,7 +64,7 @@ class SemestreController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         //on compte le nbre de smestres presents dans la base de donnees
-        $nbsemestre = $semestreRepository->count([
+        $nbsemestre = $application->repo_semestre->count([
             
         ]);
 
@@ -77,13 +72,12 @@ class SemestreController extends AbstractController
         if (empty($nbsemestre)) {
 
             for ($i = 1; $i < 4; $i++) {
-                $semestre = new Semestre();
+                $semestre = new $application->table_semestre;
                 $semestre->setUser($user);
                 $semestre->setNom($i);
                 $semestre->setCreatedAt(new \DateTime());
-                $manager = $end->getManager();
-                $manager->persist($semestre);
-                $manager->flush();
+                $application->db->persist($semestre);
+                $application->db->flush();
             }
 
         }
@@ -112,8 +106,7 @@ class SemestreController extends AbstractController
                     'nom' => $_POST['semestre'.$i]
                 );
 
-                $ecritureSemestre=new EcritureSemestre;
-                $ecritureSemestre->Enregistrer($data,$user,$end);
+                $application->new_semestre($data,$user);
             }
             
             $this->addFlash('success', 'Enregistrement éffectué!');
@@ -125,13 +118,13 @@ class SemestreController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="delete", methods={"POST"})
+     * @Route("semestre_{id}", name="delete", methods={"POST"})
      */
-    public function delete(Request $request, Semestre $semestre, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Application $application,$id): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$semestre->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($semestre);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$id->getId(), $request->request->get('_token'))) {
+            $application->db->remove($id);
+            $application->db->flush();
         }
 
         return $this->redirectToRoute('semestre_index', [], Response::HTTP_SEE_OTHER);
@@ -142,7 +135,7 @@ class SemestreController extends AbstractController
     /**
      * @Route("imprimer", name="imprimer")
      */
-    public function imprimer(SemestreRepository $semestreRepository)
+    public function imprimer(Application $application)
     {
         $pdfOptions= new Options();
         $pdfOptions->set('defaultFont','Arial');
@@ -151,7 +144,7 @@ class SemestreController extends AbstractController
 
         $html=$this->renderView('semestre/imprimer.html.twig',[
             'titre'=>'Liste des semestres',
-            'semestres'=>$semestreRepository->findAll()
+            'semestres'=>$application->repo_semestre->findAll()
         ]);
 
         $dompdf->loadHtml($html);

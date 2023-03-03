@@ -1,18 +1,13 @@
 <?php
 
 namespace App\Controller;
-
-use App\Repository\FiliereRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Enregistrement\EcritureFiliere;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Symfony\Component\HttpFoundation\Response;
+use App\Application\Application;
 
 /**
  * @Route("filieres_", name="filieres_")
@@ -40,7 +35,7 @@ class FilieresController extends AbstractController
     /**
      * @Route("index", name="index")
      */
-    public function index(FiliereRepository $filiereRepository)
+    public function index(Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -49,7 +44,7 @@ class FilieresController extends AbstractController
         }
 
         return $this->render('filieres/index.html.twig', [
-            'filieres' => $filiereRepository->findBy([
+            'filieres' => $application->repo_filiere->findBy([
                 'user'=>$user]),
         ]);
     }
@@ -57,7 +52,7 @@ class FilieresController extends AbstractController
     /**
      * @Route("add", name="add")
      */
-    public function add(SessionInterface $session, ManagerRegistry $end)
+    public function add(SessionInterface $session,Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -90,8 +85,9 @@ class FilieresController extends AbstractController
                     'sigle'    => $_POST['abbr' . $i]
                 );
 
-                $ecritureFiliere=new EcritureFiliere;
-                $ecritureFiliere->Enregistrer($data,$user,$end);
+                $application->new_filiere($data,$user);
+
+                
             }
             $this->addFlash('success', 'Enregistrement éffectué!');
 
@@ -105,7 +101,7 @@ class FilieresController extends AbstractController
     /**
      * @Route("imprimer", name="imprimer")
      */
-    public function imprimer(FiliereRepository $filiereRepository)
+    public function imprimer(Application $application)
     {
         
         $pdfOptions= new Options();
@@ -115,7 +111,7 @@ class FilieresController extends AbstractController
 
         $html=$this->renderView('filieres/imprimer.html.twig',[
             'titre'=>'Liste des filières',
-            'filieres'=>$filiereRepository->findAll()
+            'filieres'=>$application->repo_filiere->findAll()
         ]);
 
         $dompdf->loadHtml($html);
