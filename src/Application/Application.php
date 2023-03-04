@@ -82,6 +82,13 @@ class Application
 
     }
 
+    public function insert_to_db($entity){
+       
+        $this->db->persist($entity);
+        $this->db->flush();
+    }
+
+
     public function multiple_row($array)
     {
         foreach ($array as $key => $value) {
@@ -94,7 +101,7 @@ class Application
         return $array;
     }
 
-    public function new_filiere($data, User $user)
+    public function new_classe($data, User $user)
     {
         $this->multiple_row($data);
         
@@ -107,7 +114,7 @@ class Application
         $this->db->flush();
     }
 
-    public function new_classe($data, User $user)
+    public function new_niveau($data, User $user)
     {
         $this->multiple_row($data);
         
@@ -131,187 +138,78 @@ class Application
         $this->db->flush();
     }
 
-
-
-}
-
-class EcritureMatiere{
-
-    function Enregistrer($tableauValaleurs, User $utilisateur, ManagerRegistry $enregistreur)
+    public function new_matiere($data, User $user)
     {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
-        
-        $object = new Matiere;
-        $object->setUser($utilisateur);
-        $object->setNom(ucfirst($tableauValaleurs['nom']));
-        $object->setCreatedAt(new \datetime);
+        $matiere = new $this->table_matiere;
+        $matiere->setUser($user);
+        $matiere->setNom(ucfirst($data['nom']));
+        $matiere->setCreatedAt(new \datetime);
 
-        $ue=new Ue;
-        $ue->setFiliere($tableauValaleurs['filiere']);
-        $ue->setNiveau($tableauValaleurs['niveau']);
-        $ue->setSemestre($tableauValaleurs['semestre']);
-        $ue->setUser($utilisateur);
-        $ue->setMatiere($object);
-        $ue->setNote($tableauValaleurs['note']);
-        $ue->setCredit($tableauValaleurs['note']/20);
-        $ue->setCode($tableauValaleurs['code']);
+        $ue=new $this->table_ue;
+        $ue->setFiliere($data['filiere']);
+        $ue->setNiveau($data['niveau']);
+        $ue->setSemestre($data['semestre']);
+        $ue->setUser($user);
+        $ue->setMatiere($matiere);
+        $ue->setNote($data['note']);
+        $ue->setCredit($data['note']/20);
+        $ue->setCode($data['code']);
         $ue->setCreatedAt(new \DateTime);
-        $manager = $enregistreur->getManager();
-        $manager->persist($ue);
-        $manager->flush();
+        $this->db->persist($ue);
+        $this->db->flush();
     }
 
-    function MettreAJour($tableauValaleurs,Matiere $object, ManagerRegistry $enregistreur)
+    public function affecter_matiere($data)
     {
-        foreach ($tableauValaleurs as $key => $value) {
-            $k[] = $key;
-            $v[] = $value;
-        }
-        $k = implode(",", $k);
-        $v = implode(",", $v);
-        
-        $object->setNom(ucfirst($tableauValaleurs['nom']));
-        $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->flush();
-    }
-    
-}
-
-class EcritureCours{
-
-    function Enregistrer(Matiere $matiere,Niveau $classe,Filiere $filiere,Semestre $semestre, User $utilisateur, ManagerRegistry $enregistreur)
-    {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
-        
-        $object = new Ue;
-        $object->setUser($utilisateur);
-        $object->setMatiere($matiere);
-        $object->setNiveau($classe);
-        $object->setFiliere($filiere);
-        $object->setSemestre($semestre);
+        $object = new $this->table_ue;
+        $object->setUser($data['user']);
+        $object->setMatiere($data['matiere']);
+        $object->setNiveau($data['niveau']);
+        $object->setFiliere($data['filiere']);
+        $object->setSemestre($data['semestre']);
         $object->setCredit(4);
         $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->persist($object);
-        $manager->flush();
+        $this->db->persist($object);
+        $this->db->flush();
     }
 
-    function MettreAJour(Ue $object,Matiere $matiere,Niveau $classe,Filiere $filiere,Semestre $semestre, ManagerRegistry $enregistreur)
-    {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
-        $object->setMatiere($matiere);
-        $object->setNiveau($classe);
-        $object->setFiliere($filiere);
-        $object->setSemestre($semestre);
-        $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->flush();
-    }
-    
-}
-
-class EcritureEtudiant{
-
-    function persistance(ManagerRegistry $managerRegistry ,$Entity){
-       
-        $manager=$managerRegistry->getManager();
-        $manager->persist($Entity);
-        $manager->flush();
-    }
-
-    function Enregistrer($tableauValaleurs, User $utilisateur)
+    public function new_etudiant($data)
     {
 
         //on enregistre
-        $object = new Etudiant;
-        $object->setUser($utilisateur);
-        $object->setNom(ucfirst($tableauValaleurs['nom']));
-        $object->setPrenom(ucfirst($tableauValaleurs['prenom']));
-        $object->setSexe(ucfirst($tableauValaleurs['sexe']));
-        $object->setCreatedAt(new \datetime);
+        $etudiant = $this->table_etudiant;
+        $etudiant->setUser($data['user']);
+        $etudiant->setNom(ucfirst($data['nom']));
+        $etudiant->setPrenom(ucfirst($data['prenom']));
+        $etudiant->setSexe(ucfirst($data['sexe']));
+        $etudiant->setCreatedAt(new \datetime);
         //on inscrit
-        $inscription=new Inscription();
-        $inscription->setEtudiant($object);
-        $inscription->setFiliere($tableauValaleurs['filiere']);
-        $inscription->setNiveau($tableauValaleurs['niveau']);
+        $inscription=new $this->table_inscription;
+        $inscription->setEtudiant($etudiant);
+        $inscription->setFiliere($data['filiere']);
+        $inscription->setNiveau($data['niveau']);
         $inscription->setCreatedAt(new \datetime);
         //on retourne les resultats
-        return $inscription;
+        $this->db->persist($inscription);
+        $this->db->flush();
 
     }
 
-    function MettreAJour($tableauValaleurs,Etudiant $object, ManagerRegistry $enregistreur)
+    public function affecter_etudiant($data)
     {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
         
-        $object->setNom(ucfirst($tableauValaleurs['nom']));
-        $object->setPrenom(ucfirst($tableauValaleurs['prenom']));
-        $object->setSexe(ucfirst($tableauValaleurs['sexe']));
+        $object = new $this->table_inscription;
+        $object->setUser($this->repo_user->find($data['user']));
+        $object->setEtudiant($this->repo_etudiant->find($data['etudiant']));
+        $object->setNiveau($this->repo_niveau->find($data['niveau']));
+        $object->setFiliere($this->repo_filiere->find($data['filiere']));
         $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->flush();
-    }
-    
-}
-
-class EcritureInscription{
-
-    function Enregistrer(Etudiant $etudiant,Niveau $classe,Filiere $filiere, User $utilisateur, ManagerRegistry $enregistreur)
-    {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
-        
-        $object = new Inscription;
-        $object->setUser($utilisateur);
-        $object->setEtudiant($etudiant);
-        $object->setNiveau($classe);
-        $object->setFiliere($filiere);
-        $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->persist($object);
-        $manager->flush();
+        $this->db->persist($object);
+        $this->db->flush();
     }
 
-    function MettreAJour(Inscription $object,Niveau $classe,Filiere $filiere, ManagerRegistry $enregistreur)
-    {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
-        $object->setNiveau($classe);
-        $object->setFiliere($filiere);
-        $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->flush();
-    }
-    
+
+
 }
 
 class EcritureNote{

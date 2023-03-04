@@ -2,16 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Ue;
-use App\Entity\Matiere;
-use App\Repository\UeRepository;
-use App\Repository\NiveauRepository;
-use App\Repository\FiliereRepository;
-use App\Repository\MatiereRepository;
-use App\Repository\SemestreRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Enregistrement\EcritureCours;
-use Enregistrement\EcritureMatiere;
+use App\Application\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +37,7 @@ class MatieresController extends AbstractController
      /**
      * @Route("index", name="index")
      */
-    public function index (MatiereRepository $matiereRepository)
+    public function index (Application $application)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -55,7 +46,7 @@ class MatieresController extends AbstractController
         }
 
         return $this->render('matieres/index.html.twig', [
-            'matieres'=>$matiereRepository->findBy([
+            'matieres'=>$application->repo_matiere->findBy([
                 'user'=>$user]),
         ]);
     }
@@ -63,8 +54,7 @@ class MatieresController extends AbstractController
     /**
      * @Route("add", name="add")
      */
-    public function ajoutMatiere (SessionInterface $session,FiliereRepository $filiereRepository
-    ,NiveauRepository $niveauRepository,SemestreRepository $semestreRepository ,ManagerRegistry $end)
+    public function ajoutMatiere (SessionInterface $session,Application $application)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -94,15 +84,14 @@ class MatieresController extends AbstractController
             for ($i = 0; $i < $sessionNb; $i++) {
                 $data = array(
                     'nom' => $_POST['matiere' . $i],
-                    'filiere' => $filiereRepository->find($_POST['filiere']),
-                    'niveau' =>$niveauRepository->find($_POST['niveau']),
-                    'semestre'=>$semestreRepository->find($_POST['semestre']),
+                    'filiere' => $application->repo_filiere->find($_POST['filiere']),
+                    'niveau' =>$application->repo_niveau->find($_POST['niveau']),
+                    'semestre'=>$application->repo_semestre->find($_POST['semestre']),
                     'note'=>$_POST['note'  . $i],
-                    'code'=>$filiereRepository->find($_POST['filiere'])->getNom()." " .random_int(120,300)
+                    'code'=>$application->repo_filiere->find($_POST['filiere'])->getNom()." " .random_int(120,300)
                 );
 
-                $enregistrerMatiere= new EcritureMatiere;
-                $enregistrerMatiere->Enregistrer($data,$user,$end);
+                $application->new_matiere($data,$user);
             }
 
             $this->addFlash('success', 'Enregistrement éffectué!');
@@ -110,16 +99,16 @@ class MatieresController extends AbstractController
 
         return $this->render('matieres/add.html.twig', [
             'nb_rows' => $nb_row,
-            'filieres'=>$filiereRepository->findAll(),
-            'niveaux'=>$niveauRepository->findAll(),
-            'semestres'=>$semestreRepository->findAll()
+            'filieres'=>$application->repo_filiere->findAll(),
+            'niveaux'=>$application->repo_niveau->findAll(),
+            'semestres'=>$application->repo_semestre->findAll()
         ]);
     }
 
     /**
      * @Route("suppression_{id}", name="suppression")
      */
-    public function suppression (Matiere $matiere, ManagerRegistry $end)
+    public function suppression (Application $application, $id)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -127,9 +116,8 @@ class MatieresController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
         //sinon on supprime les données
-        $manager = $end->getManager();
-        $manager->remove($matiere);
-        $manager->flush();
+        $application->db->remove($id);
+        $application->db->flush();
 
         return $this->redirectToRoute('matieres_ajoutEt_liste');
         
@@ -138,7 +126,7 @@ class MatieresController extends AbstractController
     /**
      * @Route("imprimer", name="imprimer")
      */
-    public function imprimer(MatiereRepository $matiereRepository)
+    public function imprimer(Application $application)
     {
         $pdfOptions= new Options();
         $pdfOptions->set('defaultFont','Arial');
@@ -147,7 +135,7 @@ class MatieresController extends AbstractController
 
         $html=$this->renderView('matieres/imprimer.html.twig',[
             'titre'=>'Liste des matières',
-            'matieres'=>$matiereRepository->findAll()
+            'matieres'=>$application->repo_matiere->findAll()
         ]);
 
         $dompdf->loadHtml($html);
@@ -168,7 +156,7 @@ class MatieresController extends AbstractController
     /**
      * @Route("passerelleCours", name="passerelleCours")
      */
-    function passerelleCours(SessionInterface $session,Request $request,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository){
+    function passerelleCours(SessionInterface $session,Request $request,Application $application){
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         if (!$user) {
@@ -176,9 +164,9 @@ class MatieresController extends AbstractController
         }
 
         if (!empty($request->request->get('filiere')) && !empty($request->request->get('niveau')) && !empty($request->request->get('semestre'))) {
-            $filiere=$filiereRepository->find($request->request->get("filiere"));
-            $semestre=$semestreRepository->find($request->request->get('semestre'));
-            $niveau=$niveauRepository->find($request->request->get('niveau'));
+            $filiere=$application->repo_filiere->find($request->request->get("filiere"));
+            $semestre=$application->repo_semestre->find($request->request->get('semestre'));
+            $niveau=$application->repo_niveau->find($request->request->get('niveau'));
             $get_filiere=$session->get('filiere',[]);
             $get_semestre=$session->get('semestre',[]);
             $get_niveau=$session->get('niveau',[]);
@@ -194,10 +182,10 @@ class MatieresController extends AbstractController
             return $this->redirectToRoute('matieres_t');
         }
         return $this->render('matieres/passerelleCours.html.twig',[
-            'filieres'=>$filiereRepository->findBy([
+            'filieres'=>$application->repo_filiere->findBy([
                 'user'=>$user]),
-            'semestres'=>$semestreRepository->findAll(),
-            'niveaux'=>$niveauRepository->findBy([
+            'semestres'=>$application->repo_semestre->findAll(),
+            'niveaux'=>$application->repo_niveau->findBy([
                 'user'=>$user]),
         ]);
     }
@@ -205,23 +193,23 @@ class MatieresController extends AbstractController
     /**
      * @Route("choixFiliereNiveauxSemestreC", name="choixFiliereNiveauxSemestreC")
      */
-    public function choixFiliereNiveauxSemestreC(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
+    public function choixFiliereNiveauxSemestreC(Request $request, SessionInterface $session, Application $application)
     {
 
         if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe')) && !empty($request->request->get('semestre'))) {
-            $filiere = $filiereRepository->find($request->request->get("filiere"));
-            $classe = $niveauRepository->find($request->request->get('classe'));
-            $semestre=$semestreRepository->find($request->request->get('semestre'));
+            $filiere = $application->repo_filiere->find($request->request->get("filiere"));
+            $niveau = $application->repo_niveau->find($request->request->get('classe'));
+            $semestre=$application->repo_semestre->find($request->request->get('semestre'));
             $get_filiere = $session->get('filiere', []);
             $get_classe = $session->get('niveau', []);
             $get_semestre = $session->get('semestre', []);
             if (!empty($get_filiere) && !empty($get_classe) && !empty($get_semestre)) {
                 $session->set('filiere', $filiere);
-                $session->set('niveau', $classe);
+                $session->set('niveau', $niveau);
                 $session->set('semestre', $semestre);
             }
             $session->set('filiere', $filiere);
-            $session->set('niveau', $classe);
+            $session->set('niveau', $niveau);
             $session->set('semestre', $semestre);
             //dd($session);
 
@@ -234,7 +222,7 @@ class MatieresController extends AbstractController
     /**
      * @Route("t", name="t")
      */
-    public function enregistrerCours(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, MatiereRepository $matiereRepository,SemestreRepository $semestreRepository): Response
+    public function enregistrerCours(Request $request, SessionInterface $session,Application $application): Response
     {
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
         $sessionF = $session->get('filiere', []);
@@ -242,7 +230,7 @@ class MatieresController extends AbstractController
         $sessionSe = $session->get('semestre', []);
         $user = $this->getUser();
         if (!empty($sessionF)) {
-            $filiere = $filiereRepository->find($sessionF);
+            $filiere = $application->repo_filiere->find($sessionF);
             
         }
         else {
@@ -250,15 +238,15 @@ class MatieresController extends AbstractController
         }
         //classe
         if (!empty($sessionN)) {
-            $classe = $niveauRepository->find($sessionN);
+            $niveau = $application->repo_niveau->find($sessionN);
             
         }
         else {
-            $classe=null;
+            $niveau=null;
         }
         //semestre
         if (!empty($sessionSe)) {
-            $semestre = $semestreRepository->find($sessionSe);
+            $semestre = $application->repo_semestre->find($sessionSe);
             
         }
         else {
@@ -270,13 +258,20 @@ class MatieresController extends AbstractController
             foreach ($request->request->get("matiereName") as $key => $value) {
                 if (in_array($request->request->get("matiereName")[$key], $check_array)) {
                     
-                    $matiere = $matiereRepository->find($request->request->get("matiereName")[$key]);
-                    $semestre = $semestreRepository->find($sessionSe);
-                    $filiere = $filiereRepository->find($sessionF);
-                    $classe = $niveauRepository->find($sessionN);
+                    $matiere = $application->repo_matiere->find($request->request->get("matiereName")[$key]);
+                    $semestre = $application->repo_semestre->find($sessionSe);
+                    $filiere = $application->repo_filiere->find($sessionF);
+                    $niveau = $application->repo_niveau->find($sessionN);
 
-                    $enregistrerCours=new EcritureCours;
-                    $enregistrerCours->Enregistrer($matiere,$classe,$filiere,$semestre,$user,$managerRegistry);
+                    $data=([
+                        'user'=>$application->repo_user->find($user),
+                        'matiere'=>$matiere,
+                        'niveau'=>$niveau,
+                        'filiiere'=>$filiere,
+                        'semestre'=>$semestre
+                    ]);
+
+                    $application->affecter_matiere($data);
                     
                 }
             }
@@ -285,19 +280,19 @@ class MatieresController extends AbstractController
         }
 
         return $this->render('matieres/cours.html.twig', [
-            'mr' =>  $matiereRepository->matierePasEncoreUe($user,$filiere,$classe,$semestre),
-            'filieres'=>$filiereRepository->findBy([
+            'mr' =>  $application->repo_matiere->matierePasEncoreUe($user,$filiere,$niveau,$semestre),
+            'filieres'=>$application->repo_filiere->findBy([
                 'user'=>$user]),
-            'classes' =>$niveauRepository->findBy([
+            'classes' =>$application->repo_niveau->findBy([
                 'user'=>$user]),
-            'semestres' =>$semestreRepository->findAll()
+            'semestres' =>$application->repo_semestre->findAll()
         ]);
     }
 
     /**
      * @Route("liste_Ues", name="liste_Ues")
      */
-    public function liste_Ues (SessionInterface $session,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository,SemestreRepository $semestreRepository,UeRepository $ueRepository)
+    public function liste_Ues (SessionInterface $session,Application $application)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -311,16 +306,16 @@ class MatieresController extends AbstractController
         $sessionSe=$session->get('semestre',[]);
        
         return $this->render('matieres/listeC.html.twig', [
-            'listeCours'=>$ueRepository->findBy([
+            'listeCours'=>$application->repo_ue->findBy([
                 'user'=>$user,
                 'niveau'=>$sessionN,
                 'filiere'=>$sessionF,
                 'semestre'=>$sessionSe
 
             ]),
-            'filiere'=>$filiereRepository->find($sessionF),
-            'classe'=>$niveauRepository->find($sessionN),
-            'semestre'=>$semestreRepository->find($sessionSe),
+            'filiere'=>$application->repo_filiere->find($sessionF),
+            'classe'=>$application->repo_niveau->find($sessionN),
+            'semestre'=>$application->repo_semestre->find($sessionSe),
             
         ]);
     }
@@ -328,7 +323,7 @@ class MatieresController extends AbstractController
     /**
      * @Route("ue_suppression/{id}", name="ue_suppression")
      */
-    public function suppression_ue(Ue $ue, ManagerRegistry $end)
+    public function suppression_ue(Application $application,$id)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -336,9 +331,8 @@ class MatieresController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
         //sinon on supprime les données
-        $manager = $end->getManager();
-        $manager->remove($ue);
-        $manager->flush();
+        $application->db->remove($id);
+        $application->db->flush();
 
         return $this->redirectToRoute('matieres_liste_Ues');
         

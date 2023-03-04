@@ -2,17 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Etudiant;
-use App\Entity\Filiere;
-use App\Entity\User;
-use App\Repository\NiveauRepository;
-use App\Repository\FiliereRepository;
-use App\Repository\EtudiantRepository;
-use App\Repository\InscriptionRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\Persistence\ManagerRegistry;
-use Enregistrement\EcritureEtudiant;
-use Enregistrement\EcritureInscription;
+use App\Application\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,20 +21,18 @@ class EtudiantsController extends AbstractController
     /**
      * @Route("form_ajout", name="form_ajout")
      */
-    public function form_ajout(FiliereRepository $filiereRepository,NiveauRepository $niveauRepository): Response
+    public function form_ajout(Application $application): Response
     {
         return $this->render('etudiants/ajout.html.twig', [
-            'filieres'=>$filiereRepository->findAll(),
-            'classes'=>$niveauRepository->findAll()
+            'filieres'=>$application->repo_filiere->findAll(),
+            'classes'=>$application->repo_niveau->findAll()
         ]);
     }
 
     /**
      * @Route("ajout", name="ajout")
      */
-    public function ajout(Request $request, ManagerRegistry $end_e,FiliereRepository $filiereRepository,
-        NiveauRepository $niveauRepository,EtudiantRepository $etudiantRepository
-    )
+    public function ajout(Request $request, Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -53,11 +41,12 @@ class EtudiantsController extends AbstractController
         $nom=$request->request->get('nom');
         $prenom=$request->request->get('prenom');
         $sexe=$request->request->get('sexe');
-        $filiere=$filiereRepository->find($request->request->get('filiere'));
-        $niveau=$niveauRepository->find($request->request->get('niveau'));
+        $filiere=$application->repo_filiere->find($request->request->get('filiere'));
+        $niveau=$application->repo_niveau->find($request->request->get('niveau'));
         if( !empty($nom) && !empty($prenom) && !empty($sexe) && !empty($filiere) && !empty($niveau)) {
             
             $data=array(
+                'user'=>$application->repo_user->find($user),
                 'nom'=>$nom,
                 'prenom'=>$prenom,
                 'sexe'=>$sexe,
@@ -65,10 +54,8 @@ class EtudiantsController extends AbstractController
                 'niveau'=>$niveau
             );
             //on enregistre l'etudiant
-            $enregistrerEtudiant = new EcritureEtudiant;
-            $stockable=$enregistrerEtudiant->Enregistrer($data,$user);
             try {
-                $enregistrerEtudiant->persistance($end_e,$stockable);
+                $application->new_etudiant($data);
                 $this->addFlash('success', 'Enregistrement éffectué!');
                 
             } catch (\Throwable $th) {
@@ -84,7 +71,7 @@ class EtudiantsController extends AbstractController
     /**
      * @Route("liste", name="liste")
      */
-    public function liste(EtudiantRepository $etudiantRepository)
+    public function liste(Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -94,7 +81,7 @@ class EtudiantsController extends AbstractController
         }
 
         return $this->render('etudiants/etudiants.html.twig', [
-            'etudiants' => $etudiantRepository->etudiantsListe($user),
+            'etudiants' => $application->repo_etudiant->etudiantsListe($user),
         ]);
     }
 
@@ -102,7 +89,7 @@ class EtudiantsController extends AbstractController
      * On supprime un etudiant par son id
      * @Route("suppression/{id}", name="suppression")
      */
-    public function suppression(Etudiant $etudiant, ManagerRegistry $end)
+    public function suppression(Application $application,$id)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -113,9 +100,8 @@ class EtudiantsController extends AbstractController
         }
 
         //sinon on supprime les données
-        $manager = $end->getManager();
-        $manager->remove($etudiant);
-        $manager->flush();
+        $application->db->remove($id);
+        $application->db->flush();
 
         return $this->redirectToRoute('etudiants_liste');
     }
@@ -123,12 +109,12 @@ class EtudiantsController extends AbstractController
     /**
      * @Route("choixFiliereNiveauxI", name="choixFiliereNiveauxI")
      */
-    public function choixFiliereNiveauxI(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository)
+    public function choixFiliereNiveauxI(Request $request, SessionInterface $session, Application $application)
     {
 
         if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe'))) {
-            $filiere = $filiereRepository->find($request->request->get("filiere"));
-            $classe = $niveauRepository->find($request->request->get('classe'));
+            $filiere = $application->repo_filiere->find($request->request->get("filiere"));
+            $classe = $application->repo_niveau->find($request->request->get('classe'));
             $get_filiere = $session->get('filiere', []);
             $get_classe = $session->get('niveau', []);
             if (!empty($get_filiere)) {
@@ -148,7 +134,7 @@ class EtudiantsController extends AbstractController
     /**
      * @Route("i", name="i")
      */
-    public function i(ManagerRegistry $managerRegistry, Request $request, SessionInterface $session, EtudiantRepository $etudiantRepository, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository): Response
+    public function i(Request $request, SessionInterface $session, Application $application): Response
     {
         $user=$this->getUser();
         if (!$user) {
@@ -166,21 +152,27 @@ class EtudiantsController extends AbstractController
                     //dd($request->request->get("inscription")[$key]);
                     // echo $request->request->get("matiereName")[$key];
                     // echo '<br>';
-                    $etudiant = $etudiantRepository->find($request->request->get("etudiantName")[$key]);
-                    $filiere = $filiereRepository->find($sessionF);
-                    $classe = $niveauRepository->find($sessionN);
+                    $etudiant = $application->repo_etudiant->find($request->request->get("etudiantName")[$key]);
+                    $filiere = $application->repo_filiere->find($sessionF);
+                    $classe = $application->repo_niveau->find($sessionN);
+
+                    $data=array([
+                        'user'=>$user,
+                        'etudiant'=>$request->request->get("etudiantName")[$key],
+                        'niveau'=>$sessionN,
+                        'filiere'=>$sessionF,
+                    ]);
                     
-                    $inscrireEtudiant= new EcritureInscription;
-                    $inscrireEtudiant->Enregistrer($etudiant,$classe,$filiere,$user,$managerRegistry);
+                    $application->affecter_etudiant($data);
                 }
             }
         }
 
         return $this->render('etudiants/inscription.html.twig', [
-            'mr' =>  $etudiantRepository->etudiantsPasInscris($user),
-            'filieres' =>$filiereRepository->findBy([
+            'mr' =>  $application->repo_etudiant->etudiantsPasInscris($user),
+            'filieres' =>$application->repo_filiere->findBy([
                 'user'=>$user]),
-            'classes'  =>$niveauRepository->findBy([
+            'classes'  =>$application->repo_niveau->findBy([
                 'user'=>$user]),
         ]);
     }
@@ -188,13 +180,13 @@ class EtudiantsController extends AbstractController
     /**
      * @Route("menuImprimer", name="menuImprimer")
      */
-    public function menuImprimer(Request $request,SessionInterface $session,FiliereRepository $filiereRepository, NiveauRepository $niveauRepository): Response
+    public function menuImprimer(Request $request,SessionInterface $session,Application $application): Response
     {
         if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe'))) {
             $filiere=$request->request->get('filiere');
             $classe=$request->request->get('classe');
-            $repoFiliere=$filiereRepository->find($filiere);
-            $repoClasse=$niveauRepository->find($classe);
+            $repoFiliere=$application->repo_filiere->find($filiere);
+            $repoClasse=$application->repo_niveau->find($classe);
             // $nomFiliere=$repoFiliere->getNom();
             // $nomClasse=$repoClasse->getNom();
 
@@ -207,8 +199,8 @@ class EtudiantsController extends AbstractController
         }
         
         return $this->render('etudiants/index.html.twig', [
-            'filieres'=>$filiereRepository->findAll(),
-            'classes'=>$niveauRepository->findAll(),
+            'filieres'=>$application->repo_filiere->findAll(),
+            'classes'=>$application->repo_niveau->findAll(),
 
         ]);
     }
@@ -216,7 +208,7 @@ class EtudiantsController extends AbstractController
     /**
      * @Route("imprimer", name="imprimer")
      */
-    public function imprimer(SessionInterface $session,InscriptionRepository $inscriptionRepository): Response
+    public function imprimer(SessionInterface $session,Application $application): Response
     {
         $filiere=$session->get('filiere',[]);
         $classe=$session->get('niveau',[]);
@@ -233,7 +225,7 @@ class EtudiantsController extends AbstractController
         $dompdf=new Dompdf($pdfOptions);
 
         $html=$this->renderView('etudiants/imprimer.html.twig',[
-            'etudiants'=>$inscriptionRepository->findBy([
+            'etudiants'=>$application->repo_inscription->findBy([
                 'filiere'=>$filiere,
                 'niveau'=>$classe, 
             ]),

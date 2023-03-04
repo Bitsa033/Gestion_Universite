@@ -85,7 +85,7 @@ class FilieresController extends AbstractController
                     'sigle'    => $_POST['abbr' . $i]
                 );
 
-                $application->new_filiere($data,$user);
+                $application->new_classe($data,$user);
 
                 
             }

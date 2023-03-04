@@ -123,7 +123,7 @@ class NiveauxController extends AbstractController
                     'nom' => $_POST['classe' . $i]
                 );
 
-                $application->new_classe($data,$user);
+                $application->new_niveau($data,$user);
             }
 
             $this->addFlash('success', 'Enregistrement éffectué!');
