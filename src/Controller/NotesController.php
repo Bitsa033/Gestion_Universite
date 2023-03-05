@@ -1,83 +1,19 @@
 <?php
 
 namespace App\Controller;
-
-use App\Repository\EtudiantRepository;
-use App\Repository\FiliereRepository;
-use App\Repository\InscriptionRepository;
+use App\Application\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\NiveauRepository;
-use App\Repository\NotesEtudiantRepository;
-use App\Repository\SemestreRepository;
-use App\Repository\UeRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Enregistrement\EcritureNote;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-/**
- * @Route("notes_", name="notes_")
- */
 class NotesController extends AbstractController
 {
-
-    // /**
-    //  * @Route("sessionCours", name="sessionCours")
-    //  */
-    // public function sessionCours(SessionInterface $session, Request $request,UeRepository $ueRepository)
-    // {
-    //     if (!empty($request->request->get('cours'))) {
-    //         $cours = $ueRepository->find($request->request->get('cours'));
-    //         $get_cours = $session->get('cours', []);
-    //         if (!empty($get_cours)) {
-    //             $session->set('cours', $cours);
-    //         }
-    //         $session->set('cours', $cours);
-    //         //dd($session);
-    //     }
-    //    return $this->redirectToRoute('notes_s');
-    // }
-
-    /**
-     *  filiere_et_classe pour le formulaire des notes [formulaire_notes]
-     * @Route("filiere_et_classe", name="filiere_et_classe")
-     */
-    public function filiere_et_classe(Request $request, SessionInterface $session, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository,SemestreRepository $semestreRepository)
-    {
-        $get_filiere = $session->get('filiere', []);
-        $get_classe = $session->get('niveau', []);
-        $get_semestre = $session->get('semestre', []);
-
-        $filiere_post=$request->request->get('filiere');
-        $niveau_post=$request->request->get('classe');
-        $semestre_post=$request->request->get('semestre');
-
-        if (!empty($filiere_post) && !empty($niveau_post) && !empty($semestre_post)) {
-            $filiere = $filiereRepository->find($filiere_post);
-            $classe = $niveauRepository->find($niveau_post);
-            $semestre=$semestreRepository->find($semestre_post);
-            
-            if (!empty($get_filiere) && !empty($get_classe) && !empty($get_semestre)) {
-                $session->set('filiere', $filiere);
-                $session->set('niveau', $classe);
-                $session->set('semestre', $semestre);
-            }
-            $session->set('filiere', $filiere);
-            $session->set('niveau', $classe);
-            $session->set('semestre', $semestre);
-            
-        }
-
-        return $this->redirectToRoute('notes_formulaire_notes');
-    }
-
     /**
      * formulaire pour enregistrer les notes
-     * @Route("formulaire_notes", name="formulaire_notes")
+     * @Route("notes_new_form", name="notes_new_form")
      */
-    public function Note( SessionInterface $session, InscriptionRepository $inscriptionRepository,FiliereRepository $filiereRepository,NiveauRepository $niveauRepository, SemestreRepository $semestreRepository): Response
+    public function notes_new_form( SessionInterface $session,Application $application): Response
     {
         $user=$this->getUser();
         if (!$user) {
@@ -87,51 +23,27 @@ class NotesController extends AbstractController
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
-        if (!empty($sessionF)) {
-            $repfiliere=$filiereRepository->find($sessionF);
-            
-        }
-        else {
-            $repfiliere=null;
-        }
-        //classe
-        if (!empty($sessionN)) {
-            $repclasse=$niveauRepository->find($sessionN);
-            
-        }
-        else {
-            $repclasse=null;
-        }
-        //semestre
-        if (!empty($sessionSe)) {
-            $repsemestre=$semestreRepository->find($sessionSe);
-            
-        }
-        else {
-            $repsemestre=null;
-        }
 
-        $em=$inscriptionRepository->etudiantsMatieres($repfiliere,$repclasse,$repsemestre);
+        $em=$application->repo_inscription->etudiantsMatieres($sessionF,$sessionN,$sessionSe);
         //dd($em);
        
        //dd($sessionCours);
         return $this->render('notes/notes.html.twig', [
             
-            'filieres'=>$filiereRepository->findBy([
+            'filieres'=>$application->repo_filiere->findBy([
                 'user'=>$user]),
-            'classes' =>$niveauRepository->findBy([
+            'niveaux' =>$application->repo_niveau->findBy([
                 'user'=>$user]),
-            'semestres' =>$semestreRepository->findAll(),
-            'etudiantsMatieres'=>$em
+            'semestres' =>$application->repo_semestre->findAll(),
+            'etudiants_et_matieres'=>$em
         ]);
     }
 
     /**
-     * enregistrement des notes
-     * @Route("actionNotes", name="actionNotes")
+     * on enregistre les notes dans la bd
+     * @Route("notes_new_save", name="notes_new_save")
      */
-    public function actionNotes(SessionInterface $session, InscriptionRepository $inscriptionRepository,
-    SemestreRepository $semestreRepository,UeRepository $ueRepository, ManagerRegistry $managerRegistry)
+    public function notes_new_save(SessionInterface $session, Application $application)
     {
         $user=$this->getUser();
         $sessionF = $session->get('filiere', []);
@@ -144,75 +56,52 @@ class NotesController extends AbstractController
             $check_array = $_POST['inscription'];
             foreach ($_POST['etudiant'] as $key => $value) {
                 if (in_array($_POST['inscription'][$key], $check_array)) {
-                    $inscr= $_POST["inscription"][$key];
-                    $moy= $_POST["moyenne"][$key];
-                    //echo '<br>';
-                    //echo $request->request->get("moyenne")[$key];
-                    //echo '<br>';
-                    $etudiant = $inscriptionRepository->find($_POST['etudiant'][$key]);
-                    $cours = $ueRepository->find($_POST["cours"][$key]);
-                    $moyenne = $_POST['moyenne'][$key];
+
                     $data=array(
-                        'moyenne'=>$moyenne
+                        'user'=>$user,
+                        'inscription'=>$_POST['etudiant'][$key],
+                        'cours'=>$_POST["cours"][$key],
+                        'note'=>$_POST['moyenne'][$key],
+                        'semestre'=>$sessionSe
                     );
-                    $semestre = $semestreRepository->find($sessionSe);
-                    //dd($session);
-                    $notesEtudiant = new EcritureNote();
-                    $notesEtudiant->Enregistrer($data,$etudiant,$cours,$semestre,$user,$managerRegistry);
+                    
+                    $application->new_note($data);
                     
                 }
             }
-            // $this->addFlash('success', 'Enregistrement éffectué!');
+            $this->addFlash('success', 'Enregistrement éffectué!');
         }
-        return $this->redirectToRoute('notes_formulaire_notes');
+        return $this->redirectToRoute('notes_new_form');
     }
 
     /**
-     * on se dirige vers le template [listeEtudiants]
-     * @Route("listeEtudiants", name="listeEtudiants")
+     * pour consulter les notes de l'étudiant on le choisi
+     * on se dirige vers le template [notes_etudiant]
+     * @Route("notes_etudiant", name="notes_etudiant")
      */
-    function listeEtudiants(FiliereRepository $filiereRepository,NiveauRepository $niveauRepository,SemestreRepository $semestreRepository, InscriptionRepository $inscriptionRepository){
+    function notes_etudiant(Application $application){
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
         if (!$user) {
           return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('notes/listeEtudiants.html.twig',[
-            'filieres'=>$filiereRepository->findBy([
+        return $this->render('notes/notes_etudiant.html.twig',[
+            'filieres'=>$application->repo_filiere->findBy([
                 'user'=>$user]),
-            'semestres'=>$semestreRepository->findAll(),
-            'classes'=>$niveauRepository->findBy([
+            'semestres'=>$application->repo_semestre->findAll(),
+            'niveaux'=>$application->repo_niveau->findBy([
                 'user'=>$user]),
             
-            'inscriptions'=>$inscriptionRepository->findAll(),
+            'inscriptions'=>$application->repo_inscription->findAll(),
         ]);
     }
 
     /**
-     * on traite le template [notes/listeEtudiants]
-     * @Route("actionListeEtudiants", name="actionListeEtudiants")
+     * on affiche les notes d'un seul etudiant selon le semestre
+     * @Route("releve_de_notes", name="releve_de_notes", methods={"GET"})
      */
-    public function actionListeEtudiants(SessionInterface $session, InscriptionRepository $inscriptionRepository)
-    {
-
-        if (isset($_POST['enregistrer'])) {
-            $inscription = $inscriptionRepository->find($_POST['etudiantId']);
-            $get_inscription= $session->get('inscription', []);
-            if (!empty($get_inscription)) {
-                $session->set('inscription', $inscription);
-            }
-            $session->set('inscription', $inscription);
-            
-        }
-
-        return $this->redirectToRoute('notes_notes_index');
-    }
-
-    /**
-     * @Route("index", name="notes_index", methods={"GET"})
-     */
-    public function index(EtudiantRepository $etudiantRepository,SessionInterface $session,InscriptionRepository $inscriptionRepository, NotesEtudiantRepository $notesEtudiantRepository,UeRepository $cours, FiliereRepository $filiereRepository, NiveauRepository $niveauRepository, SemestreRepository $semestreRepository ): Response
+    public function releve_de_notes(SessionInterface $session,Application $application): Response
     {
         $user = $this->getUser();
 
@@ -220,14 +109,36 @@ class NotesController extends AbstractController
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
         $sessionInsc=$session->get('inscription');
-        $noteE=$notesEtudiantRepository->notesEtudiant($user,$sessionInsc);
+        $noteE=$application->repo_note->notesEtudiant($user,$sessionInsc);
         
-        return $this->render('notes/index.html.twig', [
-            'filiere'=>$filiereRepository->find($sessionF),
-            'classe'=>$niveauRepository->find($sessionN),
-            'semestre'=>$semestreRepository->find($sessionSe),
-            'inscription'=>$inscriptionRepository->find($sessionInsc),
-            'etudiant' => $etudiantRepository->findBy(['id'=>$sessionInsc]),
+        return $this->render('notes/releve_de_notes.html.twig', [
+            'filiere'=>$application->repo_filiere->find($sessionF),
+            'niveau'=>$application->repo_niveau->find($sessionN),
+            'semestre'=>$application->repo_semestre->find($sessionSe),
+            'inscription'=>$application->repo_inscription->find($sessionInsc),
+            'notes' => $noteE,
+        ]);
+    }
+
+    /**
+     * on affiche les notes de tous les etudiants de la filiere selon le semestre
+     * @Route("notes_liste", name="notes_liste", methods={"GET"})
+     */
+    public function notes_liste(SessionInterface $session,Application $application): Response
+    {
+        $user = $this->getUser();
+
+        $sessionF = $session->get('filiere', []);
+        $sessionN = $session->get('niveau', []);
+        $sessionSe = $session->get('semestre', []);
+        $sessionInsc=$session->get('inscription');
+        $noteE=$application->repo_note->notesEtudiant($user,$sessionInsc);
+        
+        return $this->render('notes/notes_liste.html.twig', [
+            'filiere'=>$application->repo_filiere->find($sessionF),
+            'niveau'=>$application->repo_niveau->find($sessionN),
+            'semestre'=>$application->repo_semestre->find($sessionSe),
+            'inscription'=>$application->repo_inscription->find($sessionInsc),
             'notes' => $noteE,
         ]);
     }

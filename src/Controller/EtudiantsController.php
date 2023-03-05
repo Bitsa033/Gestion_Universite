@@ -152,10 +152,6 @@ class EtudiantsController extends AbstractController
                     //dd($request->request->get("inscription")[$key]);
                     // echo $request->request->get("matiereName")[$key];
                     // echo '<br>';
-                    $etudiant = $application->repo_etudiant->find($request->request->get("etudiantName")[$key]);
-                    $filiere = $application->repo_filiere->find($sessionF);
-                    $classe = $application->repo_niveau->find($sessionN);
-
                     $data=array([
                         'user'=>$user,
                         'etudiant'=>$request->request->get("etudiantName")[$key],

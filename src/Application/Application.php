@@ -80,6 +80,12 @@ class Application
 
         $this->db=$managerRegistry->getManager();
 
+        //on cherche l'utilisateur connecté
+        // $user= $this->getUser();
+        // if (!$user) {
+        //   return $this->redirectToRoute('app_login');
+        // }
+
     }
 
     public function insert_to_db($entity){
@@ -146,9 +152,9 @@ class Application
         $matiere->setCreatedAt(new \datetime);
 
         $ue=new $this->table_ue;
-        $ue->setFiliere($data['filiere']);
-        $ue->setNiveau($data['niveau']);
-        $ue->setSemestre($data['semestre']);
+        $ue->setFiliere($this->repo_filiere->find($data['filiere']));
+        $ue->setNiveau($this->repo_niveau->find($data['niveau']));
+        $ue->setSemestre($this->repo_semestre->find($data['semestre']));
         $ue->setUser($user);
         $ue->setMatiere($matiere);
         $ue->setNote($data['note']);
@@ -163,10 +169,10 @@ class Application
     {
         $object = new $this->table_ue;
         $object->setUser($data['user']);
-        $object->setMatiere($data['matiere']);
-        $object->setNiveau($data['niveau']);
-        $object->setFiliere($data['filiere']);
-        $object->setSemestre($data['semestre']);
+        $object->setMatiere($this->repo_matiere->find($data['matiere']));
+        $object->setFiliere($this->repo_filiere->find($data['filiere']));
+        $object->setNiveau($this->repo_niveau->find($data['niveau']));
+        $object->setSemestre($this->repo_semestre->find($data['semestre']));
         $object->setCredit(4);
         $object->setCreatedAt(new \datetime);
         $this->db->persist($object);
@@ -186,8 +192,8 @@ class Application
         //on inscrit
         $inscription=new $this->table_inscription;
         $inscription->setEtudiant($etudiant);
-        $inscription->setFiliere($data['filiere']);
-        $inscription->setNiveau($data['niveau']);
+        $inscription->setFiliere($this->repo_filiere->find($data['filiere']));
+        $inscription->setNiveau($this->repo_niveau->find($data['niveau']));
         $inscription->setCreatedAt(new \datetime);
         //on retourne les resultats
         $this->db->persist($inscription);
@@ -208,46 +214,18 @@ class Application
         $this->db->flush();
     }
 
-
-
-}
-
-class EcritureNote{
-
-    function Enregistrer($tableauValeurs,Inscription $inscription,Ue $cours,Semestre $semestre, User $utilisateur, ManagerRegistry $enregistreur)
+    function new_note($data)
     {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
-        
-        $object = new NotesEtudiant;
-        $object->setUser($utilisateur);
-        $object->setInscription($inscription);
-        $object->setUe($cours);
-        $object->setSemestre($semestre);
-        $object->setMoyenne($tableauValeurs['moyenne']);
+        $object = new $this->table_note;
+        $object->setUser($this->repo_user->find($data['user']));
+        $object->setInscription($this->repo_inscription->find($data['inscription']));
+        $object->setUe($this->repo_ue->find($data['cours']));
+        $object->setSemestre($this->repo_semestre->find($data['semestre']));
+        $object->setMoyenne($data['note']);
         $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->persist($object);
-        $manager->flush();
+        $this->db->persist($object);
+        $this->db->flush();
     }
 
-    function MettreAJour($tableauValaleurs,NotesEtudiant $object, ManagerRegistry $enregistreur)
-    {
-        // foreach ($tableauValaleurs as $key => $value) {
-        //     $k[] = $key;
-        //     $v[] = $value;
-        // }
-        // $k = implode(",", $k);
-        // $v = implode(",", $v);
-        
-        $object->setMoyenne(ucfirst($tableauValaleurs['moyenne']));
-        $object->setCreatedAt(new \datetime);
-        $manager = $enregistreur->getManager();
-        $manager->flush();
-    }
-    
+
 }

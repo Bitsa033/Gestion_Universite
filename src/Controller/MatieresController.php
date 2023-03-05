@@ -12,15 +12,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-/**
- * @Route("matieres_",name="matieres_")
- */
 class MatieresController extends AbstractController
 {
     /**
-     * @Route("nb", name="nb")
+     * @Route("matieres_nb", name="matieres_nb")
      */
-    public function nb(SessionInterface $session, Request $request)
+    public function matieres_nb(SessionInterface $session, Request $request)
     {
         if (!empty($request->request->get('nb_row'))) {
             $nb_of_row = $request->request->get('nb_row');
@@ -31,11 +28,11 @@ class MatieresController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //   dd($session);
         }
-        return $this->redirectToRoute('matieres_add');
+        return $this->redirectToRoute('matieres_new_form');
     }
 
      /**
-     * @Route("index", name="index")
+     * @Route("matieres_liste", name="matieres_liste")
      */
     public function index (Application $application)
     {
@@ -52,9 +49,9 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * @Route("add", name="add")
+     * @Route("matieres_new_form", name="matieres_new_form")
      */
-    public function ajoutMatiere (SessionInterface $session,Application $application)
+    public function matieres_new_form (SessionInterface $session,Application $application)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -68,12 +65,11 @@ class MatieresController extends AbstractController
         else{
             $sessionLigne = 1;
         }
-        $sessionNb = $sessionLigne;
         //on cree un tableau
         $nb_row = array(1);
-        if (!empty( $sessionNb)) {
+        if (!empty( $sessionLigne)) {
            
-            for ($i = 0; $i < $sessionNb; $i++) {
+            for ($i = 0; $i < $sessionLigne; $i++) {
                 $nb_row[$i] = $i;
             }
         }
@@ -81,12 +77,12 @@ class MatieresController extends AbstractController
         //si on clic sur le boutton enregistrer et que les champs du post ne sont pas vide
         if (isset($_POST['enregistrer'])) {
             
-            for ($i = 0; $i < $sessionNb; $i++) {
+            for ($i = 0; $i < $sessionLigne; $i++) {
                 $data = array(
                     'nom' => $_POST['matiere' . $i],
-                    'filiere' => $application->repo_filiere->find($_POST['filiere']),
-                    'niveau' =>$application->repo_niveau->find($_POST['niveau']),
-                    'semestre'=>$application->repo_semestre->find($_POST['semestre']),
+                    'filiere' => $_POST['filiere'],
+                    'niveau' =>$_POST['niveau'],
+                    'semestre'=>$_POST['semestre'],
                     'note'=>$_POST['note'  . $i],
                     'code'=>$application->repo_filiere->find($_POST['filiere'])->getNom()." " .random_int(120,300)
                 );
@@ -106,9 +102,9 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * @Route("suppression_{id}", name="suppression")
+     * @Route("matieres_delete/{id}", name="matieres_delete")
      */
-    public function suppression (Application $application, $id)
+    public function matieres_delete (Application $application, $id)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -119,14 +115,14 @@ class MatieresController extends AbstractController
         $application->db->remove($id);
         $application->db->flush();
 
-        return $this->redirectToRoute('matieres_ajoutEt_liste');
+        return $this->redirectToRoute('matieres_liste');
         
     }
 
     /**
-     * @Route("imprimer", name="imprimer")
+     * @Route("matieres_imprimer", name="matieres_imprimer")
      */
-    public function imprimer(Application $application)
+    public function matieres_imprimer(Application $application)
     {
         $pdfOptions= new Options();
         $pdfOptions->set('defaultFont','Arial');
@@ -154,121 +150,30 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * @Route("passerelleCours", name="passerelleCours")
+     * on crée des cours pour la filiere,le niveau et le semestre
+     * ici,on choisi la matiere qui est deja dans la base données
+     * @Route("matieres_transert_form", name="matieres_transert_form")
      */
-    function passerelleCours(SessionInterface $session,Request $request,Application $application){
-        //on cherche l'utilisateur connecté
-        $user= $this->getUser();
-        if (!$user) {
-          return $this->redirectToRoute('app_login');
-        }
-
-        if (!empty($request->request->get('filiere')) && !empty($request->request->get('niveau')) && !empty($request->request->get('semestre'))) {
-            $filiere=$application->repo_filiere->find($request->request->get("filiere"));
-            $semestre=$application->repo_semestre->find($request->request->get('semestre'));
-            $niveau=$application->repo_niveau->find($request->request->get('niveau'));
-            $get_filiere=$session->get('filiere',[]);
-            $get_semestre=$session->get('semestre',[]);
-            $get_niveau=$session->get('niveau',[]);
-            if (!empty($get_filiere) && !empty($get_semestre) && !empty($get_niveau)) {
-              $session->set('filiere',$filiere);
-              $session->set('semestre',$semestre);
-              $session->set('niveau',$niveau);
-            }
-            //dd($session);
-            $session->set('filiere',$filiere);
-            $session->set('semestre',$semestre);
-            $session->set('niveau',$niveau);
-            return $this->redirectToRoute('matieres_t');
-        }
-        return $this->render('matieres/passerelleCours.html.twig',[
-            'filieres'=>$application->repo_filiere->findBy([
-                'user'=>$user]),
-            'semestres'=>$application->repo_semestre->findAll(),
-            'niveaux'=>$application->repo_niveau->findBy([
-                'user'=>$user]),
-        ]);
-    }
-
-    /**
-     * @Route("choixFiliereNiveauxSemestreC", name="choixFiliereNiveauxSemestreC")
-     */
-    public function choixFiliereNiveauxSemestreC(Request $request, SessionInterface $session, Application $application)
-    {
-
-        if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe')) && !empty($request->request->get('semestre'))) {
-            $filiere = $application->repo_filiere->find($request->request->get("filiere"));
-            $niveau = $application->repo_niveau->find($request->request->get('classe'));
-            $semestre=$application->repo_semestre->find($request->request->get('semestre'));
-            $get_filiere = $session->get('filiere', []);
-            $get_classe = $session->get('niveau', []);
-            $get_semestre = $session->get('semestre', []);
-            if (!empty($get_filiere) && !empty($get_classe) && !empty($get_semestre)) {
-                $session->set('filiere', $filiere);
-                $session->set('niveau', $niveau);
-                $session->set('semestre', $semestre);
-            }
-            $session->set('filiere', $filiere);
-            $session->set('niveau', $niveau);
-            $session->set('semestre', $semestre);
-            //dd($session);
-
-            //return $this->redirectToRoute('etudiants_i');
-        }
-
-        return $this->redirectToRoute('matieres_t');
-    }
-
-    /**
-     * @Route("t", name="t")
-     */
-    public function enregistrerCours(Request $request, SessionInterface $session,Application $application): Response
+    public function matieres_transert_form(Request $request, SessionInterface $session,Application $application): Response
     {
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
         $sessionF = $session->get('filiere', []);
         $sessionN = $session->get('niveau', []);
         $sessionSe = $session->get('semestre', []);
         $user = $this->getUser();
-        if (!empty($sessionF)) {
-            $filiere = $application->repo_filiere->find($sessionF);
-            
-        }
-        else {
-            $filiere=null;
-        }
-        //classe
-        if (!empty($sessionN)) {
-            $niveau = $application->repo_niveau->find($sessionN);
-            
-        }
-        else {
-            $niveau=null;
-        }
-        //semestre
-        if (!empty($sessionSe)) {
-            $semestre = $application->repo_semestre->find($sessionSe);
-            
-        }
-        else {
-            $semestre=null;
-        }
+        
         if (isset($_POST['enregistrer']) && !empty($sessionF) && !empty($sessionSe) && !empty($sessionN)) {
             
             $check_array = $request->request->get("matiereId");
             foreach ($request->request->get("matiereName") as $key => $value) {
                 if (in_array($request->request->get("matiereName")[$key], $check_array)) {
                     
-                    $matiere = $application->repo_matiere->find($request->request->get("matiereName")[$key]);
-                    $semestre = $application->repo_semestre->find($sessionSe);
-                    $filiere = $application->repo_filiere->find($sessionF);
-                    $niveau = $application->repo_niveau->find($sessionN);
-
                     $data=([
-                        'user'=>$application->repo_user->find($user),
-                        'matiere'=>$matiere,
-                        'niveau'=>$niveau,
-                        'filiiere'=>$filiere,
-                        'semestre'=>$semestre
+                        'user'=>$user,
+                        'matiere'=>$request->request->get("matiereName")[$key],
+                        'niveau'=>$sessionN,
+                        'filiere'=>$sessionF,
+                        'semestre'=>$sessionSe
                     ]);
 
                     $application->affecter_matiere($data);
@@ -280,19 +185,21 @@ class MatieresController extends AbstractController
         }
 
         return $this->render('matieres/cours.html.twig', [
-            'mr' =>  $application->repo_matiere->matierePasEncoreUe($user,$filiere,$niveau,$semestre),
+            'matieres' =>  $application->repo_matiere->matierePasEncoreUe(
+                $user,$sessionF,$sessionN,$sessionSe),
             'filieres'=>$application->repo_filiere->findBy([
                 'user'=>$user]),
-            'classes' =>$application->repo_niveau->findBy([
+            'niveaux' =>$application->repo_niveau->findBy([
                 'user'=>$user]),
             'semestres' =>$application->repo_semestre->findAll()
         ]);
     }
 
     /**
-     * @Route("liste_Ues", name="liste_Ues")
+     * liste des matieres par filiere,niveau et semestre
+     * @Route("cours_liste", name="cours_liste")
      */
-    public function liste_Ues (SessionInterface $session,Application $application)
+    public function cours_liste (SessionInterface $session,Application $application)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -321,9 +228,9 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * @Route("ue_suppression/{id}", name="ue_suppression")
+     * @Route("cours_delete/{id}", name="ue_delete")
      */
-    public function suppression_ue(Application $application,$id)
+    public function cours_delete(Application $application,$id)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();

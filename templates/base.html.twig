@@ -34,18 +34,12 @@
             <link rel="stylesheet" href="template/plugins/summernote/summernote-bs4.min.css">
             <style>
 
-                .position {
-                    .position: relative;
-                    top: 150px;
-                }
-                
             </style>
         {% endblock %}
 
 
     </head>
     <body class="hold-transition sidebar-mini layout-fixed">
-
         <div class="wrapper">
 
             <!-- Navbar -->
@@ -130,7 +124,7 @@
                                     <li class="nav-item">
                                         <a href="{{path("niveaux_add")}}" class="nav-link">
                                             <i class="fa fa-home"></i>
-                                            <p>Classes</p>
+                                            <p>Niveaux</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -140,13 +134,13 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{path("matieres_add")}}" class="nav-link">
+                                        <a href="{{path("matieres_new_form")}}" class="nav-link">
                                             <i class="fa fa-book-open"></i>
                                             <p>Matieres</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{path("matieres_t")}}" class="nav-link">
+                                        <a href="{{path("matieres_transert_form")}}" class="nav-link">
                                             <i class="fa fa-book-open"></i>
                                             <p>Cours</p>
                                         </a>
@@ -161,7 +155,7 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a href="{{path('notes_formulaire_notes')}}" class="nav-link">
+                                <a href="{{path('notes_new_form')}}" class="nav-link">
                                     <i class="nav-icon fas fa-th"></i>
                                     <p>
                                         Notes

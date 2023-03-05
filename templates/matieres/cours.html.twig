@@ -15,7 +15,7 @@
                     <div class="col-md-8 offset-1">
                         <div class="card card-warning">
                             <div class="card-header"> 
-                                <form action="{{path('matieres_choixFiliereNiveauxSemestreC')}}" method="post">
+                                <form action="{{path('matieres_session_fns')}}" method="post">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <select name="filiere" id="" class="form-control">
@@ -29,9 +29,9 @@
                                         </div>
                                         <!--/col -->
                                         <div class="col-md-3">
-                                            <select name="classe" id="" class="form-control">
+                                            <select name="niveau" id="" class="form-control">
                                                 <option value="">Classe ...</option>
-                                                {% for classe in classes %}
+                                                {% for classe in niveaux %}
                                                         <option value="{{classe.id}}">{{classe.nom}}</option>
                                                 {% else %}
                                                     <option value="">Tableau vide...</option>
@@ -51,7 +51,7 @@
                                         </div>
                                         <!--/col -->
                                         <div class="col-md-2">
-                                            <button class="btn btn-default" type="submit">Choisir</button>
+                                            <button name="matieres_transert_form" value="matieres_transert_form" class="btn btn-default" type="submit">Choisir</button>
                                         </div>
                                         <!--/col -->
                                     </div>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="card-header">
                                 {% if app.session.get('filiere') and app.session.get('niveau') and app.session.get('semestre') %}
-                                    <a href="{{path('matieres_liste_Ues')}}"> liste des cours</a>
+                                    <a href="{{path('cours_liste')}}"> liste des cours</a>
                                 {% endif %}
                             </div>
                            
@@ -71,12 +71,11 @@
                                         
                                         <form action="" method="post">
                                             
-                                            {% for ms in mr %}
+                                            {% for ms in matieres %}
                                             <tr>
                                                 <td><input type="checkbox" name="matiereId[]" id="" value="{{ ms.id }}"></td>
-
                                                 <td>{{ ms.nom }}<input type="hidden" value="{{ ms.id }}" class="form-control form-check" name="matiereName[]" id=""></td>
-                                                <td><input type="checkbox" name="matiereId[]" id="" value="{{ ms.id }}"></td>
+                                                <td><input type="number" class="form-control" name="note[]" id="" placeholder="Note /20"></td>
                                             </tr>
                                             {% endfor %}
                                             
