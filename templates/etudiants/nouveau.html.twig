@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+    <!-- Main content -->
+    <section class="content">
+    <br>
+      <div class="container-fluid">
+        <!-- Info boxes -->
+        
+        <div class="row">
+          <div class="col-md-5 offset-2">
+           
+            <div class="card insert-filiere">
+            <div class="card-header"><a href="{{path('liste_etudiant')}}">Consulter la liste des etudiants</a></div>
+            <div class="card-body">
+            <form action="{{path('nouvel_etudiant_traitement')}}" method="post">
+                Nom
+                <div class="form-group">
+                    <input type="text" name="nom" class="form-control" id="" required>
+                </div>
+                    Prenom
+                <div class="form-group">
+                    <input type="text" name="prenom" class="form-control" id="" required>
+                </div>
+                    <p>Sexe</p>
+                <div class="form-group">
+                    <select type="text" name="sexe" class="form-control"  style="width:100%;">
+                        <option value="M">Masculin</option>
+                            <option value="F">Feminin</option>
+                    </select>
+                </div>
+                Filiere
+                <div class="form-group">
+                    <select type="text" name="filiere" class="form-control"  style="width:100%;" required>
+                        {% for filiere in filieres %}
+                            <option value="{{filiere.id}}">{{filiere.nom}}</option> 
+                        {% else %}
+                                    <option value="">Liste vide</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                Niveau
+                <div class="form-group">
+                    <select type="text" name="niveau" class="form-control"  style="width:100%;" required>
+                        {% for classe in classes %}
+                            <option value="{{classe.id}}">{{classe.nom}}</option> 
+                        {% else %}
+                                    <option value="">Liste vide</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br>
+                <div class="form-group">
+                    <button type="submit" style="width:100%;" class="btn btn-success">Valider</button>
+                    
+                </div>
+            </form>
+            </div>
+            
+            </div>
+            
+          </div>
+         
+        </div>
+        <!-- /row-->
+        
+        
+    </section>
+    <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+{% endblock %}

@@ -95,7 +95,7 @@ class SecurityAuthenticator extends AbstractFormLoginAuthenticator implements Pa
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('filieres_add'));
+        return new RedirectResponse($this->urlGenerator->generate('nouvelle_filiere'));
         throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 

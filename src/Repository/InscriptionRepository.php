@@ -24,7 +24,7 @@ class InscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Inscription::class);
     }
 
-    public function EtudiantPasDeNote(User $user, Filiere $filiere, Niveau $niveau, Semestre $semestre, Ue $ue)
+    public function EtudiantPasDeNote(User $user, Filiere $filiere=null, Niveau $niveau, Semestre $semestre, Ue $ue)
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
@@ -71,15 +71,15 @@ class InscriptionRepository extends ServiceEntityRepository
     // WHERE ue.semestre_id=1 and ue.id not in (SELECT n.ue_id
     // FROM notes_etudiant n )
 
-    public function etudiantsMatieres(Filiere $filiere=null,Niveau $niveau=null,Semestre $semestre=null)
+    public function liste_etudiant_matiere(Filiere $filiere=null,Niveau $niveau=null,Semestre $semestre=null)
     {
         if ($filiere!=null && $niveau!=null && $semestre!=null) {
             # code...
             $conn = new \PDO('mysql:host=localhost;dbname=gnu','root','');
             $sql = '
             
-            SELECT inscription.id as idI,etudiant.nom as nomE, ue.id as idC,
-            matiere.nom as nomM from inscription inner join etudiant on etudiant.id
+            SELECT inscription.id as inscription,etudiant.nom as etudiant, ue.id as cour,
+            matiere.nom as matiere from inscription inner join etudiant on etudiant.id
             =inscription.etudiant_id inner join ue on ue.filiere_id = inscription.filiere_id
             inner JOIN matiere on matiere.id=ue.matiere_id inner join semestre on semestre.id
             =ue.semestre_id WHERE ue.semestre_id=:semestre and ue.filiere_id=:filiere and 
@@ -98,7 +98,7 @@ class InscriptionRepository extends ServiceEntityRepository
             return $tab;
         }
         else {
-            
+            $sql='';
         }
 
         

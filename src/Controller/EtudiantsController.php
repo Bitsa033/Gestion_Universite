@@ -11,28 +11,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use PDO;
 
-/**
- * @Route("etudiants_", name="etudiants_")
- */
 class EtudiantsController extends AbstractController
 {
     /**
-     * @Route("form_ajout", name="form_ajout")
+     * @Route("nouvel_etudiant", name="nouvel_etudiant")
      */
-    public function form_ajout(Application $application): Response
+    public function nouvel_etudiant(Application $application): Response
     {
-        return $this->render('etudiants/ajout.html.twig', [
+        return $this->render('etudiants/nouveau.html.twig', [
             'filieres'=>$application->repo_filiere->findAll(),
             'classes'=>$application->repo_niveau->findAll()
         ]);
     }
 
     /**
-     * @Route("ajout", name="ajout")
+     * @Route("nouvel_etudiant_traitement", name="nouvel_etudiant_traitement")
      */
-    public function ajout(Request $request, Application $application)
+    public function nouvel_etudiant_traitement(Request $request, Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -55,7 +51,7 @@ class EtudiantsController extends AbstractController
             );
             //on enregistre l'etudiant
             try {
-                $application->new_etudiant($data);
+                $application->nouvel_etudiant($data);
                 $this->addFlash('success', 'Enregistrement éffectué!');
                 
             } catch (\Throwable $th) {
@@ -65,13 +61,13 @@ class EtudiantsController extends AbstractController
 
         }
        
-        return $this->redirectToRoute('etudiants_form_ajout');
+        return $this->redirectToRoute('nouvel_etudiant');
     }
 
     /**
-     * @Route("liste", name="liste")
+     * @Route("liste_etudiant", name="liste_etudiant")
      */
-    public function liste(Application $application)
+    public function liste_etudiant(Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -80,16 +76,16 @@ class EtudiantsController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('etudiants/etudiants.html.twig', [
+        return $this->render('etudiants/liste.html.twig', [
             'etudiants' => $application->repo_etudiant->etudiantsListe($user),
         ]);
     }
 
     /**
      * On supprime un etudiant par son id
-     * @Route("suppression/{id}", name="suppression")
+     * @Route("supprimer_etudiant_/{id}", name="supprimer_etudiant")
      */
-    public function suppression(Application $application,$id)
+    public function supprimer_etudiant(Application $application,$id)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -103,46 +99,21 @@ class EtudiantsController extends AbstractController
         $application->db->remove($id);
         $application->db->flush();
 
-        return $this->redirectToRoute('etudiants_liste');
+        return $this->redirectToRoute('liste_etudiant');
     }
 
     /**
-     * @Route("choixFiliereNiveauxI", name="choixFiliereNiveauxI")
+     * @Route("inscription_etudiant", name="inscription_etudiant")
      */
-    public function choixFiliereNiveauxI(Request $request, SessionInterface $session, Application $application)
-    {
-
-        if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe'))) {
-            $filiere = $application->repo_filiere->find($request->request->get("filiere"));
-            $classe = $application->repo_niveau->find($request->request->get('classe'));
-            $get_filiere = $session->get('filiere', []);
-            $get_classe = $session->get('niveau', []);
-            if (!empty($get_filiere)) {
-                $session->set('filiere', $filiere);
-                $session->set('niveau', $classe);
-            }
-            $session->set('filiere', $filiere);
-            $session->set('niveau', $classe);
-            //dd($session);
-
-            //return $this->redirectToRoute('etudiants_i');
-        }
-
-        return $this->redirectToRoute('etudiants_i');
-    }
-
-    /**
-     * @Route("i", name="i")
-     */
-    public function i(Request $request, SessionInterface $session, Application $application): Response
+    public function inscription_etudiant(Request $request, SessionInterface $session, Application $application): Response
     {
         $user=$this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
-        $sessionF = $session->get('filiere', []);
-        $sessionN = $session->get('niveau', []);
+        $session_filiere = $session->get('filiere', []);
+        $session_niveau = $session->get('niveau', []);
 
         if (isset($_POST['enregistrer'])) {
 
@@ -155,28 +126,28 @@ class EtudiantsController extends AbstractController
                     $data=array([
                         'user'=>$user,
                         'etudiant'=>$request->request->get("etudiantName")[$key],
-                        'niveau'=>$sessionN,
-                        'filiere'=>$sessionF,
+                        'niveau'=>$session_niveau,
+                        'filiere'=>$session_filiere,
                     ]);
                     
-                    $application->affecter_etudiant($data);
+                    $application->nouvelle_inscription($data);
                 }
             }
         }
 
         return $this->render('etudiants/inscription.html.twig', [
-            'mr' =>  $application->repo_etudiant->etudiantsPasInscris($user),
+            'etudiants_pas_inscrits' =>  $application->repo_etudiant->etudiantsPasInscris($user),
             'filieres' =>$application->repo_filiere->findBy([
                 'user'=>$user]),
-            'classes'  =>$application->repo_niveau->findBy([
+            'niveaux'  =>$application->repo_niveau->findBy([
                 'user'=>$user]),
         ]);
     }
 
     /**
-     * @Route("menuImprimer", name="menuImprimer")
+     * @Route("porte_imprimer_etudiant", name="porte_imprimer_etudiant")
      */
-    public function menuImprimer(Request $request,SessionInterface $session,Application $application): Response
+    public function porte_imprimer_etudiant(Request $request,SessionInterface $session,Application $application): Response
     {
         if (!empty($request->request->get('filiere')) && !empty($request->request->get('classe'))) {
             $filiere=$request->request->get('filiere');
@@ -194,24 +165,24 @@ class EtudiantsController extends AbstractController
           
         }
         
-        return $this->render('etudiants/index.html.twig', [
+        return $this->render('etudiants/porte_imprimer_etudiant.html.twig', [
             'filieres'=>$application->repo_filiere->findAll(),
-            'classes'=>$application->repo_niveau->findAll(),
+            'niveaux'=>$application->repo_niveau->findAll(),
 
         ]);
     }
 
     /**
-     * @Route("imprimer", name="imprimer")
+     * @Route("imprimer_etudiant", name="imprimer_etudiant")
      */
-    public function imprimer(SessionInterface $session,Application $application): Response
+    public function imprimer_etudiant(SessionInterface $session,Application $application): Response
     {
         $filiere=$session->get('filiere',[]);
-        $classe=$session->get('niveau',[]);
+        $niveau=$session->get('niveau',[]);
 
         $nomFiliere=$filiere->getSigle();
-        $nomClasse=$classe->getNom();
-        $idClasse=$classe->getId();
+        $nomNiveau=$niveau->getNom();
+        $idClasse=$niveau->getId();
 
         //dd($nomFiliere);
 
@@ -220,14 +191,14 @@ class EtudiantsController extends AbstractController
 
         $dompdf=new Dompdf($pdfOptions);
 
-        $html=$this->renderView('etudiants/imprimer.html.twig',[
+        $html=$this->renderView('etudiants/imprimer_etudiant.html.twig',[
             'etudiants'=>$application->repo_inscription->findBy([
                 'filiere'=>$filiere,
-                'niveau'=>$classe, 
+                'niveau'=>$niveau, 
             ]),
             'titre'=>"Liste des etudiants",
             'filiere'=>$nomFiliere,
-            'classe'=>$nomClasse
+            'niveau'=>$nomNiveau
         ]);
 
         $dompdf->loadHtml($html);
@@ -236,24 +207,14 @@ class EtudiantsController extends AbstractController
         $dompdf->render();
 
         $output=$dompdf->output();
-        $publicDirectory=$this->getParameter('images_directory') ;
+        $publicDirectory=$this->getParameter('documents') ;
         $pdfFilePath=$publicDirectory.'/'.$nomFiliere.'-'.$idClasse.'-Etudiants.pdf';
 
         file_put_contents($pdfFilePath,$output);
 
         $this->addFlash('success',"Le fichier pdf a été téléchargé");
-        return $this->redirectToRoute('etudiants_menuImprimer');
+        return $this->redirectToRoute('porte_imprimer_etudiant');
 
-        // return $this->render('etudiants/imprimer.html.twig', [
-        //     'etudiants'=>$inscriptionRepository->findBy([
-        //         'filiere'=>$filiere,
-        //         'niveau'=>$classe, 
-        //     ]),
-        //     'titre'=>"Liste des etudiants",
-        //     'filiere'=>$nomFiliere,
-        //     'classe'=>$nomClasse
-
-        // ]);
     }
 
     

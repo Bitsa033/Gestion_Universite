@@ -9,16 +9,13 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Application\Application;
 
-/**
- * @Route("filieres_", name="filieres_")
- */
 class FilieresController extends AbstractController
 {
 
     /**
-     * @Route("nb", name="nb")
+     * @Route("quantite_filiere", name="quantite_filiere")
      */
-    public function nb(SessionInterface $session, Request $request)
+    public function quantite_filiere(SessionInterface $session, Request $request)
     {
         if (!empty($request->request->get('nb_row'))) {
             $nb_of_row = $request->request->get('nb_row');
@@ -29,13 +26,13 @@ class FilieresController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //dd($session);
         }
-        return $this->redirectToRoute('filieres_add');
+        return $this->redirectToRoute('quantite_filiere');
     }
 
     /**
-     * @Route("index", name="index")
+     * @Route("liste_filiere", name="liste_filiere")
      */
-    public function index(Application $application)
+    public function liste_filiere(Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -43,16 +40,16 @@ class FilieresController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('filieres/index.html.twig', [
+        return $this->render('filieres/liste.html.twig', [
             'filieres' => $application->repo_filiere->findBy([
                 'user'=>$user]),
         ]);
     }
 
     /**
-     * @Route("add", name="add")
+     * @Route("nouvelle_filiere", name="nouvelle_filiere")
      */
-    public function add(SessionInterface $session,Application $application)
+    public function nouvelle_filiere(SessionInterface $session,Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -66,12 +63,11 @@ class FilieresController extends AbstractController
         else{
             $sessionLigne = 1;
         }
-        $sessionNb = $sessionLigne;
         //on cree un tableau
         $nb_row = array(1);
-        if (!empty( $sessionNb)) {
+        if (!empty( $sessionLigne)) {
            
-            for ($i = 0; $i < $sessionNb; $i++) {
+            for ($i = 0; $i < $sessionLigne; $i++) {
                 $nb_row[$i] = $i;
             }
         }
@@ -79,13 +75,13 @@ class FilieresController extends AbstractController
         //si on clic sur le boutton enregistrer et que les champs du post ne sont pas vide
         if (isset($_POST['enregistrer'])) {
             
-            for ($i = 0; $i < $sessionNb; $i++) {
+            for ($i = 0; $i < $sessionLigne; $i++) {
                 $data = array(
                     'nom' => $_POST['filiere' . $i],
                     'sigle'    => $_POST['abbr' . $i]
                 );
 
-                $application->new_classe($data,$user);
+                $application->nouvelle_filiere($data,$user);
 
                 
             }
@@ -93,15 +89,15 @@ class FilieresController extends AbstractController
 
         }
 
-        return $this->render('filieres/add.html.twig', [
+        return $this->render('filieres/nouvelle.html.twig', [
             'nb_rows' => $nb_row,
         ]);
     }
 
     /**
-     * @Route("imprimer", name="imprimer")
+     * @Route("imprimer_filiere", name="imprimer_filiere")
      */
-    public function imprimer(Application $application)
+    public function imprimer_filiere(Application $application)
     {
         
         $pdfOptions= new Options();
@@ -109,7 +105,7 @@ class FilieresController extends AbstractController
 
         $dompdf=new Dompdf($pdfOptions);
 
-        $html=$this->renderView('filieres/imprimer.html.twig',[
+        $html=$this->renderView('filieres/imprimer_filiere.html.twig',[
             'titre'=>'Liste des filières',
             'filieres'=>$application->repo_filiere->findAll()
         ]);
@@ -120,19 +116,13 @@ class FilieresController extends AbstractController
         $dompdf->render();
 
         $output=$dompdf->output();
-        $publicDirectory=$this->getParameter('images_directory') ;
-        $pdfFilePath=$publicDirectory.'/filieres.pdf';
+        $publicDirectory=$this->getParameter('documents') ;
+        $pdfFilePath=$publicDirectory.'/Filieres.pdf';
 
         file_put_contents($pdfFilePath,$output);
 
         $this->addFlash('success',"Le fichier pdf a été téléchargé");
-        return $this->redirectToRoute('filieres_add');
-        //return new Response('Ce pdf a été téléchargé ');
-
-        // return $this->render('filieres/imprimer.html.twig',[
-        //     'titre'=>'Liste des filières',
-        //     'filieres'=>$filiereRepository->findAll()
-        // ]);
+        return $this->redirectToRoute('nouvelle_filiere');
 
     }
     

@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+          <div class="col-md-10">
+    
+            <div class="card ">
+                <div class="card-header">
+                    <a href="{{path('inscription_etudiant')}}"  class="btn btn-primary">Inscrire <i class="fa fa-pen"></i></a> 
+                    <a href="{{path('porte_imprimer_etudiant')}}" class="btn btn-primary">Telecharger <i class="fa fa-upload"></i></a>
+                    
+                </div>
+                <div class="card-body table-responsive p-0" style="height: 400px;">
+                    <table class="table table-bordered table-head-fixed text-nowrap">
+                        <tr>
+                            <td style="width:1%;">ID</td>
+                            <td style="width:1%;">Action</td>
+                            <td >Etudiant</td>
+                            <td>Filiere</td>
+                            <td>Classe</td>
+                            <td>Inscrit</td>
+                        </tr>
+                        {% for etudiant in etudiants %}
+                        <tr>
+                            <td >{{etudiant.id}}</td>
+                            {% if etudiant.filiere and etudiant.niveau  %}
+                            <td>
+                            
+                            </td>
+                            <td>
+                                <a  href="">{{etudiant.nom}} {{etudiant.prenom}} </a> 
+                            </td>
+                            <td>
+                                {{etudiant.filiere}} 
+                            </td>
+                            <td>{{etudiant.niveau}}</td>
+                            <td><span class="btn btn-success">oui !</span></td>
+                            
+                            {% else %}
+                            <td>
+                            <a href="{{path('supprimer_etudiant',{id:etudiant.id})}}" ><i class="fa fa-times"></i></a>
+                            {# <a href="{{path('etudiants_suppression',{id:etudiant.id})}}"><i class="fa fa-pen"></i></a> #}
+                            </td>
+                            <td>
+                                <a  href="">{{etudiant.nom}} {{etudiant.prenom}}</a>
+                            </td>
+                                <td><span class="btn btn-danger">non !</span></td>
+                            {% endif %}
+                        </tr>
+                        {% else %}
+                        <tr>
+                        <td colspan="5">Aucune donnée recente !</td>
+                        </tr>
+                        {% endfor %}
+                    
+                    </table>
+                    
+                </div>
+                <!--/card-body-->
+                <div class="card-footer">@Developpé par: BITSA NDZIE PASCAL</div>
+
+            </div>
+          </div>
+          <!-- col -->
+        </div>
+        <!-- row -->
+
+    </section>
+    <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+{% endblock %}
+
+{% block javascripts %}
+  <script src=""></script>
+{% endblock %}
+
+

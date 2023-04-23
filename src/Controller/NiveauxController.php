@@ -11,13 +11,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-/**
- * @Route("niveaux_", name="niveaux_")
- */
 class NiveauxController extends AbstractController
 {
     /**
-     * @Route("nb", name="nb")
+     * @Route("quantite_niveau", name="quantite_niveau")
      */
     public function nb(SessionInterface $session, Request $request)
     {
@@ -30,13 +27,13 @@ class NiveauxController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //   dd($session);
         }
-        return $this->redirectToRoute('niveaux_add');
+        return $this->redirectToRoute('nouveau_niveau');
     }
 
     /**
-     * @Route("index", name="index")
+     * @Route("liste_niveau", name="liste_niveau")
      */
-    public function index( Application $application)
+    public function liste_niveau( Application $application)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -49,16 +46,16 @@ class NiveauxController extends AbstractController
             'user' => $user
         ]);
 
-        return $this->render('niveaux/index.html.twig', [
+        return $this->render('niveaux/liste.html.twig', [
             'niveaux' => $application->repo_niveau->findBy([
                 'user'=>$user]),
         ]);
     }
 
     /**
-     * @Route("add", name="add")
+     * @Route("nouveau_niveau", name="nouveau_niveau")
      */
-    public function classe(SessionInterface $session, Application $application, Request $request)
+    public function nouveau_niveau(SessionInterface $session, Application $application, Request $request)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -96,7 +93,7 @@ class NiveauxController extends AbstractController
                 $application->db->flush();
             }
 
-            return $this->redirectToRoute('niveaux_add');
+            return $this->redirectToRoute('nouveau_niveau');
         }
 
         if (!empty($session->get('nb_row', []))) {
@@ -123,21 +120,21 @@ class NiveauxController extends AbstractController
                     'nom' => $_POST['classe' . $i]
                 );
 
-                $application->new_niveau($data,$user);
+                $application->nouveau_niveau($data,$user);
             }
 
             $this->addFlash('success', 'Enregistrement éffectué!');
         }
 
-        return $this->render('niveaux/add.html.twig', [
+        return $this->render('niveaux/nouveau.html.twig', [
             'nb_rows' => $nb_row,
         ]);
     }
 
     /**
-     * @Route("suppression/{id}", name="suppression")
+     * @Route("supprimer_niveau_/{id}", name="supprimer_niveau")
      */
-    public function suppression(Application $application,$id)
+    public function supprimer_niveau(Application $application,$id)
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -149,13 +146,13 @@ class NiveauxController extends AbstractController
         $application->db->remove($id);
         $application->db->flush();
 
-        return $this->redirectToRoute('niveaux_add');
+        return $this->redirectToRoute('nouveau_niveau');
     }
 
     /**
-     * @Route("imprimer", name="imprimer")
+     * @Route("imprimer_niveau", name="imprimer_niveau")
      */
-    public function imprimer(Application $application)
+    public function imprimer_niveau(Application $application)
     {
         $pdfOptions= new Options();
         $pdfOptions->set('defaultFont','Arial');
@@ -173,13 +170,13 @@ class NiveauxController extends AbstractController
         $dompdf->render();
 
         $output=$dompdf->output();
-        $publicDirectory=$this->getParameter('images_directory') ;
-        $pdfFilePath=$publicDirectory.'/classes.pdf';
+        $publicDirectory=$this->getParameter('documents') ;
+        $pdfFilePath=$publicDirectory.'/Niveaux.pdf';
 
         file_put_contents($pdfFilePath,$output);
 
         $this->addFlash('success',"Le fichier pdf a été téléchargé");
-        return $this->redirectToRoute('niveaux_add');
+        return $this->redirectToRoute('nouveau_niveau');
     }
 
 }

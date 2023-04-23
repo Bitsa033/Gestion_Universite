@@ -11,15 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-/**
- * @Route("semestres_", name="semestres_")
- */
 class SemestreController extends AbstractController
 {
     /**
-     * @Route("nb", name="nb")
+     * @Route("quantite_semestre", name="quantite_semestre")
      */
-    public function nb(SessionInterface $session, Request $request)
+    public function quantite_semestre(SessionInterface $session, Request $request)
     {
         if (!empty($request->request->get('nb_row'))) {
             $nb_of_row = $request->request->get('nb_row');
@@ -30,13 +27,13 @@ class SemestreController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //   dd($session);
         }
-        return $this->redirectToRoute('semestres_add');
+        return $this->redirectToRoute('nouveau_semestre');
     }
    
     /**
-     * @Route("index", name="index", methods={"GET","POST"})
+     * @Route("liste_semestre", name="liste_semestre", methods={"GET","POST"})
      */
-    public function index(Application $application): Response
+    public function liste_semestre(Application $application): Response
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -48,15 +45,15 @@ class SemestreController extends AbstractController
             
         ]);
         
-        return $this->render('semestre/index.html.twig', [
+        return $this->render('semestre/liste.html.twig', [
             'semestres' => $application->repo_semestre->findAll(),
         ]);
     }
 
     /**
-     * @Route("add", name="add", methods={"GET","POST"})
+     * @Route("nouveau_semestre", name="nouveau_semestre", methods={"GET","POST"})
      */
-    public function semestre(SessionInterface $session,Application $application): Response
+    public function nouveau_semestre(SessionInterface $session,Application $application): Response
     {
         //on cherche l'utilisateur connecté
         $user = $this->getUser();
@@ -106,36 +103,36 @@ class SemestreController extends AbstractController
                     'nom' => $_POST['semestre'.$i]
                 );
 
-                $application->new_semestre($data,$user);
+                $application->nouveau_semestre($data,$user);
             }
             
             $this->addFlash('success', 'Enregistrement éffectué!');
 
         }
-        return $this->render('semestre/add.html.twig', [
+        return $this->render('semestre/nouveau.html.twig', [
             'nb_rows' => $nb_row,
         ]);
     }
 
     /**
-     * @Route("semestre_{id}", name="delete", methods={"POST"})
+     * @Route("supprimer_semestre_{id}", name="supprimer_semestre", methods={"POST"})
      */
-    public function delete(Request $request, Application $application,$id): Response
+    public function supprimer_semestre(Request $request, Application $application,$id): Response
     {
         if ($this->isCsrfTokenValid('delete'.$id->getId(), $request->request->get('_token'))) {
             $application->db->remove($id);
             $application->db->flush();
         }
 
-        return $this->redirectToRoute('semestre_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('liste_semestre', [], Response::HTTP_SEE_OTHER);
     }
 
     
 
     /**
-     * @Route("imprimer", name="imprimer")
+     * @Route("imprimer_semestre", name="imprimer_semestre")
      */
-    public function imprimer(Application $application)
+    public function imprimer_semestre(Application $application)
     {
         $pdfOptions= new Options();
         $pdfOptions->set('defaultFont','Arial');

@@ -15,9 +15,9 @@ use Dompdf\Options;
 class MatieresController extends AbstractController
 {
     /**
-     * @Route("matieres_nb", name="matieres_nb")
+     * @Route("quantite_matiere", name="quantite_matiere")
      */
-    public function matieres_nb(SessionInterface $session, Request $request)
+    public function quantite_matiere(SessionInterface $session, Request $request)
     {
         if (!empty($request->request->get('nb_row'))) {
             $nb_of_row = $request->request->get('nb_row');
@@ -28,13 +28,13 @@ class MatieresController extends AbstractController
             $session->set('nb_row', $nb_of_row);
             //   dd($session);
         }
-        return $this->redirectToRoute('matieres_new_form');
+        return $this->redirectToRoute('nouvelle_matiere');
     }
 
      /**
-     * @Route("matieres_liste", name="matieres_liste")
+     * @Route("liste_matiere", name="liste_matiere")
      */
-    public function index (Application $application)
+    public function liste_matiere (Application $application)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -42,16 +42,16 @@ class MatieresController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('matieres/index.html.twig', [
+        return $this->render('matieres/liste.html.twig', [
             'matieres'=>$application->repo_matiere->findBy([
                 'user'=>$user]),
         ]);
     }
 
     /**
-     * @Route("matieres_new_form", name="matieres_new_form")
+     * @Route("nouvelle_matiere", name="nouvelle_matiere")
      */
-    public function matieres_new_form (SessionInterface $session,Application $application)
+    public function nouvelle_matiere (SessionInterface $session,Application $application)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -87,13 +87,13 @@ class MatieresController extends AbstractController
                     'code'=>$application->repo_filiere->find($_POST['filiere'])->getNom()." " .random_int(120,300)
                 );
 
-                $application->new_matiere($data,$user);
+                $application->nouvelle_matiere($data,$user);
             }
 
             $this->addFlash('success', 'Enregistrement éffectué!');
         } 
 
-        return $this->render('matieres/add.html.twig', [
+        return $this->render('matieres/nouvelle.html.twig', [
             'nb_rows' => $nb_row,
             'filieres'=>$application->repo_filiere->findAll(),
             'niveaux'=>$application->repo_niveau->findAll(),
@@ -102,9 +102,9 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * @Route("matieres_delete/{id}", name="matieres_delete")
+     * @Route("supprimer_matiere_/{id}", name="supprimer_matiere")
      */
-    public function matieres_delete (Application $application, $id)
+    public function supprimer_matiere (Application $application, $id)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -115,14 +115,14 @@ class MatieresController extends AbstractController
         $application->db->remove($id);
         $application->db->flush();
 
-        return $this->redirectToRoute('matieres_liste');
+        return $this->redirectToRoute('liste_matiere');
         
     }
 
     /**
-     * @Route("matieres_imprimer", name="matieres_imprimer")
+     * @Route("imprimer_matiere", name="imprimer_matiere")
      */
-    public function matieres_imprimer(Application $application)
+    public function imprimer_matiere(Application $application)
     {
         $pdfOptions= new Options();
         $pdfOptions->set('defaultFont','Arial');
@@ -141,28 +141,57 @@ class MatieresController extends AbstractController
 
         $output=$dompdf->output();
         $publicDirectory=$this->getParameter('images_directory') ;
-        $pdfFilePath=$publicDirectory.'/matieres.pdf';
+        $pdfFilePath=$publicDirectory.'/Matieres.pdf';
 
         file_put_contents($pdfFilePath,$output);
 
         $this->addFlash('success',"Le fichier pdf a été téléchargé");
-        return $this->redirectToRoute('matieres_add');
+        return $this->redirectToRoute('nouvelle_matiere');
     }
 
     /**
-     * on crée des cours pour la filiere,le niveau et le semestre
-     * ici,on choisi la matiere qui est deja dans la base données
-     * @Route("matieres_transert_form", name="matieres_transert_form")
+     * nous avons d'abord un formulaire pour,
+     * choisir la filiere,le niveau, et le,
+     * semestre qu'on appelle[porte_nouveau_cour],
+     * son traitement se trouve dans la route[porte_nouveau_cour_traitement]
+     * @Route("nouveau_cour", name="nouveau_cour")
      */
-    public function matieres_transert_form(Request $request, SessionInterface $session,Application $application): Response
+    public function nouveau_cour(Request $request, SessionInterface $session,Application $application): Response
+    {
+        $user=$this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $filiere=$session->get('filiere');
+        $niveau=$session->get('niveau');
+        $semestre=$session->get('semestre');
+        
+        return $this->render('matieres/nouveau_cour.html.twig', [
+            
+            'filieres'=>$application->repo_filiere->findBy([
+                'user'=>$user]),
+            'niveaux' =>$application->repo_niveau->findBy([
+                'user'=>$user]),
+            'semestres' =>$application->repo_semestre->findAll(),
+            'matieres' => $application->repo_matiere->matierePasEncoreUe($user,$filiere,$niveau,$semestre),
+            
+        ]);
+    }
+
+    /**
+     * on traite le formulaire d'insertion des notes[route=nouveau_cour]
+     * @Route("nouveau_cour_traitement", name="nouveau_cour_traitement")
+     */
+    public function nouveau_cour_traitement(Request $request, SessionInterface $session,Application $application)
     {
         //on cherche les informations de la filiere,la classe et le semestre stockees dans la session
-        $sessionF = $session->get('filiere', []);
-        $sessionN = $session->get('niveau', []);
-        $sessionSe = $session->get('semestre', []);
+        $filiere = $session->get('filiere', []);
+        $niveau = $session->get('niveau', []);
+        $semestre = $session->get('semestre', []);
         $user = $this->getUser();
         
-        if (isset($_POST['enregistrer']) && !empty($sessionF) && !empty($sessionSe) && !empty($sessionN)) {
+        if (isset($_POST['enregistrer']) && !empty($filiere) && !empty($niveau) && !empty($semestre)) {
             
             $check_array = $request->request->get("matiereId");
             foreach ($request->request->get("matiereName") as $key => $value) {
@@ -171,35 +200,28 @@ class MatieresController extends AbstractController
                     $data=([
                         'user'=>$user,
                         'matiere'=>$request->request->get("matiereName")[$key],
-                        'niveau'=>$sessionN,
-                        'filiere'=>$sessionF,
-                        'semestre'=>$sessionSe
+                        'niveau'=>$niveau,
+                        'filiere'=>$filiere,
+                        'semestre'=>$semestre
                     ]);
 
-                    $application->affecter_matiere($data);
+                    $application->nouveau_cour($data);
                     
                 }
             }
 
             $this->addFlash('success', 'Enregistrement éffectué!');
         }
+        return $this->redirectToRoute('nouveau_cour');
 
-        return $this->render('matieres/cours.html.twig', [
-            'matieres' =>  $application->repo_matiere->matierePasEncoreUe(
-                $user,$sessionF,$sessionN,$sessionSe),
-            'filieres'=>$application->repo_filiere->findBy([
-                'user'=>$user]),
-            'niveaux' =>$application->repo_niveau->findBy([
-                'user'=>$user]),
-            'semestres' =>$application->repo_semestre->findAll()
-        ]);
+        
     }
 
     /**
-     * liste des matieres par filiere,niveau et semestre
-     * @Route("cours_liste", name="cours_liste")
+     * liste des cours par filiere,niveau et semestre
+     * @Route("liste_cours", name="liste_cours")
      */
-    public function cours_liste (SessionInterface $session,Application $application)
+    public function liste_cours (SessionInterface $session,Application $application)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -212,7 +234,7 @@ class MatieresController extends AbstractController
         $sessionN=$session->get('niveau',[]);
         $sessionSe=$session->get('semestre',[]);
        
-        return $this->render('matieres/listeC.html.twig', [
+        return $this->render('matieres/liste_cours.html.twig', [
             'listeCours'=>$application->repo_ue->findBy([
                 'user'=>$user,
                 'niveau'=>$sessionN,
@@ -228,9 +250,9 @@ class MatieresController extends AbstractController
     }
 
     /**
-     * @Route("cours_delete/{id}", name="ue_delete")
+     * @Route("supprimer_cour_/{id}", name="supprimer_cour")
      */
-    public function cours_delete(Application $application,$id)
+    public function supprimer_cour(Application $application,$id)
     {
         //on cherche l'utilisateur connecté
         $user= $this->getUser();
@@ -241,7 +263,7 @@ class MatieresController extends AbstractController
         $application->db->remove($id);
         $application->db->flush();
 
-        return $this->redirectToRoute('matieres_liste_Ues');
+        return $this->redirectToRoute('liste_cours');
         
     }
     

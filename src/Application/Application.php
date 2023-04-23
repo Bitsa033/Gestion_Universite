@@ -107,7 +107,7 @@ class Application
         return $array;
     }
 
-    public function new_classe($data, User $user)
+    public function nouvelle_filiere($data, User $user)
     {
         $this->multiple_row($data);
         
@@ -120,7 +120,7 @@ class Application
         $this->db->flush();
     }
 
-    public function new_niveau($data, User $user)
+    public function nouveau_niveau($data, User $user)
     {
         $this->multiple_row($data);
         
@@ -132,7 +132,7 @@ class Application
         $this->db->flush();
     }
 
-    public function new_semestre($data, User $user)
+    public function nouveau_semestre($data, User $user)
     {
         $this->multiple_row($data);
         
@@ -144,7 +144,7 @@ class Application
         $this->db->flush();
     }
 
-    public function new_matiere($data, User $user)
+    public function nouvelle_matiere($data, User $user)
     {
         $matiere = new $this->table_matiere;
         $matiere->setUser($user);
@@ -165,7 +165,7 @@ class Application
         $this->db->flush();
     }
 
-    public function affecter_matiere($data)
+    public function nouveau_cour($data)
     {
         $object = new $this->table_ue;
         $object->setUser($data['user']);
@@ -179,7 +179,7 @@ class Application
         $this->db->flush();
     }
 
-    public function new_etudiant($data)
+    public function nouvel_etudiant($data)
     {
 
         //on enregistre
@@ -201,7 +201,7 @@ class Application
 
     }
 
-    public function affecter_etudiant($data)
+    public function nouvelle_inscription($data)
     {
         
         $object = new $this->table_inscription;
@@ -214,7 +214,7 @@ class Application
         $this->db->flush();
     }
 
-    function new_note($data)
+    function nouvelle_note($data)
     {
         $object = new $this->table_note;
         $object->setUser($this->repo_user->find($data['user']));
