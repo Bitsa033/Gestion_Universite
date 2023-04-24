@@ -150,12 +150,12 @@ class SemestreController extends AbstractController
         $dompdf->render();
 
         $output=$dompdf->output();
-        $publicDirectory=$this->getParameter('images_directory') ;
-        $pdfFilePath=$publicDirectory.'/semestres.pdf';
+        $publicDirectory=$this->getParameter('documents') ;
+        $pdfFilePath=$publicDirectory.'/Semestres.pdf';
 
         file_put_contents($pdfFilePath,$output);
 
         $this->addFlash('success',"Le fichier pdf a été téléchargé");
-        return $this->redirectToRoute('semestres_add');
+        return $this->redirectToRoute('nouveau_semestre');
     }
 }

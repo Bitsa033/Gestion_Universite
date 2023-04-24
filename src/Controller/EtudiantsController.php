@@ -161,7 +161,7 @@ class EtudiantsController extends AbstractController
             $session->set('niveau',$repoClasse);
             //dd($session->get('filiere',[]),$session->get('niveau',[]));
 
-            return $this->redirectToRoute('etudiants_imprimer');
+            return $this->redirectToRoute('imprimer_etudiant');
           
         }
         

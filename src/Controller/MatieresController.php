@@ -140,7 +140,7 @@ class MatieresController extends AbstractController
         $dompdf->render();
 
         $output=$dompdf->output();
-        $publicDirectory=$this->getParameter('images_directory') ;
+        $publicDirectory=$this->getParameter('documents') ;
         $pdfFilePath=$publicDirectory.'/Matieres.pdf';
 
         file_put_contents($pdfFilePath,$output);
