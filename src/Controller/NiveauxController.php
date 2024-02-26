@@ -20,11 +20,11 @@ class NiveauxController extends AbstractController
     {
         if (!empty($request->request->get('nb_row'))) {
             $nb_of_row = $request->request->get('nb_row');
-            $get_nb_row = $session->get('nb_row', []);
+            $get_nb_row = $session->get('nb_row_niveau', []);
             if (!empty($get_nb_row)) {
-                $session->set('nb_row', $nb_of_row);
+                $session->set('nb_row_niveau', $nb_of_row);
             }
-            $session->set('nb_row', $nb_of_row);
+            $session->set('nb_row_niveau', $nb_of_row);
             //   dd($session);
         }
         return $this->redirectToRoute('nouveau_niveau');
@@ -96,8 +96,8 @@ class NiveauxController extends AbstractController
             return $this->redirectToRoute('nouveau_niveau');
         }
 
-        if (!empty($session->get('nb_row', []))) {
-            $sessionLigne = $session->get('nb_row', []);
+        if (!empty($session->get('nb_row_niveau', []))) {
+            $sessionLigne = $session->get('nb_row_niveau', []);
         }
         else{
             $sessionLigne = 1;
@@ -146,6 +146,7 @@ class NiveauxController extends AbstractController
         $application->db->remove($id);
         $application->db->flush();
 
+        $this->addFlash('success', 'Donnée supprimée!');
         return $this->redirectToRoute('nouveau_niveau');
     }
 
@@ -160,7 +161,7 @@ class NiveauxController extends AbstractController
         $dompdf=new Dompdf($pdfOptions);
 
         $html=$this->renderView('niveaux/imprimer.html.twig',[
-            'titre'=>'Liste des classes',
+            'titre'=>'Liste des Niveaux',
             'classes'=>$application->repo_niveau->findAll()
         ]);
 

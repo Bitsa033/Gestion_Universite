@@ -19,14 +19,14 @@ class FilieresController extends AbstractController
     {
         if (!empty($request->request->get('nb_row'))) {
             $nb_of_row = $request->request->get('nb_row');
-            $get_nb_row = $session->get('nb_row', []);
+            $get_nb_row = $session->get('nb_row_filiere', []);
             if (!empty($get_nb_row)) {
-                $session->set('nb_row', $nb_of_row);
+                $session->set('nb_row_filiere', $nb_of_row);
             }
-            $session->set('nb_row', $nb_of_row);
+            $session->set('nb_row_filiere', $nb_of_row);
             //dd($session);
         }
-        return $this->redirectToRoute('quantite_filiere');
+        return $this->redirectToRoute('nouvelle_filiere');
     }
 
     /**
@@ -57,8 +57,8 @@ class FilieresController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         // on cherche la session nb
-        if (!empty($session->get('nb_row', []))) {
-            $sessionLigne = $session->get('nb_row', []);
+        if (!empty($session->get('nb_row_filiere', []))) {
+            $sessionLigne = $session->get('nb_row_filiere', []);
         }
         else{
             $sessionLigne = 1;

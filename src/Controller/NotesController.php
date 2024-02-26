@@ -125,20 +125,21 @@ class NotesController extends AbstractController
     public function liste_note(SessionInterface $session,Application $application): Response
     {
         $user = $this->getUser();
+        dd('liste des notes');
 
-        $sessionF = $session->get('filiere', []);
-        $sessionN = $session->get('niveau', []);
-        $sessionSe = $session->get('semestre', []);
-        $sessionInsc=$session->get('inscription');
-        $noteE=$application->repo_note->findAll();
+        // $sessionF = $session->get('filiere', []);
+        // $sessionN = $session->get('niveau', []);
+        // $sessionSe = $session->get('semestre', []);
+        // $sessionInsc=$session->get('inscription');
+        // $noteE=$application->repo_note->findAll();
         
-        return $this->render('notes/liste_note.html.twig', [
-            'filiere'=>$application->repo_filiere->find($sessionF),
-            'niveau'=>$application->repo_niveau->find($sessionN),
-            'semestre'=>$application->repo_semestre->find($sessionSe),
-            'inscription'=>$application->repo_inscription->find($sessionInsc),
-            'notes' => $noteE,
-        ]);
+        // return $this->render('notes/liste_note.html.twig', [
+        //     'filiere'=>$application->repo_filiere->find($sessionF),
+        //     'niveau'=>$application->repo_niveau->find($sessionN),
+        //     'semestre'=>$application->repo_semestre->find($sessionSe),
+        //     'inscription'=>$application->repo_inscription->find($sessionInsc),
+        //     'notes' => $noteE,
+        // ]);
     }
 
 }

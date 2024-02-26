@@ -13,7 +13,7 @@
                 
                 <div class="row">
                     <div class="col-md-8 offset-1">
-                        <div class="card card-warning">
+                        <div class="card card-blue">
                             <div class="card-header"> 
                                 <form action="{{path('porte_nouveau_cour_traitement')}}" method="post">
                                     <div class="row">
@@ -51,7 +51,7 @@
                                         </div>
                                         <!--/col -->
                                         <div class="col-md-2">
-                                            <button name="matieres_transert_form" value="matieres_transert_form" class="btn btn-default" type="submit">Choisir</button>
+                                            <button name="matieres_transfert_form" value="matieres_transfert_form" class="btn btn-default" type="submit">Choisir</button>
                                         </div>
                                         <!--/col -->
                                     </div>
@@ -69,7 +69,7 @@
                                     
                                     <table class="table table-head-fixed text-nowrap">
                                         
-                                        <form action="nouveau_cour_traitement" method="post">
+                                        <form action="{{path('nouveau_cour_traitement')}}" method="post">
                                             
                                             {% for ms in matieres %}
                                             <tr>
@@ -88,9 +88,9 @@
                                 {% endif %}
 
                             </div>
-                            <div class="card-footer" style="background:orange">
+                            <div class="card-footer">
                                 {% if app.session.get('filiere') and app.session.get('niveau') and app.session.get('semestre') %}
-                                    <button name="enregistrer" class="btn btn-warning form-control" type="submit">Enregistrer</button>
+                                    <button name="enregistrer" class="btn btn-success form-control" type="submit">Enregistrer</button>
                                     </form>
                                     
                                 {% else %}

@@ -20,20 +20,28 @@
                                     <form action="{{ path('porte_releve_de_notes_traitement') }}" method="post">
 
                                         <tr>
+                                           
                                             <td>
-                                                {# <select name="etudiantId" id="" class="form-control">
-                                                    <option value="{{ i.id }}">{{ i.etudiant.nom }}</option>
+                                                <table class="table">
+                                                    <tr>
+                                                        <th style="width: 1%;"></th>
+                                                        <th>Etudiant</th>
+                                                    </tr>
+                                                    {% for i in inscriptions %}
+                                                    <tr>
+                                                        <td><input type="checkbox" name="name="etudiantId"" id=""></td>
+                                                        <td>{{ i.etudiant.nom }}</td>
+                                                    </tr>
+                                                    {# <select name="etudiantId" id="" class="form-control">
+                                                    <option value="{{ i.id }}">{{ i.etudiant.nom }}</option> #}
                                                     {% else %}
-                                                    <option value="">Tableau vide...</option>
-                                                </select> #}
-                                            </td>
-                                            <td>
-                                                {% for i in inscriptions %}
-                                                <div class="form-group">
-                                                    <input type="radio" name="etudiantId" value="{{ i.id }}" 
-                                                    id="">{{ i.etudiant.nom }}
-                                                </div>
-                                                {% endfor %}
+                                                    {# <option value="">Tableau vide...</option> #}
+                                                    {# </select> #}
+                                                    <tr>
+                                                        <td colspan="2">Liste vide ...</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </table>
                                             </td>
 
                                         </tr>

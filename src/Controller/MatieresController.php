@@ -21,11 +21,11 @@ class MatieresController extends AbstractController
     {
         if (!empty($request->request->get('nb_row'))) {
             $nb_of_row = $request->request->get('nb_row');
-            $get_nb_row = $session->get('nb_row', []);
+            $get_nb_row = $session->get('nb_row_matiere', []);
             if (!empty($get_nb_row)) {
-                $session->set('nb_row', $nb_of_row);
+                $session->set('nb_row_matiere', $nb_of_row);
             }
-            $session->set('nb_row', $nb_of_row);
+            $session->set('nb_row_matiere', $nb_of_row);
             //   dd($session);
         }
         return $this->redirectToRoute('nouvelle_matiere');
@@ -59,8 +59,8 @@ class MatieresController extends AbstractController
           return $this->redirectToRoute('app_login');
         }
 
-        if (!empty($session->get('nb_row', []))) {
-            $sessionLigne = $session->get('nb_row', []);
+        if (!empty($session->get('nb_row_matiere', []))) {
+            $sessionLigne = $session->get('nb_row_matiere', []);
         }
         else{
             $sessionLigne = 1;

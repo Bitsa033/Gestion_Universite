@@ -107,15 +107,16 @@ class UtilsController extends AbstractController
      */
     public function porte_releve_de_notes_traitement(SessionInterface $session,Application $application)
     {
-            $inscription = $application->repo_inscription->find($_POST['etudiantId']);
-            if (!empty($inscription)) {
-                $inscription_session = $session->get('inscription', []);
-                if (!empty($inscription_session)) {
-                    $session->set('inscription', $inscription);
-                }
-                $session->set('inscription', $inscription);
-            }
-            return $this->redirectToRoute('releve_de_notes');
+            // $inscription = $application->repo_inscription->find($_POST['etudiantId']);
+            // if (!empty($inscription)) {
+            //     $inscription_session = $session->get('inscription', []);
+            //     if (!empty($inscription_session)) {
+            //         $session->set('inscription', $inscription);
+            //     }
+            //     $session->set('inscription', $inscription);
+            // }
+            // return $this->redirectToRoute('releve_de_notes');
+            dd('ok');
         
     }
 

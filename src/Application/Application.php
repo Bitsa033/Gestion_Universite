@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Application;
 
 use App\Entity\Etudiant;
@@ -46,39 +47,38 @@ class Application
     public $db;
 
     function __construct(
-                        UserRepository $userRepository,
-                        FiliereRepository $filiereRepository,
-                        NiveauRepository $niveauRepository,
-                        SemestreRepository $semestreRepository,
-                        MatiereRepository $matiereRepository,
-                        UeRepository $ueRepository,
-                        EtudiantRepository $etudiantRepository,
-                        InscriptionRepository $inscriptionRepository,
-                        NotesEtudiantRepository $notesEtudiantRepository,
-                        ManagerRegistry $managerRegistry
-    )
-    {
-        $this->repo_user=$userRepository;
-        $this->repo_filiere=$filiereRepository;
-        $this->repo_niveau=$niveauRepository;
-        $this->repo_semestre=$semestreRepository;
-        $this->repo_matiere=$matiereRepository;
-        $this->repo_ue=$ueRepository;
-        $this->repo_etudiant=$etudiantRepository;
-        $this->repo_inscription=$inscriptionRepository;
-        $this->repo_note=$notesEtudiantRepository;
+        UserRepository $userRepository,
+        FiliereRepository $filiereRepository,
+        NiveauRepository $niveauRepository,
+        SemestreRepository $semestreRepository,
+        MatiereRepository $matiereRepository,
+        UeRepository $ueRepository,
+        EtudiantRepository $etudiantRepository,
+        InscriptionRepository $inscriptionRepository,
+        NotesEtudiantRepository $notesEtudiantRepository,
+        ManagerRegistry $managerRegistry
+    ) {
+        $this->repo_user = $userRepository;
+        $this->repo_filiere = $filiereRepository;
+        $this->repo_niveau = $niveauRepository;
+        $this->repo_semestre = $semestreRepository;
+        $this->repo_matiere = $matiereRepository;
+        $this->repo_ue = $ueRepository;
+        $this->repo_etudiant = $etudiantRepository;
+        $this->repo_inscription = $inscriptionRepository;
+        $this->repo_note = $notesEtudiantRepository;
 
-        $this->table_user= new User;
-        $this->table_filiere=Filiere::class;
-        $this->table_niveau= Niveau::class;
-        $this->table_semestre= Semestre::class;
-        $this->table_matiere= Matiere::class;
-        $this->table_ue= Ue::class;
-        $this->table_etudiant= new Etudiant;
-        $this->table_inscription= Inscription::class;
-        $this->table_note= NotesEtudiant::class;
+        $this->table_user = new User;
+        $this->table_filiere = Filiere::class;
+        $this->table_niveau = Niveau::class;
+        $this->table_semestre = Semestre::class;
+        $this->table_matiere = Matiere::class;
+        $this->table_ue = Ue::class;
+        $this->table_etudiant = new Etudiant;
+        $this->table_inscription = Inscription::class;
+        $this->table_note = NotesEtudiant::class;
 
-        $this->db=$managerRegistry->getManager();
+        $this->db = $managerRegistry->getManager();
 
         //on cherche l'utilisateur connecté
         // $user= $this->getUser();
@@ -88,8 +88,9 @@ class Application
 
     }
 
-    public function insert_to_db($entity){
-       
+    public function insert_to_db($entity)
+    {
+
         $this->db->persist($entity);
         $this->db->flush();
     }
@@ -110,8 +111,8 @@ class Application
     public function nouvelle_filiere($data, User $user)
     {
         $this->multiple_row($data);
-        
-        $filiere= new $this->table_filiere;
+
+        $filiere = new $this->table_filiere;
         $filiere->setUser($user);
         $filiere->setNom(ucfirst($data['nom']));
         $filiere->setSigle(strtoupper($data['sigle']));
@@ -123,8 +124,8 @@ class Application
     public function nouveau_niveau($data, User $user)
     {
         $this->multiple_row($data);
-        
-        $classe= new $this->table_niveau;
+
+        $classe = new $this->table_niveau;
         $classe->setUser($user);
         $classe->setNom(ucfirst($data['nom']));
         $classe->setCreatedAt(new \datetime);
@@ -135,8 +136,8 @@ class Application
     public function nouveau_semestre($data, User $user)
     {
         $this->multiple_row($data);
-        
-        $semestre= new $this->table_semestre;
+
+        $semestre = new $this->table_semestre;
         $semestre->setUser($user);
         $semestre->setNom(ucfirst($data['nom']));
         $semestre->setCreatedAt(new \datetime);
@@ -151,14 +152,14 @@ class Application
         $matiere->setNom(ucfirst($data['nom']));
         $matiere->setCreatedAt(new \datetime);
 
-        $ue=new $this->table_ue;
+        $ue = new $this->table_ue;
         $ue->setFiliere($this->repo_filiere->find($data['filiere']));
         $ue->setNiveau($this->repo_niveau->find($data['niveau']));
         $ue->setSemestre($this->repo_semestre->find($data['semestre']));
         $ue->setUser($user);
         $ue->setMatiere($matiere);
         $ue->setNote($data['note']);
-        $ue->setCredit($data['note']/20);
+        $ue->setCredit($data['note'] / 20);
         $ue->setCode($data['code']);
         $ue->setCreatedAt(new \DateTime);
         $this->db->persist($ue);
@@ -190,7 +191,7 @@ class Application
         $etudiant->setSexe(ucfirst($data['sexe']));
         $etudiant->setCreatedAt(new \datetime);
         //on inscrit
-        $inscription=new $this->table_inscription;
+        $inscription = new $this->table_inscription;
         $inscription->setEtudiant($etudiant);
         $inscription->setFiliere($this->repo_filiere->find($data['filiere']));
         $inscription->setNiveau($this->repo_niveau->find($data['niveau']));
@@ -198,12 +199,11 @@ class Application
         //on retourne les resultats
         $this->db->persist($inscription);
         $this->db->flush();
-
     }
 
     public function nouvelle_inscription($data)
     {
-        
+
         $object = new $this->table_inscription;
         $object->setUser($this->repo_user->find($data['user']));
         $object->setEtudiant($this->repo_etudiant->find($data['etudiant']));
@@ -226,6 +226,4 @@ class Application
         $this->db->persist($object);
         $this->db->flush();
     }
-
-
 }

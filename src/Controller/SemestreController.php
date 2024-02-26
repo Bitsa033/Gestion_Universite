@@ -20,11 +20,11 @@ class SemestreController extends AbstractController
     {
         if (!empty($request->request->get('nb_row'))) {
             $nb_of_row = $request->request->get('nb_row');
-            $get_nb_row = $session->get('nb_row', []);
+            $get_nb_row = $session->get('nb_row_semestre', []);
             if (!empty($get_nb_row)) {
-                $session->set('nb_row', $nb_of_row);
+                $session->set('nb_row_semestre', $nb_of_row);
             }
-            $session->set('nb_row', $nb_of_row);
+            $session->set('nb_row_semestre', $nb_of_row);
             //   dd($session);
         }
         return $this->redirectToRoute('nouveau_semestre');
@@ -79,8 +79,8 @@ class SemestreController extends AbstractController
 
         }
 
-        if (!empty($session->get('nb_row', []))) {
-            $sessionLigne = $session->get('nb_row', []);
+        if (!empty($session->get('nb_row_semestre', []))) {
+            $sessionLigne = $session->get('nb_row_semestre', []);
         }
         else{
             $sessionLigne = 1;
