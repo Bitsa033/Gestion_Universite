@@ -105,18 +105,24 @@ class UtilsController extends AbstractController
      * pour afficher ses notes(route=liste_notes)
      *  @Route("porte_releve_de_notes_traitement", name="porte_releve_de_notes_traitement")
      */
-    public function porte_releve_de_notes_traitement(SessionInterface $session,Application $application)
+    public function porte_releve_de_notes_traitement(Request $request,SessionInterface $session,Application $application)
     {
-            // $inscription = $application->repo_inscription->find($_POST['etudiantId']);
-            // if (!empty($inscription)) {
-            //     $inscription_session = $session->get('inscription', []);
-            //     if (!empty($inscription_session)) {
-            //         $session->set('inscription', $inscription);
-            //     }
-            //     $session->set('inscription', $inscription);
-            // }
-            // return $this->redirectToRoute('releve_de_notes');
-            dd('ok');
+            $inscription = $request->request->get('etudiant');
+            if (!empty($inscription)) {
+                $inscription_session = $session->get('inscription', []);
+                if (!empty($inscription_session)) {
+                    $session->set('inscription', $inscription);
+                }
+                $session->set('inscription', $inscription);
+                
+                return $this->redirectToRoute('releve_de_notes');
+            }
+            else {
+                $this->addFlash('error','Vous n\'avez sélectionné aucun étudiant');
+                return $this->redirectToRoute('porte_releve_de_notes');
+            }
+            return $this->redirectToRoute('releve_de_notes');
+            // dd($request);
         
     }
 
