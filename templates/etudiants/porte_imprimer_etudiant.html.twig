@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="{{asset('template/dist/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="template/dist/css/bootstrap.min.css">
 
 <div class="row">
     <div class="col-7 offset-2">
         
         <div class="card">
             {% for message in app.flashes('success') %}
-            <div class="alert alert-success container col-4">
+            <div class="alert alert-success container col-12">
                 {{ message}}
             </div>
             {% endfor %}
