@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Etudiant;
+use App\Repository\EtudiantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,8 +14,9 @@ class SecurityController extends AbstractController
     /**
      * @Route("/", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils,EtudiantRepository $etudiant): Response
     {
+        dd($etudiant->findAll());
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
         // }
